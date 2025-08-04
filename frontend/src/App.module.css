@@ -56,7 +56,8 @@
 }
 
 .controlPanel {
-  position: absolute;
+  position: fixed;
+  z-index: 10000;
   bottom: 2rem;
   right: 2rem;
   width: 380px;
@@ -345,3 +346,46 @@
     padding: 1rem;
   }
 }
+
+.uploadButton {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.uploadLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.uploadLabel:hover {
+  background: rgba(0, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.fullscreenViewer {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 1 !important;
+  pointer-events: auto;
+}
+
+/* Removed duplicate panel rule */

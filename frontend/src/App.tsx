@@ -28,6 +28,11 @@ function App() {
       setShowUpload(true); // Enable upload controls in interactive mode
     }
     
+    // Enable upload button in development mode for debugging
+    if (import.meta.env.DEV) {
+      setShowUpload(true);
+    }
+    
     if (modelFile && fromCLI) {
       // View mode - opened from CLI with generated model
       setViewMode(true);
@@ -114,7 +119,7 @@ function App() {
       {/* Full-screen 3D viewer */}
       <div className={styles.viewerContainer}>
         {stlData ? (
-          <STLViewer stlData={stlData} width={100} height={100} />
+          <STLViewer stlData={stlData} className={styles.fullscreenViewer} />
         ) : (
           <div className={styles.emptyViewer}>
             <div className={styles.emptyContent}>

@@ -7,6 +7,7 @@ import {ConfigScreen} from './screens/config-screen.js';
 import {RenderScreen} from './screens/render-screen.js';
 import {ModelScreen} from './screens/model-screen.js';
 import {ErrorScreen} from './screens/error-screen.js';
+import {InteractiveScreen} from './screens/interactive-screen.js';
 
 interface Props {
 	screenName: string;
@@ -31,6 +32,8 @@ export function ScreenTester({screenName}: Props) {
 				return <ModelScreen />;
 			case 'error':
 				return <ErrorScreen message="Connection failed" details="Could not connect to server on port 8765" />;
+			case 'interactive':
+				return <InteractiveScreen />;
 			default:
 				return (
 					<Box flexDirection="column" padding={1}>
@@ -43,6 +46,7 @@ export function ScreenTester({screenName}: Props) {
 						<Text color="cyan">• render</Text>
 						<Text color="cyan">• model</Text>
 						<Text color="cyan">• error</Text>
+						<Text color="cyan">• interactive</Text>
 					</Box>
 				);
 		}
