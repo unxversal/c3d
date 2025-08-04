@@ -3,6 +3,7 @@ import {Text, Box} from 'ink';
 import {ServerManager} from './server-manager.js';
 import {GenerationService, GenerationProgress} from './generation-service.js';
 import {getConfig, updateConfig} from './c3d.config.js';
+import {UIPlayground} from './ui-playground.js';
 
 type Props = {
 	command: string;
@@ -26,6 +27,11 @@ export default function App({command, subCommand, scriptFile, generatePrompt, fl
 	const [serverRunning, setServerRunning] = useState(false);
 	const [actualPort, setActualPort] = useState<number | null>(null);
 	const [generationProgress, setGenerationProgress] = useState<GenerationProgress | null>(null);
+
+	// UI Playground mode - render the playground component instead of normal CLI
+	if (command === 'ui') {
+		return <UIPlayground />;
+	}
 
 	const updateServerStatus = async () => {
 		const currentPort = serverManager.getCurrentPort();

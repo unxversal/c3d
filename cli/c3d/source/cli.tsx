@@ -17,6 +17,7 @@ const cli = meow(
 		render <script>     Render a CADQuery script file
 		config              Show current configuration
 		deload              Remove C3D AI model from local storage
+		ui                  Launch UI development playground
 
 	Options
 		--name              Your name
@@ -31,6 +32,7 @@ const cli = meow(
 	  $ c3d render my-model.py --output=model.stl
 	  $ c3d config
 	  $ c3d deload
+	  $ c3d ui
 `,
 	{
 		importMeta: import.meta,

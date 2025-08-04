@@ -112,6 +112,9 @@ c3d config
 
 # Remove AI model to free up disk space (~4-8GB)
 c3d deload
+
+# Launch UI development playground
+c3d ui
 ```
 
 ### Examples
@@ -124,6 +127,9 @@ c3d generate "a smartphone stand with 45 degree angle"
 
 # Model management
 c3d deload  # Remove model to free up ~4-8GB
+
+# UI development
+c3d ui      # Launch UI playground for component development
 
 # Traditional workflow
 c3d server start
@@ -191,7 +197,28 @@ npm run build
 
 # Run tests
 npm test
+
+# UI component development
+c3d ui  # Launch the UI playground for testing components
 ```
+
+### UI Development Playground
+
+The `c3d ui` command launches a dedicated UI development environment where you can:
+
+- **Test components** in isolation without affecting main functionality
+- **Preview styling** with live examples of colors, layouts, and animations
+- **See progress indicators** like loading states and status messages
+- **Experiment with layouts** including borders, cards, and multi-column designs
+
+The playground includes sample components that demonstrate:
+- Status indicators (loading, success, error, info)
+- Progress bars and counters
+- AI generation simulation
+- Layout examples (cards, columns, borders)
+- Real-time updates and animations
+
+Use this environment to develop and test UI components before integrating them into the main CLI commands.
 
 ## Troubleshooting
 
