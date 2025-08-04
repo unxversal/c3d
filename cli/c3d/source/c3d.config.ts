@@ -12,6 +12,11 @@ export interface C3DConfig {
 	// Output Settings
 	defaultOutputFormat: string;
 	keepWorkingDirectory: boolean;
+	
+	// Conversation Management (for future interactive features)
+	keepFirstPrompt: boolean;
+	keepLatestExplanation: boolean;
+	maxHistoryMessages: number;
 }
 
 export const defaultConfig: C3DConfig = {
@@ -28,6 +33,11 @@ export const defaultConfig: C3DConfig = {
 	// Output Settings
 	defaultOutputFormat: 'stl',
 	keepWorkingDirectory: false,
+	
+	// Conversation Management (for future interactive features)
+	keepFirstPrompt: true,
+	keepLatestExplanation: true,
+	maxHistoryMessages: 10,
 };
 
 let currentConfig: C3DConfig = { ...defaultConfig };
