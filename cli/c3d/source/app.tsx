@@ -6,12 +6,14 @@ import {getConfig, updateConfig} from './c3d.config.js';
 import {UIPlayground} from './ui-playground.js';
 import {StaticPlayground} from './static-playground.js';
 import {ShimmerPlayground} from './shimmer-playground.js';
+import {ScreenTester} from './screen-tester.js';
 
 type Props = {
 	command: string;
 	subCommand?: string;
 	scriptFile?: string;
 	generatePrompt?: string;
+	screenName?: string;
 	flags: {
 		name?: string;
 		port?: number;
@@ -23,7 +25,7 @@ type Props = {
 const serverManager = new ServerManager();
 const generationService = new GenerationService();
 
-export default function App({command, subCommand, scriptFile, generatePrompt, flags}: Props) {
+export default function App({command, subCommand, scriptFile, generatePrompt, screenName, flags}: Props) {
 	const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 	const [message, setMessage] = useState('');
 	const [serverRunning, setServerRunning] = useState(false);
@@ -37,6 +39,9 @@ export default function App({command, subCommand, scriptFile, generatePrompt, fl
 		}
 		if (subCommand === 'shimmer') {
 			return <ShimmerPlayground />;
+		}
+		if (subCommand === 'screen') {
+			return <ScreenTester screenName={screenName || 'home'} />;
 		}
 		return <UIPlayground />;
 	}

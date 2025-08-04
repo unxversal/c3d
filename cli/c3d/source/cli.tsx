@@ -20,6 +20,7 @@ const cli = meow(
 		ui                  Launch UI development playground
 		ui static           Launch ASCII layout slideshow (dolphin + banner)
 		ui shimmer          Launch shimmer effects slideshow (wave, pulse, etc.)
+		ui screen <name>    Launch specific screen component for testing
 
 	Options
 		--name              Your name
@@ -37,6 +38,8 @@ const cli = meow(
 		$ c3d ui
 		$ c3d ui static
 		$ c3d ui shimmer
+		$ c3d ui screen home
+		$ c3d ui screen generation
 `,
 	{
 		importMeta: import.meta,
@@ -69,10 +72,17 @@ if (command === 'generate' && cli.input.length > 1) {
 	generatePrompt = cli.input.slice(1).join(' ');
 }
 
+// Handle screen command specially
+let screenName = '';
+if (command === 'ui' && subCommand === 'screen' && cli.input[2]) {
+	screenName = cli.input[2];
+}
+
 render(<App 
 	command={command} 
 	subCommand={subCommand}
 	scriptFile={scriptFile} 
 	generatePrompt={generatePrompt}
+	screenName={screenName}
 	flags={cli.flags} 
 />);
