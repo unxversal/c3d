@@ -1,6 +1,15 @@
-# C3D - AI-Powered CAD Generation CLI
+# C3D CLI - AI-Powered CAD Generation
 
-A command-line interface that generates CAD objects from natural language descriptions using AI, powered by Ollama and CADQuery.
+A powerful command-line interface that generates 3D CAD models from natural language descriptions using AI, with an integrated web-based 3D viewer.
+
+## ✨ Key Features
+
+- 🤖 **AI Generation**: Create CAD models from natural language using Ollama
+- 🌐 **Integrated 3D Viewer**: React Three Fiber web interface with interactive controls
+- 🖥️ **Beautiful CLI**: ASCII art interface with animations and real-time status
+- 📱 **Screen Testing**: Interactive UI components for development and testing
+- 🔄 **Auto-Launch**: Generated models open automatically in 3D viewer
+- 📦 **Complete Package**: Backend, frontend, and CLI bundled together
 
 ## Prerequisites
 
@@ -43,7 +52,148 @@ c3d generate "a simple cube"
 
 **Note:** The C3D model (`joshuaokolo/C3Dv0`) is approximately 4-8GB and will be downloaded via Ollama on first use.
 
-### Local Development
+## 🚀 Basic Usage
+
+### Generate a CAD Model
+
+```sh
+c3d generate "a simple cube"
+```
+
+This will:
+1. Start the Python backend server automatically
+2. Generate a CAD model using AI
+3. **Auto-open the 3D viewer** in your browser
+4. Display the model with interactive controls
+
+### Skip Auto-Viewer
+```sh
+c3d generate "a gear with 12 teeth" --no-viewer
+```
+
+### Launch Just the Viewer
+```sh
+c3d viewer
+```
+
+### Additional Examples
+
+```sh
+# Generate a gear with custom settings
+c3d generate "a gear with 12 teeth" --retries=10 --port=9000
+
+# Generate a phone case
+c3d generate "a phone case for iPhone 14"
+
+# Generate without auto-opening viewer
+c3d generate "a complex bracket" --no-viewer
+```
+
+## 📋 All Commands
+
+### Core Commands
+- `c3d generate <description>` - Generate CAD from text description
+- `c3d viewer` - Launch 3D web interface
+- `c3d server start/stop/status` - Manage Python backend server
+- `c3d config` - View current configuration settings
+- `c3d render <script.py>` - Render Python CADQuery scripts
+- `c3d deload` - Remove C3D AI model from local storage
+
+### Development & Testing
+- `c3d ui` - Launch UI development playground
+- `c3d ui static` - ASCII layout slideshow (dolphin + banner)
+- `c3d ui shimmer` - Animation effects showcase
+- `c3d ui screen <name>` - Test specific screen components
+
+### Available Screen Components
+```sh
+c3d ui screen home          # Home/welcome screen
+c3d ui screen generation    # Model generation screen
+c3d ui screen server        # Server management screen
+c3d ui screen config        # Configuration screen
+c3d ui screen render        # Script rendering screen
+c3d ui screen model         # Model management screen
+c3d ui screen error         # Error handling screen
+c3d ui screen interactive   # Interactive/collaboration features
+```
+
+## 🛠️ CLI Options
+
+### Global Options
+- `--port <number>` - Server port (default: 8765, auto-finds available)
+- `--retries <number>` - Max generation retries (default: 5)
+- `--output <filename>` - Custom output filename for render command
+- `--no-viewer` - Disable auto-opening web viewer after generation
+
+### Examples
+```sh
+# Custom port and retries
+c3d generate "a bracket" --port=9000 --retries=10
+
+# Render script with custom output
+c3d render my_model.py --output=custom_name.stl
+
+# Generate without auto-viewer
+c3d generate "a gear" --no-viewer
+```
+
+## 🖥️ CLI Interface & Development
+
+### UI Development Playground
+
+C3D includes extensive UI development tools for testing and creating interface components:
+
+```sh
+# Launch the main UI playground
+c3d ui
+
+# Test ASCII art layouts (dolphin + banner slideshow)
+c3d ui static
+
+# Showcase animation effects (shimmer, pulse, ripple, wave)
+c3d ui shimmer
+
+# Test specific application screens
+c3d ui screen <name>
+```
+
+Each screen demonstrates:
+- Real-time status updates with shimmer effects
+- Auto-cycling demo states showing different phases
+- Professional ASCII art layouts with UNXVERSAL dolphin branding
+- Interactive navigation controls (arrow keys, 'q' to quit)
+
+### Animation Features
+
+The CLI includes several professional animation effects:
+- **Wave Ripple**: Animated text waves
+- **Color Shimmer**: Dynamic color cycling
+- **Pulse Effect**: Breathing text animation
+- **Character Shimmer**: Individual character effects
+- **Letter Animation**: Fade-in/fade-out with noise
+- **Sliding Highlight**: Moving spotlight effect
+- **Flash Animation**: Strobe-like effects
+- **Static Shimmer**: Random flicker effects
+
+## 🌐 3D Web Viewer
+
+The integrated web viewer features:
+- **Interactive Controls**: Rotate, zoom, pan with mouse
+- **React Three Fiber**: Modern 3D rendering with Three.js
+- **Dark Theme**: Professional CAD tool aesthetic
+- **Auto-Integration**: Opens automatically after generation
+- **Upload Support**: STL file testing (development mode)
+- **Responsive Design**: Works on desktop and mobile
+
+### Viewer Controls
+- **Left Mouse Drag**: Rotate camera around model
+- **Right Mouse Drag**: Pan camera
+- **Mouse Wheel**: Zoom in/out
+- **Control Panel**: Model info and generation settings
+
+## 🔧 Development
+
+### Local Development Setup
 
 ```sh
 git clone <repository>
@@ -52,202 +202,148 @@ npm install
 npm run build
 ```
 
-## Usage
-
-### AI-Powered CAD Generation
-
-Generate CAD objects directly from text descriptions:
-
-```sh
-# Generate a simple object
-c3d generate "a gear with 20 teeth"
-
-# Generate with custom retry count
-c3d generate "a phone case for iPhone 15 Pro" --retries=3
-
-# Complex objects
-c3d generate "a parametric bracket with mounting holes for M6 bolts"
+### Project Structure
+```
+cli/c3d/
+├── source/                 # TypeScript source files
+│   ├── app.tsx            # Main CLI application
+│   ├── cli.tsx            # Command parsing and help
+│   ├── components/        # Reusable UI components
+│   ├── screens/           # Screen testing components
+│   ├── dolphins.ts        # ASCII art assets
+│   └── server/            # Python FastAPI backend
+├── frontend-dist/         # Built React frontend (generated)
+├── dist/                  # Compiled TypeScript (generated)
+└── package.json
 ```
 
-**How it works:**
-1. C3D uses a two-stage AI process for better results
-2. First, it generates a detailed technical description from your prompt
-3. Then, it creates CADQuery code based on that description
-4. The code is tested and retried up to 5 times (configurable) until it produces a valid STL file
-
-### Server Management
-
+### Build Process
 ```sh
-# Start the CADQuery rendering server
-c3d server start
-
-# Check server status
-c3d server status
-
-# Stop the server
-c3d server stop
-
-# Start server on custom port
-c3d server start --port=9000
+npm run build              # Build complete project
+npm run build:frontend     # Build React frontend only
+npm run build:cli          # Build CLI only
+tsc                        # TypeScript compilation
 ```
 
-### Manual CADQuery Script Rendering
-
+### Testing
 ```sh
-# Render a CADQuery script (auto-starts server if needed)
-c3d render my-model.py
+# Test CLI locally
+node dist/cli.js --help
 
-# Render with specific output filename
-c3d render my-model.py --output=custom-name.stl
+# Test specific commands
+node dist/cli.js generate "test model"
+node dist/cli.js ui screen home
+```
 
-# Render on custom port
-c3d render my-model.py --port=9000
+## 🔌 Backend Integration
+
+### Python FastAPI Server
+- **Auto-Management**: CLI starts/stops server automatically
+- **CADQuery Engine**: Generates STL files from Python scripts
+- **Static Serving**: Hosts the React frontend and generated files
+- **API Endpoints**: RESTful interface for generation and file access
+
+### Server Commands
+```sh
+c3d server start          # Start Python backend
+c3d server stop           # Stop Python backend
+c3d server status         # Check server status
 ```
 
 ### Configuration
 
+View current settings:
 ```sh
-# View current configuration
 c3d config
-
-# Remove AI model to free up disk space (~4-8GB)
-c3d deload
-
-# Launch UI development playground
-c3d ui
 ```
 
-### Examples
+Default configuration includes:
+- **AI Model**: `joshuaokolo/C3Dv0` (Ollama)
+- **Server Port**: 8765 (auto-detects available ports)
+- **Max Retries**: 5 attempts for generation
+- **Temperature**: 0.7 for AI model creativity
+- **Host**: `127.0.0.1:11434` for Ollama connection
 
-```sh
-# AI generation examples
-c3d generate "a simple box 50x30x20mm"
-c3d generate "a hex nut for M8 bolt"
-c3d generate "a smartphone stand with 45 degree angle"
+## 🔍 Troubleshooting
 
-# Model management
-c3d deload  # Remove model to free up ~4-8GB
+### Common Issues
 
-# UI development
-c3d ui      # Launch UI playground for component development
+1. **Ollama not running**
+   ```sh
+   ollama serve
+   ```
 
-# Traditional workflow
-c3d server start
-c3d render examples/box.py --output=my-box.stl
+2. **Model not installed**
+   ```sh
+   c3d generate "test"  # Will auto-download model
+   ```
 
-# Mixed workflow
-c3d generate "a gear" --output=my-gear.stl
-```
+3. **Port conflicts**
+   ```sh
+   c3d generate "test" --port=9000
+   ```
 
-## AI Model Information
-
-C3D uses the `joshuaokolo/C3Dv0` model, specifically trained for CADQuery code generation:
-
-- **Model**: Fine-tuned for mechanical design and CADQuery syntax
-- **Size**: Approximately 4-8GB download
-- **Two-stage process**: Description → Code generation for better accuracy
-- **Structured outputs**: Uses JSON schemas for reliable formatting
-- **Retry logic**: Automatically retries failed generations up to 5 times
+4. **Python/uv issues**
+   ```sh
+   # Check Python availability
+   python3 --version
+   uv --version
+   ```
 
 ### Model Management
-
 ```sh
-# Model is downloaded automatically on first use
-c3d generate "test cube"
-
-# Remove model to free up disk space
+# Remove model to free disk space (4-8GB)
 c3d deload
 
-# Model will be re-downloaded automatically when needed again
-c3d generate "another object"
+# Check model status
+ollama list | grep C3Dv0
 ```
 
-## CADQuery Script Format
-
-For manual script rendering, your Python scripts should use CADQuery and export files:
-
-```python
-import cadquery as cq
-
-# Create a simple box
-result = cq.Workplane("XY").box(10, 10, 10)
-
-# Export to STL
-cq.exporters.export(result, "output.stl")
-```
-
-**AI-Generated Code**: When using `c3d generate`, the AI automatically creates properly structured CADQuery code following best practices.
-
-## Supported Output Formats
-
-- `.stl` - Stereolithography format
-- `.step` - Standard for Exchange of Product Data
-- `.3mf` - 3D Manufacturing Format
-- `.stp` - STEP format variant
-- `.obj` - Wavefront OBJ format
-
-## Development
-
+### Debug Mode
+Enable verbose logging by setting environment variable:
 ```sh
-# Watch mode for development
-npm run dev
-
-# Build for production
-npm run build
-
-# Run tests
-npm test
-
-# UI component development
-c3d ui  # Launch the UI playground for testing components
+DEBUG=1 c3d generate "test model"
 ```
 
-### UI Development Playground
+## 📦 Distribution & Packaging
 
-The `c3d ui` command launches a dedicated UI development environment where you can:
+The CLI packages everything needed for distribution:
+- TypeScript CLI compiled to JavaScript
+- React frontend bundled and minified
+- Python backend with dependencies
+- ASCII art and static assets
 
-- **Test components** in isolation without affecting main functionality
-- **Preview styling** with live examples of colors, layouts, and animations
-- **See progress indicators** like loading states and status messages
-- **Experiment with layouts** including borders, cards, and multi-column designs
+Single-command installation:
+```sh
+npm install -g c3d
+```
 
-The playground includes sample components that demonstrate:
-- Status indicators (loading, success, error, info)
-- Progress bars and counters
-- AI generation simulation
-- Layout examples (cards, columns, borders)
-- Real-time updates and animations
+## 🤝 Contributing
 
-Use this environment to develop and test UI components before integrating them into the main CLI commands.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test with `npm run build`
+5. Submit a pull request
 
-## Troubleshooting
+### Development Guidelines
+- Follow TypeScript best practices
+- Test UI components with `c3d ui screen <name>`
+- Ensure ASCII art alignment in terminal
+- Maintain dark theme consistency
+- Add comprehensive error handling
 
-### AI Generation Issues
+## 📄 License
 
-1. **Model not found**: The C3D model will be downloaded automatically on first use
-2. **Ollama not running**: Make sure Ollama is running with `ollama serve`
-3. **Generation failures**: Increase retry count with `--retries=10`
-4. **Poor results**: Be more specific in your descriptions
-5. **Disk space**: Use `c3d deload` to remove the model and free up ~4-8GB
+MIT License
 
-### Server Won't Start
+## 🔗 Related Projects
 
-1. Ensure uv is installed: `uv --version`
-2. Check Python installation: `python3 --version`
-3. Verify CADQuery dependencies are available in the server environment
+- [Ollama](https://ollama.ai/) - AI model runtime
+- [CADQuery](https://cadquery.readthedocs.io/) - Python CAD library
+- [React Three Fiber](https://docs.pmnd.rs/react-three-fiber) - React 3D rendering
+- [Ink](https://github.com/vadimdemedes/ink) - React for CLI interfaces
 
-### Path Issues
+---
 
-- Make sure `uv`, `python3`, and `ollama` are in your system PATH
-- On Windows, you may need to use `python` instead of `python3`
-
-### Port Conflicts
-
-- Use `--port` flag to specify different port if 8765 is in use
-- Check what's running on the port: `lsof -i :8765` (macOS/Linux)
-
-### Ollama Connection Issues
-
-- Ensure Ollama is running: `ollama serve`
-- Check Ollama is accessible: `ollama list`
-- Default host is `127.0.0.1:11434`
+**UNXVERSAL LABS C3D** - Transforming ideas into 3D reality through AI ✨
