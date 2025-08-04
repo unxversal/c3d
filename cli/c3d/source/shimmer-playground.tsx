@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Text, Box, useInput} from 'ink';
-import {DOLPHIN_ANSI_ONE, DOLPHIN_BANNER, DOLPHIN_BANNER_COLUMNS} from './dolphins.js';
+import {DOLPHIN_ANSI_ONE, DOLPHIN_ANSI_TWO, DOLPHIN_BANNER, DOLPHIN_BANNER_COLUMNS} from './dolphins.js';
 
 // Shimmer/ripple effects playground
 export function ShimmerPlayground() {
@@ -8,8 +8,16 @@ export function ShimmerPlayground() {
 	const [shimmerPhase, setShimmerPhase] = useState(0);
 	const [pulseIntensity, setPulseIntensity] = useState(0);
 	const [focusedSection, setFocusedSection] = useState(0);
+	const [selectedDolphin, setSelectedDolphin] = useState(DOLPHIN_ANSI_ONE);
 
-	const sections = ['Wave Ripple', 'Color Shimmer', 'Pulse Effect', 'Character Shimmer', 'Letter Animation', 'Sliding Highlight', 'Flash Animation', 'Static Shimmer', 'Colorful Static'];
+	const sections = ['Wave Ripple', 'Color Shimmer', 'Pulse Effect', 'Character Shimmer', 'Letter Animation', 'Sliding Highlight', 'Flash Animation', 'Static Shimmer', 'Pause State'];
+
+	// Randomly choose dolphin on component mount
+	useEffect(() => {
+		const dolphins = [DOLPHIN_ANSI_ONE, DOLPHIN_ANSI_TWO];
+		const randomDolphin = dolphins[Math.floor(Math.random() * dolphins.length)]!;
+		setSelectedDolphin(randomDolphin);
+	}, []);
 
 	// Handle keyboard navigation
 	useInput((input, key) => {
@@ -73,7 +81,7 @@ export function ShimmerPlayground() {
 	};
 
 	// Split ASCII into lines for individual animation
-	const dolphinLines = DOLPHIN_ANSI_ONE.split('\n');
+	const dolphinLines = selectedDolphin.split('\n');
 	const bannerLines = DOLPHIN_BANNER.split('\n');
 
 	const renderCurrentEffect = () => {
@@ -128,7 +136,7 @@ export function ShimmerPlayground() {
 						<Box flexDirection="row">
 							<Box flexDirection="column" marginRight={4}>
 								<Text {...getPulseProps()}>
-									{DOLPHIN_ANSI_ONE}
+									{selectedDolphin}
 								</Text>
 							</Box>
 							<Box flexDirection="column">
@@ -160,7 +168,7 @@ export function ShimmerPlayground() {
 					<Box flexDirection="column">
 						<Box flexDirection="row">
 							<Box flexDirection="column" marginRight={4}>
-								<Text color="blue">{DOLPHIN_ANSI_ONE}</Text>
+								<Text color="blue">{selectedDolphin}</Text>
 							</Box>
 							<Box flexDirection="column">
 								<AnimatedBanner />
@@ -174,7 +182,7 @@ export function ShimmerPlayground() {
 					<Box flexDirection="column">
 						<Box flexDirection="row">
 							<Box flexDirection="column" marginRight={4}>
-								<Text color="blue">{DOLPHIN_ANSI_ONE}</Text>
+								<Text color="blue">{selectedDolphin}</Text>
 							</Box>
 							<Box flexDirection="column">
 								<SlidingHighlightBanner />
@@ -188,7 +196,7 @@ export function ShimmerPlayground() {
 					<Box flexDirection="column">
 						<Box flexDirection="row">
 							<Box flexDirection="column" marginRight={4}>
-								<Text color="blue">{DOLPHIN_ANSI_ONE}</Text>
+								<Text color="blue">{selectedDolphin}</Text>
 							</Box>
 							<Box flexDirection="column">
 								<FlashAnimationBanner />
@@ -202,7 +210,7 @@ export function ShimmerPlayground() {
 					<Box flexDirection="column">
 						<Box flexDirection="row">
 							<Box flexDirection="column" marginRight={4}>
-								<Text color="blue">{DOLPHIN_ANSI_ONE}</Text>
+								<Text color="blue">{selectedDolphin}</Text>
 							</Box>
 							<Box flexDirection="column">
 								<StaticShimmerBanner />
@@ -211,12 +219,12 @@ export function ShimmerPlayground() {
 					</Box>
 				);
 
-			case 8: // Colorful Static
+			case 8: // Pause State
 				return (
 					<Box flexDirection="column">
 						<Box flexDirection="row">
 							<Box flexDirection="column" marginRight={4}>
-								<Text color="blue">{DOLPHIN_ANSI_ONE}</Text>
+								<Text color="blue">{selectedDolphin}</Text>
 							</Box>
 							<Box flexDirection="column">
 								<ColorfulStaticBanner />
@@ -264,7 +272,7 @@ export function ShimmerPlayground() {
 						{focusedSection === 5 && "Sliding Highlight: Full text visible with bright sliding highlight"}
 						{focusedSection === 6 && "Flash Animation: Text appears, stays visible, then disappears and repeats"}
 						{focusedSection === 7 && "Static Shimmer: Full text always visible with random static noise"}
-						{focusedSection === 8 && "Colorful Static: Full text with varied colors and random effects"}
+						{focusedSection === 8 && "Pause State: Steady text like sliding highlight pause with subtle flickers"}
 					</Text>
 					<Text color="gray" dimColor>Perfect for loading states in your CLI!</Text>
 				</Box>
@@ -606,17 +614,13 @@ function StaticShimmerBanner() {
 	);
 }
 
-// Colorful static banner - full text with varied colors and effects
+// Pause state banner - EXACTLY like sliding highlight but highlight position is fixed (not moving)
 function ColorfulStaticBanner() {
 	const totalCols = DOLPHIN_BANNER_COLUMNS.length;
 	const totalRows = DOLPHIN_BANNER_COLUMNS[0]?.length || 0;
-
-	useEffect(() => {
-		const interval = setInterval(() => {
-			// Force re-render for colorful effects
-		}, 120);
-		return () => clearInterval(interval);
-	}, []);
+	
+	// Fixed highlight position instead of moving - positioned roughly in the middle
+	const highlightPosition = Math.floor(totalCols / 2);
 
 	return (
 		<Box flexDirection="column">
@@ -625,25 +629,32 @@ function ColorfulStaticBanner() {
 					{Array.from({ length: totalCols }, (_, colIndex) => {
 						const char = DOLPHIN_BANNER_COLUMNS[colIndex]?.[rowIndex] || ' ';
 						
-						// Base color varies by position for more variety
-						const baseColors = ['blue', 'cyan', 'magenta', 'green'];
-						const baseColor = baseColors[(rowIndex + colIndex) % baseColors.length] || 'blue';
-						let color: string = baseColor;
+						// Calculate distance from highlight center - EXACT same logic as effect #5
+						const distanceFromHighlight = Math.abs(colIndex - highlightPosition);
 						
-						// Random colorful static effects
-						const randomValue = Math.random();
-						if (randomValue > 0.95) {
-							color = 'yellow'; // Bright sparkle
-						} else if (randomValue > 0.9) {
-							color = 'white'; // White flash
-						} else if (randomValue > 0.8) {
-							color = 'red'; // Red accent
-						} else if (randomValue > 0.7) {
-							// Randomly pick a different base color for variety
-							const altColors = ['cyan', 'magenta', 'green', 'blue'];
-							color = altColors[Math.floor(Math.random() * altColors.length)] || 'blue';
+						let color: string = 'blue'; // Base color - blue instead of gray
+						
+						// Apply subtle shimmer colors based on distance from center - EXACT same logic as effect #5
+						if (distanceFromHighlight <= 4) { // Wider window: 4 instead of 2
+							// Letters in the shimmer zone - subtle brightening
+							if (distanceFromHighlight === 0) {
+								color = 'white'; // Center of shimmer - brightest
+							} else if (distanceFromHighlight <= 1) {
+								color = 'cyan'; // Next to center - medium bright
+							} else if (distanceFromHighlight <= 2) {
+								color = 'cyan'; // Medium zone
+							} else {
+								color = 'blue'; // Edge - back to base
+							}
+						} else if (distanceFromHighlight <= 6) {
+							// Subtle transition zone
+							if (Math.random() > 0.8) {
+								color = 'cyan'; // Occasional subtle sparkle
+							} else {
+								color = 'blue'; // Mostly base color
+							}
 						}
-						// Most of the time stays the base color
+						// Everything else stays blue (base color)
 
 						return (
 							<Text key={colIndex} color={color}>
