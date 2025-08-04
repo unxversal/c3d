@@ -278,13 +278,14 @@ function AnimatedBanner() {
 	const totalCols = DOLPHIN_BANNER_COLUMNS.length;
 	const totalRows = DOLPHIN_BANNER_COLUMNS[0]?.length || 0;
 	
-	// Total animation cycle: fade in left-to-right + fade out right-to-left + pause
-	const totalAnimationSteps = (totalCols * 2) + 20; // 20 steps pause between cycles
+	// Total animation cycle: fade in left-to-right + pause (1s) + fade out left-to-right + pause
+	const pauseSteps = 10; // 1 second pause (10 steps at 100ms each)
+	const totalAnimationSteps = totalCols + pauseSteps + totalCols + 5; // fade in + pause + fade out + end pause
 
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setAnimationPhase(prev => (prev + 1) % totalAnimationSteps);
-		}, 100);
+		}, 80); // Faster: 80ms instead of 100ms
 		return () => clearInterval(interval);
 	}, [totalAnimationSteps]);
 
@@ -325,10 +326,18 @@ function AnimatedBanner() {
 									isVisible = Math.random() > 0.8; // High uncertainty
 								}
 							}
-						} else if (animationPhase < totalCols * 2) {
-							// Phase 2: Fade out left to right (same direction as fade in)
-							const fadeOutProgress = animationPhase - totalCols;
-							const fadeOutPosition = fadeOutProgress; // Start from left, same as fade in
+						} else if (animationPhase < totalCols + pauseSteps) {
+							// Phase 2: Pause - all letters visible and stable
+							isVisible = true;
+							color = 'cyan';
+							// Occasional subtle flicker during pause
+							if (Math.random() > 0.98) {
+								isVisible = false;
+							}
+						} else if (animationPhase < totalCols + pauseSteps + totalCols) {
+							// Phase 3: Fade out left to right
+							const fadeOutProgress = animationPhase - totalCols - pauseSteps;
+							const fadeOutPosition = fadeOutProgress; // Start from left
 							const distanceFromFadeOut = colIndex - fadeOutPosition;
 							
 							if (distanceFromFadeOut < 0) {
@@ -370,7 +379,7 @@ function AnimatedBanner() {
 	);
 }
 
-// Sliding highlight banner - always shows full text with moving highlight window
+// Sliding highlight banner - subtle shimmer effect on colored base
 function SlidingHighlightBanner() {
 	const [highlightPosition, setHighlightPosition] = useState(0);
 	const totalCols = DOLPHIN_BANNER_COLUMNS.length;
@@ -393,28 +402,27 @@ function SlidingHighlightBanner() {
 						// Calculate distance from highlight center
 						const distanceFromHighlight = Math.abs(colIndex - highlightPosition);
 						
-						let color: string = 'gray'; // Base color - always visible
+						let color: string = 'blue'; // Base color - blue instead of gray
 						
-						// Apply highlight colors based on distance from center
-						if (distanceFromHighlight <= 3) {
-							// Letters in the highlight zone
+						// Apply subtle shimmer colors based on distance from center
+						if (distanceFromHighlight <= 2) {
+							// Letters in the shimmer zone - subtle brightening
 							if (distanceFromHighlight === 0) {
-								color = 'yellow'; // Center of highlight
+								color = 'white'; // Center of shimmer - brightest
 							} else if (distanceFromHighlight === 1) {
-								color = 'white'; // Next to center
-							} else if (distanceFromHighlight === 2) {
-								color = 'cyan'; // Edge of highlight
+								color = 'cyan'; // Next to center - medium bright
 							} else {
-								color = 'blue'; // Fade back to base
+								color = 'blue'; // Edge - back to base but could be slightly brighter
 							}
-						} else if (distanceFromHighlight <= 6) {
-							// Subtle glow zone
-							color = 'gray'; // Still base color but could add subtle brightening
-							if (Math.random() > 0.9) {
-								color = 'blue'; // Occasional sparkle
+						} else if (distanceFromHighlight <= 4) {
+							// Subtle transition zone
+							if (Math.random() > 0.8) {
+								color = 'cyan'; // Occasional subtle sparkle
+							} else {
+								color = 'blue'; // Mostly base color
 							}
 						}
-						// Everything else stays gray (base color)
+						// Everything else stays blue (base color)
 
 						return (
 							<Text key={colIndex} color={color}>
