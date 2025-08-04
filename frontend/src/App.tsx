@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { STLViewer } from './components/STLViewer';
 import { C3DApi } from './services/api';
 import type { GenerationResult } from './services/api';
-import { MessageSquare, Sparkles, Box } from 'lucide-react';
+import { MessageSquare, Sparkles, Box, Upload } from 'lucide-react';
 import styles from './App.module.css';
 
 function App() {
@@ -12,6 +12,8 @@ function App() {
   const [stlData, setStlData] = useState<ArrayBuffer | null>(null);
   const [viewMode, setViewMode] = useState(false); // View mode when opened from CLI
   const [originalPrompt, setOriginalPrompt] = useState(''); // Store the original prompt
+  const [interactiveMode, setInteractiveMode] = useState(false); // Interactive mode for live collaboration
+  const [showUpload, setShowUpload] = useState(false); // Show upload controls
 
   // Check URL params for auto-loading models
   useEffect(() => {
@@ -19,6 +21,12 @@ function App() {
     const modelFile = urlParams.get('model');
     const promptParam = urlParams.get('prompt');
     const fromCLI = urlParams.get('from') === 'cli';
+    const interactive = urlParams.get('mode') === 'interactive';
+    
+    if (interactive) {
+      setInteractiveMode(true);
+      setShowUpload(true); // Enable upload controls in interactive mode
+    }
     
     if (modelFile && fromCLI) {
       // View mode - opened from CLI with generated model
@@ -60,6 +68,27 @@ function App() {
       });
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.name.toLowerCase().endsWith('.stl')) {
+      alert('Please upload a .stl file');
+      return;
+    }
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      setStlData(arrayBuffer);
+      setResult(null); // Clear any previous result
+      setViewMode(false); // Switch to upload mode
+      setOriginalPrompt(''); // Clear original prompt
+    } catch (error) {
+      console.error('Error loading uploaded file:', error);
+      alert('Error loading file');
     }
   };
 
@@ -177,7 +206,9 @@ function App() {
         </div>
 
         <div className={styles.panelSection}>
-          <div className={styles.sectionTitle}>Model Info</div>
+          <div className={styles.sectionTitle}>
+            {interactiveMode ? 'Interactive Session' : 'Model Info'}
+          </div>
           <div className={styles.specGrid}>
             <div className={styles.specItem}>
               <span className={styles.specLabel}>Format</span>
@@ -200,6 +231,23 @@ function App() {
           </div>
         </div>
       </div>
+      
+      {/* Upload Button - Absolutely positioned in bottom left */}
+      {showUpload && (
+        <div className={styles.uploadButton}>
+          <input
+            type="file"
+            accept=".stl"
+            onChange={handleFileUpload}
+            id="stl-upload"
+            style={{ display: 'none' }}
+          />
+          <label htmlFor="stl-upload" className={styles.uploadLabel}>
+            <Upload size={20} />
+            <span>Upload STL</span>
+          </label>
+        </div>
+      )}
     </div>
   );
 }
