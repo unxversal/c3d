@@ -168,7 +168,7 @@ export function ShimmerPlayground() {
 					<Box flexDirection="column">
 						<Box flexDirection="row">
 							<Box flexDirection="column" marginRight={4}>
-								<Text color="blue">{selectedDolphin}</Text>
+								<Text color="cyan">{selectedDolphin}</Text>
 							</Box>
 							<Box flexDirection="column">
 								<AnimatedBanner />
@@ -196,7 +196,7 @@ export function ShimmerPlayground() {
 					<Box flexDirection="column">
 						<Box flexDirection="row">
 							<Box flexDirection="column" marginRight={4}>
-								<Text color="blue">{selectedDolphin}</Text>
+								<Text color="cyan">{selectedDolphin}</Text>
 							</Box>
 							<Box flexDirection="column">
 								<FlashAnimationBanner />
@@ -224,7 +224,7 @@ export function ShimmerPlayground() {
 					<Box flexDirection="column">
 						<Box flexDirection="row">
 							<Box flexDirection="column" marginRight={4}>
-								<Text color="blue">{selectedDolphin}</Text>
+								<Text color="cyan">{selectedDolphin}</Text>
 							</Box>
 							<Box flexDirection="column">
 								<AnimatedBanner2 />
