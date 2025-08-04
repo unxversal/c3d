@@ -355,27 +355,55 @@
 }
 
 .uploadLabel {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
+  justify-content: center;
+  padding: 8px;
   background: rgba(0, 0, 0, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  border-radius: 6px;
   color: white;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 300;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   transition: all 0.2s ease;
   backdrop-filter: blur(10px);
+  width: 32px;
+  height: 32px;
 }
 
 .uploadLabel:hover {
   background: rgba(0, 0, 0, 0.9);
   border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-1px);
+}
+
+.tooltip {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  margin-left: 8px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  z-index: 1001;
+}
+
+.uploadLabel:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
 }
 
 .fullscreenViewer {

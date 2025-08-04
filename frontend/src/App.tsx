@@ -248,8 +248,8 @@ function App() {
             style={{ display: 'none' }}
           />
           <label htmlFor="stl-upload" className={styles.uploadLabel}>
-            <Upload size={20} />
-            <span>Upload STL</span>
+            <Upload size={16} />
+            <div className={styles.tooltip}>Upload file to test renderer</div>
           </label>
         </div>
       )}
