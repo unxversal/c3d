@@ -9,7 +9,7 @@ export function ShimmerPlayground() {
 	const [pulseIntensity, setPulseIntensity] = useState(0);
 	const [focusedSection, setFocusedSection] = useState(0);
 
-	const sections = ['Wave Ripple', 'Color Shimmer', 'Pulse Effect', 'Character Shimmer', 'Letter Animation', 'Sliding Highlight'];
+	const sections = ['Wave Ripple', 'Color Shimmer', 'Pulse Effect', 'Character Shimmer', 'Letter Animation', 'Sliding Highlight', 'Flash Animation', 'Static Shimmer', 'Colorful Static'];
 
 	// Handle keyboard navigation
 	useInput((input, key) => {
@@ -183,6 +183,48 @@ export function ShimmerPlayground() {
 					</Box>
 				);
 
+			case 6: // Flash Animation
+				return (
+					<Box flexDirection="column">
+						<Box flexDirection="row">
+							<Box flexDirection="column" marginRight={4}>
+								<Text color="blue">{DOLPHIN_ANSI_ONE}</Text>
+							</Box>
+							<Box flexDirection="column">
+								<FlashAnimationBanner />
+							</Box>
+						</Box>
+					</Box>
+				);
+
+			case 7: // Static Shimmer
+				return (
+					<Box flexDirection="column">
+						<Box flexDirection="row">
+							<Box flexDirection="column" marginRight={4}>
+								<Text color="blue">{DOLPHIN_ANSI_ONE}</Text>
+							</Box>
+							<Box flexDirection="column">
+								<StaticShimmerBanner />
+							</Box>
+						</Box>
+					</Box>
+				);
+
+			case 8: // Colorful Static
+				return (
+					<Box flexDirection="column">
+						<Box flexDirection="row">
+							<Box flexDirection="column" marginRight={4}>
+								<Text color="blue">{DOLPHIN_ANSI_ONE}</Text>
+							</Box>
+							<Box flexDirection="column">
+								<ColorfulStaticBanner />
+							</Box>
+						</Box>
+					</Box>
+				);
+
 			default:
 				return null;
 		}
@@ -220,6 +262,9 @@ export function ShimmerPlayground() {
 						{focusedSection === 3 && "Character Shimmer: Text shimmers with animated symbols"}
 						{focusedSection === 4 && "Letter Animation: Letters appear and disappear in waves"}
 						{focusedSection === 5 && "Sliding Highlight: Full text visible with bright sliding highlight"}
+						{focusedSection === 6 && "Flash Animation: Text appears, stays visible, then disappears and repeats"}
+						{focusedSection === 7 && "Static Shimmer: Full text always visible with random static noise"}
+						{focusedSection === 8 && "Colorful Static: Full text with varied colors and random effects"}
 					</Text>
 					<Text color="gray" dimColor>Perfect for loading states in your CLI!</Text>
 				</Box>
@@ -285,7 +330,7 @@ function AnimatedBanner() {
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setAnimationPhase(prev => (prev + 1) % totalAnimationSteps);
-		}, 80); // Faster: 80ms instead of 100ms
+		}, 60); // Even faster: 60ms
 		return () => clearInterval(interval);
 	}, [totalAnimationSteps]);
 
@@ -388,7 +433,7 @@ function SlidingHighlightBanner() {
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setHighlightPosition(prev => (prev + 1) % (totalCols + 10));
-		}, 120);
+		}, 80); // Faster: 80ms instead of 120ms
 		return () => clearInterval(interval);
 	}, [totalCols]);
 
@@ -405,16 +450,18 @@ function SlidingHighlightBanner() {
 						let color: string = 'blue'; // Base color - blue instead of gray
 						
 						// Apply subtle shimmer colors based on distance from center
-						if (distanceFromHighlight <= 2) {
+						if (distanceFromHighlight <= 4) { // Wider window: 4 instead of 2
 							// Letters in the shimmer zone - subtle brightening
 							if (distanceFromHighlight === 0) {
 								color = 'white'; // Center of shimmer - brightest
-							} else if (distanceFromHighlight === 1) {
+							} else if (distanceFromHighlight <= 1) {
 								color = 'cyan'; // Next to center - medium bright
+							} else if (distanceFromHighlight <= 2) {
+								color = 'cyan'; // Medium zone
 							} else {
-								color = 'blue'; // Edge - back to base but could be slightly brighter
+								color = 'blue'; // Edge - back to base
 							}
-						} else if (distanceFromHighlight <= 4) {
+						} else if (distanceFromHighlight <= 6) {
 							// Subtle transition zone
 							if (Math.random() > 0.8) {
 								color = 'cyan'; // Occasional subtle sparkle
@@ -423,6 +470,180 @@ function SlidingHighlightBanner() {
 							}
 						}
 						// Everything else stays blue (base color)
+
+						return (
+							<Text key={colIndex} color={color}>
+								{char}
+							</Text>
+						);
+					})}
+				</Box>
+			))}
+		</Box>
+	);
+}
+
+// Flash animation banner - fade on, stay full, disappear, repeat
+function FlashAnimationBanner() {
+	const [animationPhase, setAnimationPhase] = useState(0);
+	const totalCols = DOLPHIN_BANNER_COLUMNS.length;
+	const totalRows = DOLPHIN_BANNER_COLUMNS[0]?.length || 0;
+	
+	// Total animation cycle: fade in + pause (1s) + disappear + brief pause
+	const pauseSteps = 15; // 1 second pause when fully visible
+	const disappearSteps = 5; // Brief disappear phase
+	const totalAnimationSteps = totalCols + pauseSteps + disappearSteps;
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setAnimationPhase(prev => (prev + 1) % totalAnimationSteps);
+		}, 60); // Fast like the letter animation
+		return () => clearInterval(interval);
+	}, [totalAnimationSteps]);
+
+	return (
+		<Box flexDirection="column">
+			{Array.from({ length: totalRows }, (_, rowIndex) => (
+				<Box key={rowIndex}>
+					{Array.from({ length: totalCols }, (_, colIndex) => {
+						const char = DOLPHIN_BANNER_COLUMNS[colIndex]?.[rowIndex] || ' ';
+						
+						let isVisible = false;
+						let color: string = 'cyan';
+						
+						// Determine which phase we're in
+						if (animationPhase < totalCols) {
+							// Phase 1: Fade in left to right (same as letter animation)
+							const fadeInProgress = animationPhase;
+							const distanceFromFront = colIndex - fadeInProgress;
+							
+							if (distanceFromFront <= 0) {
+								// Already revealed
+								isVisible = true;
+								// Add some noise to fully revealed letters
+								if (distanceFromFront < -5 && Math.random() > 0.95) {
+									isVisible = false; // Occasional flicker
+								}
+								color = 'cyan';
+							} else if (distanceFromFront <= 3) {
+								// In the reveal zone
+								if (distanceFromFront === 1) {
+									color = 'yellow'; // Leading edge
+									isVisible = Math.random() > 0.3; // Some uncertainty
+								} else if (distanceFromFront === 2) {
+									color = 'white'; 
+									isVisible = Math.random() > 0.6; // More uncertainty
+								} else {
+									color = 'blue';
+									isVisible = Math.random() > 0.8; // High uncertainty
+								}
+							}
+						} else if (animationPhase < totalCols + pauseSteps) {
+							// Phase 2: Stay fully visible for pause duration
+							isVisible = true;
+							color = 'cyan';
+							// Very occasional subtle flicker during pause
+							if (Math.random() > 0.99) {
+								isVisible = false;
+							}
+						}
+						// Phase 3: Disappear completely (isVisible stays false)
+						// Phase 4: Brief pause before restart
+
+						return (
+							<Text key={colIndex} color={color}>
+								{isVisible && char !== ' ' ? char : ' '}
+							</Text>
+						);
+					})}
+				</Box>
+			))}
+		</Box>
+	);
+}
+
+// Static shimmer banner - full text always visible with random static effects
+function StaticShimmerBanner() {
+	const totalCols = DOLPHIN_BANNER_COLUMNS.length;
+	const totalRows = DOLPHIN_BANNER_COLUMNS[0]?.length || 0;
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			// Force re-render for static effects
+		}, 100);
+		return () => clearInterval(interval);
+	}, []);
+
+	return (
+		<Box flexDirection="column">
+			{Array.from({ length: totalRows }, (_, rowIndex) => (
+				<Box key={rowIndex}>
+					{Array.from({ length: totalCols }, (_, colIndex) => {
+						const char = DOLPHIN_BANNER_COLUMNS[colIndex]?.[rowIndex] || ' ';
+						
+						let color: string = 'blue'; // Base color
+						
+						// Random static effects across all characters
+						const randomValue = Math.random();
+						if (randomValue > 0.9) {
+							color = 'white'; // Bright flicker
+						} else if (randomValue > 0.8) {
+							color = 'cyan'; // Medium flicker
+						} else if (randomValue > 0.7) {
+							color = 'blue'; // Stay base (this creates the static feel)
+						}
+						// Most of the time stays blue (base color)
+
+						return (
+							<Text key={colIndex} color={color}>
+								{char}
+							</Text>
+						);
+					})}
+				</Box>
+			))}
+		</Box>
+	);
+}
+
+// Colorful static banner - full text with varied colors and effects
+function ColorfulStaticBanner() {
+	const totalCols = DOLPHIN_BANNER_COLUMNS.length;
+	const totalRows = DOLPHIN_BANNER_COLUMNS[0]?.length || 0;
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			// Force re-render for colorful effects
+		}, 120);
+		return () => clearInterval(interval);
+	}, []);
+
+	return (
+		<Box flexDirection="column">
+			{Array.from({ length: totalRows }, (_, rowIndex) => (
+				<Box key={rowIndex}>
+					{Array.from({ length: totalCols }, (_, colIndex) => {
+						const char = DOLPHIN_BANNER_COLUMNS[colIndex]?.[rowIndex] || ' ';
+						
+						// Base color varies by position for more variety
+						const baseColors = ['blue', 'cyan', 'magenta', 'green'];
+						const baseColor = baseColors[(rowIndex + colIndex) % baseColors.length] || 'blue';
+						let color: string = baseColor;
+						
+						// Random colorful static effects
+						const randomValue = Math.random();
+						if (randomValue > 0.95) {
+							color = 'yellow'; // Bright sparkle
+						} else if (randomValue > 0.9) {
+							color = 'white'; // White flash
+						} else if (randomValue > 0.8) {
+							color = 'red'; // Red accent
+						} else if (randomValue > 0.7) {
+							// Randomly pick a different base color for variety
+							const altColors = ['cyan', 'magenta', 'green', 'blue'];
+							color = altColors[Math.floor(Math.random() * altColors.length)] || 'blue';
+						}
+						// Most of the time stays the base color
 
 						return (
 							<Text key={colIndex} color={color}>
