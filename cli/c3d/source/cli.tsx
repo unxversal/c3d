@@ -28,6 +28,7 @@ const cli = meow(
 		--port              Server port (default: 8765, will find available port)
 		--output            Output filename for render
 		--retries           Max retries for generation (default: 5)
+		--no-viewer         Disable auto-opening web viewer after generation
 
 	Examples
 	  $ c3d generate "a simple gear with 12 teeth"
@@ -56,10 +57,13 @@ const cli = meow(
 			output: {
 				type: 'string',
 			},
-			retries: {
-				type: 'number',
-				default: 5,
-			},
+					retries: {
+			type: 'number',
+			default: 5,
+		},
+		noViewer: {
+			type: 'boolean',
+		},
 		},
 	},
 );

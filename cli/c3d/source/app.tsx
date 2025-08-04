@@ -24,6 +24,7 @@ type Props = {
 		port?: number;
 		output?: string;
 		retries?: number;
+		noViewer?: boolean;
 	};
 };
 
@@ -105,6 +106,17 @@ export default function App({command, subCommand, scriptFile, generatePrompt, sc
 						if (generationResult.success) {
 							setMessage(`✅ Generation complete!\nOutput: ${generationResult.outputPath}\nAttempts: ${generationResult.attempts}\nWorking directory: ${generationResult.workingDirectory}`);
 							setStatus('success');
+							
+							// Auto-open frontend with the generated model
+							if (!flags.noViewer && generationResult.outputPath) {
+								try {
+									setMessage((prev) => prev + '\n\n🌐 Opening 3D viewer...');
+									await openFrontendWithModel(generationResult.outputPath, actualPort || 8765, generatePrompt);
+									setMessage((prev) => prev + '\n✅ 3D viewer opened successfully!');
+								} catch (error) {
+									setMessage((prev) => prev + `\n⚠️  3D viewer failed to open: ${error}`);
+								}
+							}
 						} else {
 							setMessage(`❌ Generation failed after ${generationResult.attempts} attempts.\nError: ${generationResult.error}`);
 							setStatus('error');
