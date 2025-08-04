@@ -9,7 +9,7 @@ export function ShimmerPlayground() {
 	const [pulseIntensity, setPulseIntensity] = useState(0);
 	const [focusedSection, setFocusedSection] = useState(0);
 
-	const sections = ['Wave Ripple', 'Color Shimmer', 'Pulse Effect', 'Character Shimmer', 'Letter Animation'];
+	const sections = ['Wave Ripple', 'Color Shimmer', 'Pulse Effect', 'Character Shimmer', 'Letter Animation', 'Sliding Highlight'];
 
 	// Handle keyboard navigation
 	useInput((input, key) => {
@@ -169,6 +169,20 @@ export function ShimmerPlayground() {
 					</Box>
 				);
 
+			case 5: // Sliding Highlight
+				return (
+					<Box flexDirection="column">
+						<Box flexDirection="row">
+							<Box flexDirection="column" marginRight={4}>
+								<Text color="blue">{DOLPHIN_ANSI_ONE}</Text>
+							</Box>
+							<Box flexDirection="column">
+								<SlidingHighlightBanner />
+							</Box>
+						</Box>
+					</Box>
+				);
+
 			default:
 				return null;
 		}
@@ -205,6 +219,7 @@ export function ShimmerPlayground() {
 						{focusedSection === 2 && "Pulse Effect: Entire ASCII brightens and dims rhythmically"}
 						{focusedSection === 3 && "Character Shimmer: Text shimmers with animated symbols"}
 						{focusedSection === 4 && "Letter Animation: Letters appear and disappear in waves"}
+						{focusedSection === 5 && "Sliding Highlight: Full text visible with bright sliding highlight"}
 					</Text>
 					<Text color="gray" dimColor>Perfect for loading states in your CLI!</Text>
 				</Box>
@@ -346,6 +361,64 @@ function AnimatedBanner() {
 						return (
 							<Text key={colIndex} color={color}>
 								{isVisible && char !== ' ' ? char : ' '}
+							</Text>
+						);
+					})}
+				</Box>
+			))}
+		</Box>
+	);
+}
+
+// Sliding highlight banner - always shows full text with moving highlight window
+function SlidingHighlightBanner() {
+	const [highlightPosition, setHighlightPosition] = useState(0);
+	const totalCols = DOLPHIN_BANNER_COLUMNS.length;
+	const totalRows = DOLPHIN_BANNER_COLUMNS[0]?.length || 0;
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setHighlightPosition(prev => (prev + 1) % (totalCols + 10));
+		}, 120);
+		return () => clearInterval(interval);
+	}, [totalCols]);
+
+	return (
+		<Box flexDirection="column">
+			{Array.from({ length: totalRows }, (_, rowIndex) => (
+				<Box key={rowIndex}>
+					{Array.from({ length: totalCols }, (_, colIndex) => {
+						const char = DOLPHIN_BANNER_COLUMNS[colIndex]?.[rowIndex] || ' ';
+						
+						// Calculate distance from highlight center
+						const distanceFromHighlight = Math.abs(colIndex - highlightPosition);
+						
+						let color: string = 'gray'; // Base color - always visible
+						
+						// Apply highlight colors based on distance from center
+						if (distanceFromHighlight <= 3) {
+							// Letters in the highlight zone
+							if (distanceFromHighlight === 0) {
+								color = 'yellow'; // Center of highlight
+							} else if (distanceFromHighlight === 1) {
+								color = 'white'; // Next to center
+							} else if (distanceFromHighlight === 2) {
+								color = 'cyan'; // Edge of highlight
+							} else {
+								color = 'blue'; // Fade back to base
+							}
+						} else if (distanceFromHighlight <= 6) {
+							// Subtle glow zone
+							color = 'gray'; // Still base color but could add subtle brightening
+							if (Math.random() > 0.9) {
+								color = 'blue'; // Occasional sparkle
+							}
+						}
+						// Everything else stays gray (base color)
+
+						return (
+							<Text key={colIndex} color={color}>
+								{char}
 							</Text>
 						);
 					})}
