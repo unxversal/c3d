@@ -1,5 +1,8 @@
 # main.py
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from pathlib import Path
 import tempfile, subprocess, os, shutil, uuid, socket
@@ -7,13 +10,48 @@ import uvicorn
 
 app = FastAPI()
 
+# Enable CORS for frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, specify your frontend domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Serve frontend static files
+frontend_path = Path(__file__).parent.parent / "frontend-dist"
+if frontend_path.exists():
+    app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
+    
+    # Serve React app on root
+    @app.get("/")
+    async def serve_frontend():
+        return FileResponse(str(frontend_path / "index.html"))
+    
+    # Catch-all for React Router (SPA routing)
+    @app.get("/{path:path}")
+    async def serve_frontend_routes(path: str):
+        if path.startswith("api/") or path.startswith("files/"):
+            raise HTTPException(404)
+        return FileResponse(str(frontend_path / "index.html"))
+
+# Serve generated CAD files
+temp_files_dir = Path(tempfile.gettempdir())
+app.mount("/files", StaticFiles(directory=str(temp_files_dir)), name="files")
+
 class RenderRequest(BaseModel):
     script: str
     output_filename: str | None = None
     timeout_secs: int | None = 60
 
-@app.post("/render")
+class GenerateRequest(BaseModel):
+    prompt: str
+    output_format: str = "stl"
+
+@app.post("/api/render")
 async def render_cadquery(req: RenderRequest):
+    """Render CADQuery script to STL/STEP files"""
     workdir = Path(tempfile.mkdtemp(prefix="cadquery_"))
     try:
         script_path = workdir / "model.py"
@@ -28,51 +66,77 @@ async def render_cadquery(req: RenderRequest):
             env=os.environ.copy(),
         )
         try:
-            stdout, stderr = proc.communicate(timeout=req.timeout_secs or 60)
+            stdout, stderr = proc.communicate(timeout=req.timeout_secs)
+            if proc.returncode != 0:
+                raise HTTPException(status_code=400, detail=f"Script failed: {stderr}")
+            
+            # Find generated files
+            output_files = []
+            for ext in [".stl", ".step", ".png"]:
+                for file_path in workdir.glob(f"*{ext}"):
+                    output_files.append(str(file_path))
+            
+            if not output_files:
+                raise HTTPException(status_code=400, detail="No output files generated")
+            
+            return {
+                "success": True,
+                "output_paths": output_files, 
+                "workdir": str(workdir)
+            }
         except subprocess.TimeoutExpired:
-            proc.kill()
-            raise HTTPException(status_code=504, detail="Script execution timed out")
-
-        if proc.returncode != 0:
-            raise HTTPException(
-                status_code=400,
-                detail={"message": "Script failed", "stdout": stdout, "stderr": stderr},
-            )
-
-        outputs = []
-        for ext in ("*.stl", "*.step", "*.3mf", "*.stp", "*.obj"):
-            outputs += [str(p.resolve()) for p in workdir.glob(f"**/{ext}")]
-        if not outputs and req.output_filename:
-            candidate = workdir / req.output_filename
-            if candidate.exists():
-                outputs = [str(candidate.resolve())]
-
-        if not outputs:
-            raise HTTPException(
-                status_code=500,
-                detail={"message": "No output file found", "stdout": stdout, "stderr": stderr},
-            )
-
-        return {"output_paths": outputs, "stdout": stdout, "stderr": stderr, "workdir": str(workdir)}
+            raise HTTPException(status_code=408, detail="Script execution timed out")
     finally:
-        pass  # keep workdir for inspection; implement cleanup separately
+        # Clean up temporary directory
+        shutil.rmtree(workdir, ignore_errors=True)
 
-def find_available_port(start_port: int = 8765, max_attempts: int = 100) -> int:
-    """Find an available port starting from start_port."""
-    for port in range(start_port, start_port + max_attempts):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.settimeout(1)
-            result = sock.connect_ex(('localhost', port))
-            if result != 0:  # Port is available
+@app.post("/api/generate")
+async def generate_from_prompt(req: GenerateRequest):
+    """Generate CAD from natural language prompt"""
+    try:
+        # This would integrate with your existing GenerationService
+        # For now, return a mock response for testing
+        output_filename = f"generated_{uuid.uuid4().hex[:8]}.stl"
+        
+        # TODO: Integrate with your CLI GenerationService logic here
+        # result = await generation_service.generate_cad_from_text(req.prompt)
+        
+        return {
+            "success": True,
+            "output_path": output_filename,
+            "message": f"Generated CAD from: {req.prompt}"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+@app.get("/api/health")
+async def health_check():
+    """Check server health and frontend availability"""
+    return {
+        "status": "healthy", 
+        "frontend_available": frontend_path.exists(),
+        "api_version": "1.0.0"
+    }
+
+def find_available_port(start_port=8765):
+    for port in range(start_port, start_port + 100):
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind(('', port))
                 return port
-    raise RuntimeError(f"Could not find available port in range {start_port}-{start_port + max_attempts}")
+        except OSError:
+            continue
+    raise RuntimeError("No available ports found")
 
 if __name__ == "__main__":
-    # Get port from environment or find available port
-    default_port = int(os.environ.get("PORT", 8765))
-    port = find_available_port(default_port)
+    port = int(os.environ.get("PORT", find_available_port()))
+    print(f"Starting C3D server on port {port}")
+    print(f"Frontend available: {frontend_path.exists()}")
+    if frontend_path.exists():
+        print(f"🌐 Web viewer: http://localhost:{port}")
+    print(f"📡 API: http://localhost:{port}/api")
     
-    print(f"🚀 CADQuery server starting on port {port}")
-    print(f"📖 API docs available at http://localhost:{port}/docs")
-    
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=port)

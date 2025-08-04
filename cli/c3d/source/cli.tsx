@@ -17,6 +17,7 @@ const cli = meow(
 		render <script>     Render a CADQuery script file
 		config              Show current configuration
 		deload              Remove C3D AI model from local storage
+		viewer              Launch 3D web viewer interface 🌐
 		ui                  Launch UI development playground
 		ui static           Launch ASCII layout slideshow (dolphin + banner)
 		ui shimmer          Launch shimmer effects slideshow (wave, pulse, etc.)
@@ -30,12 +31,13 @@ const cli = meow(
 
 	Examples
 	  $ c3d generate "a simple gear with 12 teeth"
+	  $ c3d viewer                                    🌐 Launch web interface
 	  $ c3d generate "a phone case for iPhone 15" --retries=3
 	  $ c3d server start
 	  $ c3d render my-model.py --output=model.stl
 	  $ c3d config
-	  		$ c3d deload
-		$ c3d ui
+	  $ c3d deload
+	  $ c3d ui
 		$ c3d ui static
 		$ c3d ui shimmer
 		$ c3d ui screen home

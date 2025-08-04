@@ -7,6 +7,11 @@ import {UIPlayground} from './ui-playground.js';
 import {StaticPlayground} from './static-playground.js';
 import {ShimmerPlayground} from './shimmer-playground.js';
 import {ScreenTester} from './screen-tester.js';
+import {ViewerLauncher} from './viewer-launcher.js';
+import {exec} from 'child_process';
+import {promisify} from 'util';
+
+const execAsync = promisify(exec);
 
 type Props = {
 	command: string;
@@ -33,6 +38,10 @@ export default function App({command, subCommand, scriptFile, generatePrompt, sc
 	const [generationProgress, setGenerationProgress] = useState<GenerationProgress | null>(null);
 
 	// UI Playground modes
+	if (command === 'viewer') {
+		return <ViewerLauncher />;
+	}
+
 	if (command === 'ui') {
 		if (subCommand === 'static') {
 			return <StaticPlayground />;
@@ -256,4 +265,20 @@ Output Settings:
 			</Box>
 		</Box>
 	);
+}
+
+// Helper function to open frontend with model
+async function openFrontendWithModel(modelPath: string, port: number, prompt?: string) {
+	const modelFileName = modelPath.split('/').pop() || 'model.stl';
+	const encodedPrompt = prompt ? encodeURIComponent(prompt) : '';
+	const url = `http://localhost:${port}?model=${modelFileName}&from=cli${prompt ? `&prompt=${encodedPrompt}` : ''}`;
+	
+	const platform = process.platform;
+	if (platform === 'darwin') {
+		await execAsync(`open "${url}"`);
+	} else if (platform === 'win32') {
+		await execAsync(`start "${url}"`);
+	} else {
+		await execAsync(`xdg-open "${url}"`);
+	}
 }

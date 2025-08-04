@@ -1,0 +1,347 @@
+.app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #000000;
+  color: white;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+}
+
+.viewerContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+}
+
+.emptyViewer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+}
+
+.emptyContent {
+  text-align: center;
+  opacity: 0.3;
+}
+
+.emptyIcon {
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: center;
+}
+
+.emptyText {
+  font-size: 1.2rem;
+  font-weight: 100;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.emptySubtext {
+  font-size: 0.8rem;
+  font-weight: 100;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.controlPanel {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  width: 380px;
+  background: rgba(0, 0, 0, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  backdrop-filter: blur(20px);
+  padding: 0;
+  font-size: 0.8rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.panelHeader {
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panelTitle {
+  font-size: 1.1rem;
+  font-weight: 100;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.2rem;
+}
+
+.panelSubtitle {
+  font-size: 0.7rem;
+  font-weight: 100;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.panelSection {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.panelSection:last-child {
+  border-bottom: none;
+}
+
+.sectionTitle {
+  font-size: 0.7rem;
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1rem;
+}
+
+.promptInput {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 200;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.promptInput:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.promptInput::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 100;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.generateButton {
+  width: 100%;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.generateButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.generateButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.promptDisplay {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
+.promptIcon {
+  opacity: 0.6;
+  margin-top: 0.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.promptText {
+  font-size: 0.8rem;
+  font-weight: 200;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.4;
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.newModelButton {
+  width: 100%;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.newModelButton:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00ff88;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.statusText {
+  font-size: 0.7rem;
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.statusMessage {
+  font-size: 0.65rem;
+  font-weight: 200;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.specGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.specItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.specLabel {
+  font-size: 0.65rem;
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.6);
+  flex: 1;
+}
+
+.specValue {
+  font-size: 0.65rem;
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: right;
+  font-family: 'SF Mono', Monaco, monospace;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.specValue.success {
+  color: #00ff88;
+}
+
+.specValue.error {
+  color: #ff4444;
+}
+
+/* Scrollbar for panel */
+.controlPanel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.controlPanel::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.controlPanel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.controlPanel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .controlPanel {
+    bottom: 1rem;
+    right: 1rem;
+    width: 320px;
+    max-height: 50vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .controlPanel {
+    bottom: 0.5rem;
+    right: 0.5rem;
+    width: calc(100vw - 1rem);
+    max-height: 60vh;
+  }
+  
+  .panelHeader,
+  .panelSection {
+    padding: 1rem;
+  }
+}

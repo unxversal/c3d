@@ -8,13 +8,17 @@
 		"node": ">=16"
 	},
 	"scripts": {
-		"build": "tsc",
+		"build": "npm run build:frontend && tsc",
+		"build:cli": "tsc",
+		"build:frontend": "cd ../../frontend && npm ci && npm run build && cp -r dist ../cli/c3d/frontend-dist",
 		"dev": "tsc --watch",
+		"dev:frontend": "cd ../../frontend && npm run dev",
 		"test": "prettier --check . && xo && ava"
 	},
 	"files": [
 		"dist",
-		"server"
+		"server",
+		"frontend-dist"
 	],
 	"dependencies": {
 		"@types/node": "^24.1.0",
