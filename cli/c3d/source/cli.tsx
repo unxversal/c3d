@@ -18,7 +18,8 @@ const cli = meow(
 		config              Show current configuration
 		deload              Remove C3D AI model from local storage
 		ui                  Launch UI development playground
-		ui static           Launch ASCII layout testing playground
+		ui static           Launch ASCII layout slideshow (dolphin + banner)
+		ui shimmer          Launch shimmer effects slideshow (wave, pulse, etc.)
 
 	Options
 		--name              Your name
@@ -35,6 +36,7 @@ const cli = meow(
 	  		$ c3d deload
 		$ c3d ui
 		$ c3d ui static
+		$ c3d ui shimmer
 `,
 	{
 		importMeta: import.meta,

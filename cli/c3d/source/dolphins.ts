@@ -64,7 +64,8 @@ export const DOLPHIN_ANSI_ONE: string = [
   ].join("\n");
 
 
-export const DOLPHIN_BANNER: string = [
+// Split the banner into columns for animation (each variable is a column of characters)
+const DOLPHIN_BANNER_ROWS = [
   "██╗░░░██╗███╗░░██╗██╗░░██╗██╗░░░██╗███████╗██████╗░░██████╗░█████╗░██╗░░░░░",
   "██║░░░██║████╗░██║╚██╗██╔╝██║░░░██║██╔════╝██╔══██╗██╔════╝██╔══██╗██║░░░░░",
   "██║░░░██║██╔██╗██║░╚███╔╝░╚██╗░██╔╝█████╗░░██████╔╝╚█████╗░███████║██║░░░░░",
@@ -78,4 +79,24 @@ export const DOLPHIN_BANNER: string = [
   "██║░░░░░██╔══██║██╔══██╗░╚═══██╗╚════╝██║░░██╗░╚═══██╗██║░░██║",
   "███████╗██║░░██║██████╦╝██████╔╝░░░░░░╚█████╔╝██████╔╝██████╔╝",
   "╚══════╝╚═╝░░╚═╝╚═════╝░╚═════╝░░░░░░░░╚════╝░╚═════╝░╚═════╝░"
-].join("\n");
+];
+
+// Find the maximum width (column count)
+const DOLPHIN_BANNER_COLS = Math.max(...DOLPHIN_BANNER_ROWS.map(row => row.length));
+
+// Create an array for each column, where each column is an array of characters from top to bottom
+export const DOLPHIN_BANNER_COLUMNS: string[][] = Array.from({ length: DOLPHIN_BANNER_COLS }, (_, colIdx) =>
+  DOLPHIN_BANNER_ROWS.map(row => row[colIdx] || " ")
+);
+
+// Optionally, for convenience, export each column as a separate variable (e.g., DOLPHIN_BANNER_COL_0, DOLPHIN_BANNER_COL_1, ...)
+export const DOLPHIN_BANNER_COL_VARS: { [key: string]: string[] } = {};
+for (let i = 0; i < DOLPHIN_BANNER_COLS; i++) {
+  DOLPHIN_BANNER_COL_VARS[`DOLPHIN_BANNER_COL_${i}`] = DOLPHIN_BANNER_COLUMNS[i] ?? [];
+}
+
+// Keep the original DOLPHIN_BANNER for backward compatibility
+export const DOLPHIN_BANNER: string = DOLPHIN_BANNER_ROWS.join("\n");
+
+// If you want to access a specific column for animation, use DOLPHIN_BANNER_COLUMNS[columnIndex]
+// Or, for named variables: DOLPHIN_BANNER_COL_VARS["DOLPHIN_BANNER_COL_0"], etc.

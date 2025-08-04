@@ -5,6 +5,7 @@ import {GenerationService, GenerationProgress} from './generation-service.js';
 import {getConfig, updateConfig} from './c3d.config.js';
 import {UIPlayground} from './ui-playground.js';
 import {StaticPlayground} from './static-playground.js';
+import {ShimmerPlayground} from './shimmer-playground.js';
 
 type Props = {
 	command: string;
@@ -33,6 +34,9 @@ export default function App({command, subCommand, scriptFile, generatePrompt, fl
 	if (command === 'ui') {
 		if (subCommand === 'static') {
 			return <StaticPlayground />;
+		}
+		if (subCommand === 'shimmer') {
+			return <ShimmerPlayground />;
 		}
 		return <UIPlayground />;
 	}
