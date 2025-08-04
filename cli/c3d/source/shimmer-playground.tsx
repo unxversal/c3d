@@ -10,7 +10,7 @@ export function ShimmerPlayground() {
 	const [focusedSection, setFocusedSection] = useState(0);
 	const [selectedDolphin, setSelectedDolphin] = useState(DOLPHIN_ANSI_ONE);
 
-	const sections = ['Wave Ripple', 'Color Shimmer', 'Pulse Effect', 'Character Shimmer', 'Letter Animation', 'Sliding Highlight', 'Flash Animation', 'Static Shimmer', 'Pause State'];
+	const sections = ['Wave Ripple', 'Color Shimmer', 'Pulse Effect', 'Character Shimmer', 'Letter Animation', 'Sliding Highlight', 'Flash Animation', 'Static Shimmer', 'Letter Animation 2'];
 
 	// Randomly choose dolphin on component mount
 	useEffect(() => {
@@ -219,7 +219,7 @@ export function ShimmerPlayground() {
 					</Box>
 				);
 
-			case 8: // Pause State
+			case 8: // Letter Animation 2
 				return (
 					<Box flexDirection="column">
 						<Box flexDirection="row">
@@ -227,7 +227,7 @@ export function ShimmerPlayground() {
 								<Text color="blue">{selectedDolphin}</Text>
 							</Box>
 							<Box flexDirection="column">
-								<ColorfulStaticBanner />
+								<AnimatedBanner2 />
 							</Box>
 						</Box>
 					</Box>
@@ -272,7 +272,7 @@ export function ShimmerPlayground() {
 						{focusedSection === 5 && "Sliding Highlight: Full text visible with bright sliding highlight"}
 						{focusedSection === 6 && "Flash Animation: Text appears, stays visible, then disappears and repeats"}
 						{focusedSection === 7 && "Static Shimmer: Full text always visible with random static noise"}
-						{focusedSection === 8 && "Pause State: Steady text like sliding highlight pause with subtle flickers"}
+						{focusedSection === 8 && "Letter Animation 2: Fades in left-to-right then freezes indefinitely"}
 					</Text>
 					<Text color="gray" dimColor>Perfect for loading states in your CLI!</Text>
 				</Box>
@@ -614,13 +614,26 @@ function StaticShimmerBanner() {
 	);
 }
 
-// Pause state banner - EXACTLY like sliding highlight but highlight position is fixed (not moving)
-function ColorfulStaticBanner() {
+// Animated banner component 2 - freezes indefinitely after fade-in
+function AnimatedBanner2() {
+	const [animationPhase, setAnimationPhase] = useState(0);
 	const totalCols = DOLPHIN_BANNER_COLUMNS.length;
 	const totalRows = DOLPHIN_BANNER_COLUMNS[0]?.length || 0;
 	
-	// Fixed highlight position instead of moving - positioned roughly in the middle
-	const highlightPosition = Math.floor(totalCols / 2);
+	// Only fade in, then freeze forever
+	const maxPhase = totalCols; // Stop after fade-in completes
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setAnimationPhase(prev => {
+				if (prev >= maxPhase) {
+					return maxPhase; // Freeze at the end of fade-in
+				}
+				return prev + 1;
+			});
+		}, 60); // Even faster: 60ms
+		return () => clearInterval(interval);
+	}, [maxPhase]);
 
 	return (
 		<Box flexDirection="column">
@@ -629,36 +642,49 @@ function ColorfulStaticBanner() {
 					{Array.from({ length: totalCols }, (_, colIndex) => {
 						const char = DOLPHIN_BANNER_COLUMNS[colIndex]?.[rowIndex] || ' ';
 						
-						// Calculate distance from highlight center - EXACT same logic as effect #5
-						const distanceFromHighlight = Math.abs(colIndex - highlightPosition);
+						let isVisible = false;
+						let color: string = 'cyan';
 						
-						let color: string = 'blue'; // Base color - blue instead of gray
-						
-						// Apply subtle shimmer colors based on distance from center - EXACT same logic as effect #5
-						if (distanceFromHighlight <= 4) { // Wider window: 4 instead of 2
-							// Letters in the shimmer zone - subtle brightening
-							if (distanceFromHighlight === 0) {
-								color = 'white'; // Center of shimmer - brightest
-							} else if (distanceFromHighlight <= 1) {
-								color = 'cyan'; // Next to center - medium bright
-							} else if (distanceFromHighlight <= 2) {
-								color = 'cyan'; // Medium zone
-							} else {
-								color = 'blue'; // Edge - back to base
+						// Determine which phase we're in
+						if (animationPhase < totalCols) {
+							// Phase 1: Fade in left to right
+							const fadeInProgress = animationPhase;
+							const distanceFromFront = colIndex - fadeInProgress;
+							
+							if (distanceFromFront <= 0) {
+								// Already revealed
+								isVisible = true;
+								// Add some noise to fully revealed letters
+								if (distanceFromFront < -5 && Math.random() > 0.95) {
+									isVisible = false; // Occasional flicker
+								}
+								color = 'cyan';
+							} else if (distanceFromFront <= 3) {
+								// In the reveal zone
+								if (distanceFromFront === 1) {
+									color = 'yellow'; // Leading edge
+									isVisible = Math.random() > 0.3; // Some uncertainty
+								} else if (distanceFromFront === 2) {
+									color = 'white'; 
+									isVisible = Math.random() > 0.6; // More uncertainty
+								} else {
+									color = 'blue';
+									isVisible = Math.random() > 0.8; // High uncertainty
+								}
 							}
-						} else if (distanceFromHighlight <= 6) {
-							// Subtle transition zone
-							if (Math.random() > 0.8) {
-								color = 'cyan'; // Occasional subtle sparkle
-							} else {
-								color = 'blue'; // Mostly base color
+						} else {
+							// Phase 2: Freeze - all letters visible and stable forever
+							isVisible = true;
+							color = 'cyan';
+							// Occasional subtle flicker during freeze
+							if (Math.random() > 0.98) {
+								isVisible = false;
 							}
 						}
-						// Everything else stays blue (base color)
 
 						return (
 							<Text key={colIndex} color={color}>
-								{char}
+								{isVisible && char !== ' ' ? char : ' '}
 							</Text>
 						);
 					})}
