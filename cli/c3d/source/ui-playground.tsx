@@ -87,17 +87,6 @@ export function UIPlayground() {
 				<GenerationProgressDemo />
 			</Box>
 
-			{/* Interactive Controls */}
-			<Box flexDirection="column" marginBottom={2}>
-				<Text color="gray">Status Controls (press numbers):</Text>
-				<Box>
-					<Text color="yellow">1: Loading </Text>
-					<Text color="green">2: Success </Text>
-					<Text color="red">3: Error </Text>
-					<Text color="blue">4: Idle</Text>
-				</Box>
-			</Box>
-
 			{/* Layout Examples */}
 			<Box flexDirection="column" marginBottom={2}>
 				<Text color="gray">Layout Examples:</Text>

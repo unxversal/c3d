@@ -18,6 +18,7 @@ const cli = meow(
 		config              Show current configuration
 		deload              Remove C3D AI model from local storage
 		ui                  Launch UI development playground
+		ui static           Launch ASCII layout testing playground
 
 	Options
 		--name              Your name
@@ -31,8 +32,9 @@ const cli = meow(
 	  $ c3d server start
 	  $ c3d render my-model.py --output=model.stl
 	  $ c3d config
-	  $ c3d deload
-	  $ c3d ui
+	  		$ c3d deload
+		$ c3d ui
+		$ c3d ui static
 `,
 	{
 		importMeta: import.meta,
