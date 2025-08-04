@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Box, Text} from 'ink';
 import {BaseScreen} from '../components/base-screen.js';
 import {ShimmerText} from '../components/shimmer-text.js';
@@ -21,7 +21,41 @@ interface Props {
 
 
 
-export function GenerationScreen({prompt, isGenerating = true, progress, result}: Props) {
+export function GenerationScreen({prompt = "Create a coffee mug with handle", isGenerating: _isGenerating = true, progress: _progress, result: _result}: Props) {
+	const [demoState, setDemoState] = useState(0);
+	
+	// Cycle through different states every 3 seconds
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setDemoState(prev => (prev + 1) % 4);
+		}, 3000);
+		return () => clearInterval(interval);
+	}, []);
+
+	const states = [
+		{
+			isGenerating: true,
+			progress: { stage: "ANALYZING PROMPT", message: "Understanding your request...", attempt: 1, maxAttempts: 5 },
+			result: null
+		},
+		{
+			isGenerating: true, 
+			progress: { stage: "GENERATING CAD CODE", message: "AI is writing CADQuery script...", attempt: 2, maxAttempts: 5 },
+			result: null
+		},
+		{
+			isGenerating: true,
+			progress: { stage: "RENDERING MODEL", message: "Creating 3D visualization...", attempt: 3, maxAttempts: 5 },
+			result: null
+		},
+		{
+			isGenerating: false,
+			progress: null,
+			result: { success: true, outputPath: "/tmp/coffee_mug.stl", error: undefined }
+		}
+	];
+
+	const currentState = states[demoState]!;
 	return (
 		<BaseScreen title="CAD Generation">
 			<Box flexDirection="column">
@@ -33,25 +67,25 @@ export function GenerationScreen({prompt, isGenerating = true, progress, result}
 				<Box borderStyle="single" padding={1} marginBottom={1}>
 					<Box flexDirection="column">
 						<Text color="yellow" bold>⚡ Generation Status</Text>
-						{isGenerating && progress ? (
+						{currentState.isGenerating && currentState.progress ? (
 							<Box flexDirection="column">
-								<ShimmerText text={progress.stage} />
-								<Text color="gray">{progress.message}</Text>
+								<ShimmerText text={currentState.progress.stage} />
+								<Text color="gray">{currentState.progress.message}</Text>
 								<Text color="blue">
-									Attempt {progress.attempt}/{progress.maxAttempts}
+									Attempt {currentState.progress.attempt}/{currentState.progress.maxAttempts}
 								</Text>
 							</Box>
-						) : result ? (
+						) : currentState.result ? (
 							<Box flexDirection="column">
-								{result.success ? (
+								{currentState.result.success ? (
 									<>
 										<Text color="green">✅ Generation Complete!</Text>
-										<Text color="gray">Output: {result.outputPath}</Text>
+										<Text color="gray">Output: {currentState.result.outputPath}</Text>
 									</>
 								) : (
 									<>
 										<Text color="red">❌ Generation Failed</Text>
-										<Text color="gray">{result.error}</Text>
+										<Text color="gray">{currentState.result.error}</Text>
 									</>
 								)}
 							</Box>
@@ -61,14 +95,15 @@ export function GenerationScreen({prompt, isGenerating = true, progress, result}
 					</Box>
 				</Box>
 
-				{isGenerating && progress && (
+				{currentState.isGenerating && currentState.progress && (
 					<Box borderStyle="single" padding={1}>
 						<Box flexDirection="column">
 							<Text color="blue" bold>📊 Progress</Text>
 							<Text color="cyan">
-								{'█'.repeat(Math.floor((progress.attempt / progress.maxAttempts) * 10))}
-								{'░'.repeat(10 - Math.floor((progress.attempt / progress.maxAttempts) * 10))}
+								{'█'.repeat(Math.floor((currentState.progress.attempt / currentState.progress.maxAttempts) * 10))}
+								{'░'.repeat(10 - Math.floor((currentState.progress.attempt / currentState.progress.maxAttempts) * 10))}
 							</Text>
+							<Text color="gray" dimColor>State {demoState + 1}/4 - Auto-cycling every 3s</Text>
 						</Box>
 					</Box>
 				)}

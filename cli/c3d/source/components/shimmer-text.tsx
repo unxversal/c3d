@@ -22,7 +22,7 @@ export function ShimmerText({text}: Props) {
 				const isShimmering = index >= shimmerIndex - 2 && index <= shimmerIndex + 2;
 				const shimmerIntensity = 2 - Math.abs(index - shimmerIndex);
 				
-				let color: string = 'gray';
+				let color: string = 'white';
 				let useChar = char;
 				
 				if (isShimmering && char !== ' ') {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Box, Text} from 'ink';
 import {BaseScreen} from '../components/base-screen.js';
 import {ShimmerText} from '../components/shimmer-text.js';
@@ -17,7 +17,45 @@ interface Props {
 	};
 }
 
-export function RenderScreen({scriptFile, isRendering = false, progress, result}: Props) {
+export function RenderScreen({scriptFile = "my_cad_model.py", isRendering: _isRendering = false, progress: _progress, result: _result}: Props) {
+	const [demoState, setDemoState] = useState(0);
+	
+	// Cycle through different states every 2.5 seconds
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setDemoState(prev => (prev + 1) % 4);
+		}, 2500);
+		return () => clearInterval(interval);
+	}, []);
+
+	const states = [
+		{
+			isRendering: true,
+			progress: { stage: "PARSING SCRIPT", percentage: 25 },
+			result: null
+		},
+		{
+			isRendering: true, 
+			progress: { stage: "EXECUTING CADQUERY", percentage: 65 },
+			result: null
+		},
+		{
+			isRendering: true,
+			progress: { stage: "EXPORTING FILES", percentage: 90 },
+			result: null
+		},
+		{
+			isRendering: false,
+			progress: null,
+			result: { 
+				success: true, 
+				outputPaths: ["/tmp/model.stl", "/tmp/model.step", "/tmp/preview.png"],
+				error: undefined
+			}
+		}
+	];
+
+	const currentState = states[demoState]!;
 	return (
 		<BaseScreen title="Script Rendering">
 			<Box flexDirection="column">
@@ -29,23 +67,23 @@ export function RenderScreen({scriptFile, isRendering = false, progress, result}
 				<Box borderStyle="single" padding={1} marginBottom={1}>
 					<Box flexDirection="column">
 						<Text color="yellow" bold>⚡ Render Status</Text>
-						{isRendering && progress ? (
+						{currentState.isRendering && currentState.progress ? (
 							<Box flexDirection="column">
-								<ShimmerText text={progress.stage} />
+								<ShimmerText text={currentState.progress.stage} />
 								<Text color="cyan">
-									{'█'.repeat(Math.floor(progress.percentage / 10))}
-									{'░'.repeat(10 - Math.floor(progress.percentage / 10))}
+									{'█'.repeat(Math.floor(currentState.progress.percentage / 10))}
+									{'░'.repeat(10 - Math.floor(currentState.progress.percentage / 10))}
 								</Text>
-								<Text color="gray">{progress.percentage}%</Text>
+								<Text color="gray">{currentState.progress.percentage}%</Text>
 							</Box>
-						) : result ? (
+						) : currentState.result ? (
 							<Box flexDirection="column">
-								{result.success ? (
+								{currentState.result.success ? (
 									<>
 										<Text color="green">✅ Render Complete!</Text>
-										{result.outputPaths && (
+										{currentState.result.outputPaths && (
 											<Box flexDirection="column">
-												{result.outputPaths.map((path, index) => (
+												{currentState.result.outputPaths.map((path, index) => (
 													<Text key={index} color="gray">  • {path}</Text>
 												))}
 											</Box>
@@ -54,7 +92,7 @@ export function RenderScreen({scriptFile, isRendering = false, progress, result}
 								) : (
 									<>
 										<Text color="red">❌ Render Failed</Text>
-										<Text color="gray">{result.error}</Text>
+										<Text color="gray">{currentState.result.error}</Text>
 									</>
 								)}
 							</Box>
@@ -70,6 +108,7 @@ export function RenderScreen({scriptFile, isRendering = false, progress, result}
 						<Text color="gray">  • STL (3D printing)</Text>
 						<Text color="gray">  • STEP (CAD exchange)</Text>
 						<Text color="gray">  • PNG (preview image)</Text>
+						<Text color="gray" dimColor>  State {demoState + 1}/4 - Auto-cycling every 2.5s</Text>
 					</Box>
 				</Box>
 			</Box>

@@ -1,15 +1,31 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Box, Text} from 'ink';
 import {BaseScreen} from '../components/base-screen.js';
 import {ShimmerText} from '../components/shimmer-text.js';
 
-interface Props {
-	modelStatus?: 'available' | 'downloading' | 'missing';
-	size?: string;
-	isDeleting?: boolean;
-}
+// Auto-cycling demo screen - no props needed
 
-export function ModelScreen({modelStatus = 'available', size = '2.3 GB', isDeleting = false}: Props) {
+export function ModelScreen() {
+	const [demoState, setDemoState] = useState(0);
+	
+	// Cycle through different states every 3 seconds
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setDemoState(prev => (prev + 1) % 4);
+		}, 3000);
+		return () => clearInterval(interval);
+	}, []);
+
+	const states = [
+		{ modelStatus: 'available' as const, size: '2.1GB', isDeleting: false },
+		{ modelStatus: 'downloading' as const, size: '1.2GB/2.1GB', isDeleting: false },
+		{ modelStatus: 'available' as const, size: '2.1GB', isDeleting: true },
+		{ modelStatus: 'missing' as const, size: '0GB', isDeleting: false }
+	];
+
+	const { modelStatus, size, isDeleting } = states[demoState]!;
+	
+	
 	const getStatusColor = () => {
 		switch (modelStatus) {
 			case 'available': return 'green';

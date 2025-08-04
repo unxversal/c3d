@@ -1,14 +1,29 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Box, Text} from 'ink';
 import {BaseScreen} from '../components/base-screen.js';
 import {ShimmerText} from '../components/shimmer-text.js';
 
-interface Props {
-	status: 'running' | 'stopped' | 'starting' | 'stopping';
-	port?: number;
-}
+// Auto-cycling demo screen - no props needed
 
-export function ServerScreen({status, port}: Props) {
+export function ServerScreen() {
+	const [demoState, setDemoState] = useState(0);
+	
+	// Cycle through different states every 2.5 seconds
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setDemoState(prev => (prev + 1) % 4);
+		}, 2500);
+		return () => clearInterval(interval);
+	}, []);
+
+	const states = [
+		{ status: 'stopped' as const, port: null },
+		{ status: 'starting' as const, port: null },
+		{ status: 'running' as const, port: 8765 },
+		{ status: 'stopping' as const, port: 8765 }
+	];
+
+	const { status, port } = states[demoState]!;
 	const getStatusColor = () => {
 		switch (status) {
 			case 'running': return 'green';
@@ -68,6 +83,7 @@ export function ServerScreen({status, port}: Props) {
 						) : (
 							<Text color="gray">  Server not running</Text>
 						)}
+						<Text color="gray" dimColor>  State {demoState + 1}/4 - Auto-cycling every 2.5s</Text>
 					</Box>
 				</Box>
 			</Box>

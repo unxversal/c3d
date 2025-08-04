@@ -21,7 +21,7 @@ export function ScreenTester({screenName}: Props) {
 			case 'generate':
 				return <GenerationScreen prompt="a simple gear with 12 teeth" />;
 			case 'server':
-				return <ServerScreen status="running" port={8765} />;
+				return <ServerScreen />;
 			case 'config':
 				return <ConfigScreen />;
 			case 'render':

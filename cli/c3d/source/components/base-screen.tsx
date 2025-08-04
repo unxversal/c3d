@@ -46,6 +46,8 @@ export function BaseScreen({children, title, showExitAnimation = false}: Props) 
 			const interval = setInterval(() => {
 				setAnimationPhase(prev => {
 					if (prev >= maxPhase) {
+						// Animation complete - stop the interval and stay static
+						clearInterval(interval);
 						return maxPhase; // Freeze at the end of fade-in
 					}
 					return prev + 1;
@@ -156,13 +158,10 @@ export function BaseScreen({children, title, showExitAnimation = false}: Props) 
 										}
 									}
 								} else {
-									// Phase 2: Freeze - all letters visible and stable forever
+									// Phase 2: Freeze - all letters visible and completely static
 									isVisible = true;
 									color = 'cyan';
-									// Occasional subtle flicker during freeze
-									if (Math.random() > 0.98) {
-										isVisible = false;
-									}
+									// No flicker - completely static after fade-in
 								}
 							}
 
