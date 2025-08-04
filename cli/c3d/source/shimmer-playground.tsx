@@ -311,20 +311,20 @@ function AnimatedBanner() {
 								}
 							}
 						} else if (animationPhase < totalCols * 2) {
-							// Phase 2: Fade out right to left
+							// Phase 2: Fade out left to right (same direction as fade in)
 							const fadeOutProgress = animationPhase - totalCols;
-							const fadeOutPosition = totalCols - 1 - fadeOutProgress; // Start from right
+							const fadeOutPosition = fadeOutProgress; // Start from left, same as fade in
 							const distanceFromFadeOut = colIndex - fadeOutPosition;
 							
-							if (distanceFromFadeOut > 0) {
+							if (distanceFromFadeOut < 0) {
 								// Already faded out
 								isVisible = false;
-							} else if (distanceFromFadeOut >= -3) {
+							} else if (distanceFromFadeOut <= 3) {
 								// In the fade out zone
 								if (distanceFromFadeOut === 0) {
 									color = 'yellow'; // Fade out edge
 									isVisible = Math.random() > 0.3; // Some uncertainty
-								} else if (distanceFromFadeOut === -1) {
+								} else if (distanceFromFadeOut === 1) {
 									color = 'white';
 									isVisible = Math.random() > 0.6; // More uncertainty  
 								} else {
