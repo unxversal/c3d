@@ -1,0 +1,1 @@
+@cq.from([{"name": "rect", "points": [{"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 1, "y": 1}, {"x": 0, "y": 1}]]}, "type": "rect", "length": 1, "width": 1, "height": 1

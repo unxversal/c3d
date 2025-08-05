@@ -32,6 +32,7 @@ let examplesPath = join(__dirname, '../../examples');
 
 const SEARCH_PATHS = [
   examplesPath, // Examples folder that comes with CLI
+  join(homedir(), 'Documents', 'C3D Generated'), // Generated files from CLI
   join(homedir(), 'Downloads'),
   join(homedir(), 'Documents'), 
   join(homedir(), 'Desktop'),

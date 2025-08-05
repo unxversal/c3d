@@ -22,6 +22,7 @@ export interface RenderRequest {
 
 export interface RenderResult {
   output_paths: string[];
+  served_files?: string[];  // Files accessible via /files/ endpoint
   workdir: string;
   success: boolean;
   error?: string;

@@ -5,6 +5,8 @@ export interface C3DConfig {
 	ollamaHost: string;
 	temperature: number;
 	maxTokens: number;
+	useJsonSchema: boolean; // Whether to use strict JSON schema or simple JSON mode
+	useStreamingMode: boolean; // Whether to use streaming markdown mode instead of JSON
 	
 	// Server Settings
 	defaultPort: number;
@@ -26,8 +28,10 @@ export const defaultConfig: C3DConfig = {
 	maxRetries: 5,
 	ollamaModel: 'joshuaokolo/C3Dv0',
 	ollamaHost: 'http://127.0.0.1:11434',
-	temperature: 0.9, // Low temperature for more deterministic output
-	maxTokens: 32768, // Maximum tokens for LLM responses
+	temperature: 1.0, // Recommended temperature for better creativity
+	maxTokens: 32768, // Maximum tokens for LLM responses (match OLLAMA_CONTEXT_LENGTH)
+	useJsonSchema: false, // Default to simple JSON mode for better generation
+	useStreamingMode: true, // Default to streaming markdown mode
 	
 	// Server Settings
 	defaultPort: 8765,

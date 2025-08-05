@@ -4,12 +4,17 @@ import {BaseScreen} from '../components/base-screen.js';
 import {ShimmerText} from '../components/shimmer-text.js';
 import {ServerManager} from '../server-manager.js';
 import {updateConfig} from '../c3d.config.js';
+import {exec} from 'child_process';
+import {promisify} from 'util';
+
+const execAsync = promisify(exec);
 
 interface Props {
 	scriptFile: string;
 	flags: {
 		port?: number;
 		output?: string;
+		noViewer?: boolean;
 	};
 }
 
@@ -19,6 +24,15 @@ export function RenderScreen({scriptFile, flags}: Props) {
 	const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
 	const [message, setMessage] = useState('');
 	const [actualPort, setActualPort] = useState<number | null>(null);
+
+	// Helper function to open frontend with model
+	const openFrontendWithModel = async (servedFileName: string, port: number, scriptName?: string) => {
+		const encodedScriptName = scriptName ? encodeURIComponent(scriptName) : '';
+		const url = `http://localhost:${port}?model=${servedFileName}&from=cli${scriptName ? `&script=${encodedScriptName}` : ''}`;
+		
+		const command = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';
+		await execAsync(`${command} "${url}"`);
+	};
 
 	useEffect(() => {
 		const renderScript = async () => {
@@ -43,6 +57,19 @@ export function RenderScreen({scriptFile, flags}: Props) {
 				const renderResult = await serverManager.render(scriptFile, flags.output);
 				setMessage(`✅ Render complete!\nOutput: ${renderResult.output_paths.join(', ')}`);
 				setStatus('success');
+
+				// Auto-open frontend with the rendered model
+				const servedFile = renderResult.served_files?.[0];
+				if (!flags.noViewer && servedFile) {
+					try {
+						setMessage((prev) => prev + '\n\n🌐 Opening 3D viewer...');
+						const scriptName = scriptFile.split('/').pop()?.replace('.py', '') || 'script';
+						await openFrontendWithModel(servedFile, actualPort || 8765, scriptName);
+						setMessage((prev) => prev + '\n✅ 3D viewer opened successfully!');
+					} catch (error) {
+						setMessage((prev) => prev + `\n⚠️  3D viewer failed to open: ${error}`);
+					}
+				}
 			} catch (error) {
 				setMessage(`❌ Render failed: ${error instanceof Error ? error.message : String(error)}`);
 				setStatus('error');

@@ -54,9 +54,16 @@ async def render_cadquery(req: RenderRequest):
             
             # Find generated files
             output_files = []
+            served_files = []
             for ext in [".stl", ".step", ".png"]:
                 for file_path in workdir.glob(f"*{ext}"):
+                    # Copy file to temp directory for serving
+                    safe_filename = f"render_{uuid.uuid4().hex[:8]}_{file_path.name}"
+                    served_path = temp_files_dir / safe_filename
+                    shutil.copy2(file_path, served_path)
+                    
                     output_files.append(str(file_path))
+                    served_files.append(safe_filename)
             
             if not output_files:
                 raise HTTPException(status_code=400, detail="No output files generated")
@@ -64,6 +71,7 @@ async def render_cadquery(req: RenderRequest):
             return {
                 "success": True,
                 "output_paths": output_files, 
+                "served_files": served_files,  # Files accessible via /files/ endpoint
                 "workdir": str(workdir)
             }
         except subprocess.TimeoutExpired:

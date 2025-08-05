@@ -11,6 +11,7 @@ import {ViewerLauncher} from './viewer-launcher.js';
 import {LibraryScreen} from './screens/library-screen.js';
 import {ConfigScreen} from './screens/config-screen.js';
 import {GenerationScreen} from './screens/generation-screen.js';
+import {EditorScreen} from './screens/editor-screen.js';
 import {ServerScreen} from './screens/server-screen.js';
 import {RenderScreen} from './screens/render-screen.js';
 import {DeloadScreen} from './screens/deload-screen.js';
@@ -21,6 +22,7 @@ type Props = {
 	subCommand?: string;
 	scriptFile?: string;
 	generatePrompt?: string;
+	editorPrompt?: string;
 	screenName?: string;
 	flags: {
 		name?: string;
@@ -33,7 +35,7 @@ type Props = {
 
 const serverManager = new ServerManager();
 
-export default function App({command, subCommand, scriptFile, generatePrompt, screenName, flags}: Props) {
+export default function App({command, subCommand, scriptFile, generatePrompt, editorPrompt, screenName, flags}: Props) {
 	const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 	const [message, setMessage] = useState('');
 	const [serverRunning, setServerRunning] = useState(false);
@@ -54,6 +56,10 @@ export default function App({command, subCommand, scriptFile, generatePrompt, sc
 
 	if (command === 'generate' && generatePrompt) {
 		return <GenerationScreen prompt={generatePrompt} flags={flags} />;
+	}
+
+	if (command === 'editor' && editorPrompt) {
+		return <EditorScreen prompt={editorPrompt} flags={flags} />;
 	}
 
 	if (command === 'server' && subCommand) {
@@ -122,7 +128,7 @@ export default function App({command, subCommand, scriptFile, generatePrompt, sc
 		};
 
 		executeCommand();
-	}, [command, subCommand, scriptFile, generatePrompt, flags]);
+	}, [command, subCommand, scriptFile, generatePrompt, editorPrompt, flags]);
 
 	const getStatusColor = () => {
 		switch (status) {

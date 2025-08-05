@@ -1,1 +1,0 @@
-cube = cq.Workplane("XY").box(2.0, 1.0, 1.0); cq.exporters.stl.export(cube, "cube.stl")

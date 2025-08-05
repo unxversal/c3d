@@ -9,6 +9,14 @@ import {getConfig} from './c3d.config.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+export interface RenderResult {
+	success: boolean;
+	output_paths: string[];
+	served_files?: string[];  // Files accessible via /files/ endpoint
+	workdir: string;
+	error?: string;
+}
+
 export class ServerManager {
 	private process: any = null;
 	private readonly serverDir: string;
@@ -180,11 +188,11 @@ export class ServerManager {
 		}
 	}
 
-	async render(scriptPath: string, outputFilename?: string, port?: number): Promise<any> {
+	async render(scriptPath: string, outputFilename?: string, port?: number): Promise<RenderResult> {
 		const renderPort = port || this.currentPort || 8765;
 		const scriptContent = await readFile(scriptPath, 'utf-8');
 		
-		const response = await fetch(`http://localhost:${renderPort}/render`, {
+		const response = await fetch(`http://localhost:${renderPort}/api/render`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -201,6 +209,6 @@ export class ServerManager {
 			throw new Error(`Render failed: ${error.detail?.message || error.detail || response.statusText}`);
 		}
 
-		return response.json();
+		return response.json() as Promise<RenderResult>;
 	}
 }

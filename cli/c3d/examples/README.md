@@ -8,13 +8,17 @@ This folder contains example STL files that you can use to test the C3D viewer a
 
 ## Usage
 
-You can access these example files using the C3D library browser:
+You can access these example files using the C3D interactive library browser:
 
 ```bash
 c3d list
 ```
 
-Then use the arrow keys to navigate and press Enter to open any file in the 3D viewer.
+This launches an interactive screen where you can:
+- Use arrow keys to navigate through files
+- Filter files by typing to search
+- Press Enter to open any file in the 3D viewer
+- Browse files from common directories (Downloads, Documents, Desktop, etc.)
 
 ## Adding Your Own Examples
 

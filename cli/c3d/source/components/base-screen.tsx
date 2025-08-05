@@ -9,9 +9,10 @@ interface Props {
 	title?: string;
 	showExitAnimation?: boolean;
 	forceColorScheme?: ColorScheme;
+	rightColumn?: React.ReactNode | ((colorScheme: ColorScheme) => React.ReactNode);
 }
 
-export function BaseScreen({children, title, showExitAnimation = false, forceColorScheme}: Props) {
+export function BaseScreen({children, title, showExitAnimation = false, forceColorScheme, rightColumn}: Props) {
 	const [selectedDolphin, setSelectedDolphin] = useState(DOLPHIN_ANSI_ONE);
 	const [colorScheme, setColorScheme] = useState<ColorScheme>(getRandomColorScheme());
 	const [animationPhase, setAnimationPhase] = useState(0);
@@ -210,18 +211,25 @@ export function BaseScreen({children, title, showExitAnimation = false, forceCol
 					<Text color={colorScheme.primary}>{selectedDolphin}</Text>
 				</Box>
 
-				{/* Right Column - constrained to banner width */}
-				<Box flexDirection="column" width={bannerWidth} flexShrink={0}>
-					{/* Top Right: Banner */}
+				{/* Middle Column - constrained to banner width */}
+				<Box flexDirection="column" width={bannerWidth} flexShrink={0} marginRight={rightColumn ? 4 : 0}>
+					{/* Top Middle: Banner */}
 					<Box marginBottom={1}>
 						{renderBanner()}
 					</Box>
 
-					{/* Bottom Right: Content Area - constrained to banner width */}
+					{/* Bottom Middle: Content Area - constrained to banner width */}
 					<Box flexDirection="column" width={bannerWidth}>
 						{typeof children === 'function' ? children(colorScheme) : children}
 					</Box>
 				</Box>
+
+				{/* Right Column - Code Display (optional) */}
+				{rightColumn && (
+					<Box flexDirection="column" flexShrink={0}>
+						{typeof rightColumn === 'function' ? rightColumn(colorScheme) : rightColumn}
+					</Box>
+				)}
 			</Box>
 
 			{/* Footer */}

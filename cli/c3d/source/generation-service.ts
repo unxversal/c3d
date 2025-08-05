@@ -1,7 +1,8 @@
 import { AIService, DescriptionResult } from './ai-service.js';
 import { ServerManager } from './server-manager.js';
 import { getConfig } from './c3d.config.js';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, copyFile } from 'fs/promises';
+import { homedir } from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -11,6 +12,7 @@ const __dirname = path.dirname(__filename);
 export interface GenerationResult {
 	success: boolean;
 	outputPath?: string;
+	servedFiles?: string[];  // Files accessible via /files/ endpoint
 	attempts: number;
 	description?: DescriptionResult;
 	finalCode?: string;
@@ -168,6 +170,144 @@ export class GenerationService {
 				success: false,
 				attempts,
 				description,
+				error: errorMsg,
+			};
+		}
+	}
+
+	async generateCADDirectly(
+		prompt: string,
+		onProgress?: (progress: GenerationProgress) => void,
+		onStream?: (chunk: string) => void
+	): Promise<GenerationResult> {
+		const config = getConfig();
+		let attempts = 0;
+		let lastError = '';
+
+		try {
+			// Step 1: Check if model is available
+			onProgress?.({
+				step: 'checking_model',
+				message: 'Checking if C3D model is available...'
+			});
+
+			const modelAvailable = await this.aiService.checkModelAvailability();
+			if (!modelAvailable) {
+				onProgress?.({
+					step: 'pulling_model',
+					message: 'C3D model not found, downloading... (this may take a while)'
+				});
+				await this.aiService.pullModel();
+			}
+
+			// Step 2: Start server if not running
+			const serverRunning = await this.serverManager.isRunning();
+			if (!serverRunning) {
+				await this.serverManager.start(config.defaultPort);
+			}
+
+			// Step 3: Generate CADQuery code directly with validation and retries
+			for (attempts = 1; attempts <= config.maxRetries; attempts++) {
+				try {
+					onProgress?.({
+						step: 'generating_code',
+						message: `Generating CADQuery code (attempt ${attempts}/${config.maxRetries})...`,
+						attempt: attempts,
+						maxAttempts: config.maxRetries
+					});
+
+					const codeResult = config.useStreamingMode 
+						? await this.aiService.generateStreamingCADQueryCode(prompt, onStream)
+						: await this.aiService.generateDirectCADQueryCode(prompt);
+					
+					// Log the code generation result for debugging
+					await this.logLLMResponse('direct_cadquery_code', codeResult, prompt);
+
+					onProgress?.({
+						step: 'testing_code',
+						message: `Testing generated code (attempt ${attempts}/${config.maxRetries})...`,
+						attempt: attempts,
+						maxAttempts: config.maxRetries
+					});
+
+					// Create temporary script file
+					const tempDir = path.join(__dirname, '../temp');
+					await mkdir(tempDir, { recursive: true });
+					const scriptPath = path.join(tempDir, `generation_${Date.now()}.py`);
+					await writeFile(scriptPath, codeResult.cadquery_code);
+
+					// Test the code with the server
+					const renderResult = await this.serverManager.render(scriptPath, 'output.stl');
+					
+					// Success! Copy to persistent location and return result
+					onProgress?.({
+						step: 'completed',
+						message: 'CAD object generated successfully!'
+					});
+
+					// Copy generated STL to user's Documents folder for persistence
+					let persistentPath = renderResult.output_paths[0];
+					try {
+						const originalFile = renderResult.output_paths[0];
+						if (originalFile) {
+							const documentsDir = path.join(homedir(), 'Documents', 'C3D Generated');
+							await mkdir(documentsDir, { recursive: true });
+							
+							const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+							const persistentFile = path.join(documentsDir, `generated_${timestamp}.stl`);
+							
+							await copyFile(originalFile, persistentFile);
+							persistentPath = persistentFile;
+							
+							console.log(`✅ File saved to: ${persistentFile}`);
+						}
+					} catch (error) {
+						console.warn(`⚠️  Could not copy to persistent location: ${error}`);
+					}
+
+					return {
+						success: true,
+						outputPath: persistentPath,
+						servedFiles: renderResult.served_files,
+						attempts,
+						finalCode: codeResult.cadquery_code,
+						workingDirectory: renderResult.workdir,
+					};
+
+				} catch (error) {
+					lastError = error instanceof Error ? error.message : String(error);
+					
+					console.log(`❌ Attempt ${attempts} failed: ${lastError}`);
+					
+					if (attempts === config.maxRetries) {
+						onProgress?.({
+							step: 'failed',
+							message: `Failed after ${config.maxRetries} attempts. Last error: ${lastError}`
+						});
+						break;
+					}
+
+					// For direct generation, just retry with the same prompt
+					// (no description modification needed)
+				}
+			}
+
+			return {
+				success: false,
+				attempts,
+				error: lastError,
+			};
+
+		} catch (error) {
+			const errorMsg = error instanceof Error ? error.message : String(error);
+			onProgress?.({
+				step: 'failed',
+				message: `Generation failed: ${errorMsg}`
+			});
+
+			return {
+				success: false,
+				attempts,
 				error: errorMsg,
 			};
 		}

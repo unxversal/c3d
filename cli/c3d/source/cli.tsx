@@ -11,6 +11,7 @@ const cli = meow(
 
 	Commands
 		generate <prompt>   Generate CAD object from text description
+		editor <prompt>     Interactive collaborative CAD generation with code editing
 		server start        Start the CADQuery rendering server
 		server stop         Stop the CADQuery rendering server  
 		server status       Check if the server is running
@@ -79,6 +80,12 @@ if (command === 'generate' && cli.input.length > 1) {
 	generatePrompt = cli.input.slice(1).join(' ');
 }
 
+// Handle editor command specially
+let editorPrompt = '';
+if (command === 'editor' && cli.input.length > 1) {
+	editorPrompt = cli.input.slice(1).join(' ');
+}
+
 // Handle screen command specially
 let screenName = '';
 if (command === 'ui' && subCommand === 'screen' && cli.input[2]) {
@@ -90,6 +97,7 @@ render(<App
 	subCommand={subCommand}
 	scriptFile={scriptFile} 
 	generatePrompt={generatePrompt}
+	editorPrompt={editorPrompt}
 	screenName={screenName}
 	flags={cli.flags} 
 />);
