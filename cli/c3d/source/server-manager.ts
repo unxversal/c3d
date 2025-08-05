@@ -111,10 +111,50 @@ export class ServerManager {
 	}
 
 	async stop(): Promise<void> {
+		// First, try to stop the process we started (if we have reference)
 		if (this.process) {
 			this.process.kill('SIGTERM');
 			this.process = null;
 			this.currentPort = null;
+		}
+		
+		// Then, find and kill any running Python servers that match our pattern
+		try {
+			// Find Python processes running main.py (our server)
+			const { stdout } = await execa('pgrep', ['-f', 'python.*main.py'], { reject: false });
+			if (stdout.trim()) {
+				const pids = stdout.trim().split('\n');
+				for (const pid of pids) {
+					try {
+						await execa('kill', ['-TERM', pid.trim()]);
+						console.log(`Killed server process ${pid}`);
+					} catch (error) {
+						// Process might already be dead, continue
+					}
+				}
+			}
+		} catch (error) {
+			// pgrep might not find anything, which is fine
+		}
+		
+		// Wait a moment for graceful shutdown, then force kill if needed
+		await new Promise(resolve => setTimeout(resolve, 1000));
+		
+		try {
+			const { stdout } = await execa('pgrep', ['-f', 'python.*main.py'], { reject: false });
+			if (stdout.trim()) {
+				const pids = stdout.trim().split('\n');
+				for (const pid of pids) {
+					try {
+						await execa('kill', ['-KILL', pid.trim()]);
+						console.log(`Force killed server process ${pid}`);
+					} catch (error) {
+						// Process might already be dead, continue
+					}
+				}
+			}
+		} catch (error) {
+			// No processes found, which is what we want
 		}
 	}
 

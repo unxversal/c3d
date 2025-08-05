@@ -8,6 +8,7 @@ export interface C3DConfig {
 	// Server Settings
 	defaultPort: number;
 	serverStartTimeout: number;
+	stopServerOnQuit: boolean; // Whether pressing 'q' to quit should also stop the server
 	
 	// Output Settings
 	defaultOutputFormat: string;
@@ -29,6 +30,7 @@ export const defaultConfig: C3DConfig = {
 	// Server Settings
 	defaultPort: 8765,
 	serverStartTimeout: 45000, // 45 seconds
+	stopServerOnQuit: false, // Don't stop server by default when quitting
 	
 	// Output Settings
 	defaultOutputFormat: 'stl',

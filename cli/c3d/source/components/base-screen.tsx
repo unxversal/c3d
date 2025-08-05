@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {Box, Text, useInput} from 'ink';
 import {DOLPHIN_ANSI_ONE, DOLPHIN_ANSI_TWO, DOLPHIN_BANNER_COLUMNS, getRandomColorScheme, type ColorScheme} from '../dolphins.js';
+import {getConfig} from '../c3d.config.js';
+import {ServerManager} from '../server-manager.js';
 
 interface Props {
 	children: React.ReactNode | ((colorScheme: ColorScheme) => React.ReactNode);
@@ -33,7 +35,19 @@ export function BaseScreen({children, title, showExitAnimation = false, forceCol
 	// Handle quit
 	useInput((input, key) => {
 		if (input === 'q' || key.escape) {
-			process.exit(0);
+			const config = getConfig();
+			if (config.stopServerOnQuit) {
+				// Stop server before quitting
+				const serverManager = new ServerManager();
+				serverManager.stop().then(() => {
+					process.exit(0);
+				}).catch(() => {
+					// Still exit even if server stop fails
+					process.exit(0);
+				});
+			} else {
+				process.exit(0);
+			}
 		}
 	});
 

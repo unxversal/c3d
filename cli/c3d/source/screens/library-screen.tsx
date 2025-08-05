@@ -6,7 +6,6 @@ import {ServerManager} from '../server-manager.js';
 import {exec} from 'child_process';
 import {promisify} from 'util';
 import {readdir, stat} from 'fs/promises';
-import {existsSync} from 'fs';
 import {join, extname, basename, dirname} from 'path';
 import {homedir} from 'os';
 import {fileURLToPath} from 'url';
@@ -24,10 +23,9 @@ interface FileInfo {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-console.log('SIMPLE DEBUG:');
-console.log('__dirname:', __dirname);
-console.log('Checking examples at:', join(__dirname, '../../examples'));
-console.log('Exists?', existsSync(join(__dirname, '../../examples')));
+// Debug: Check if examples path exists
+// console.log('__dirname:', __dirname);
+// console.log('Examples path:', join(__dirname, '../../examples'), 'exists:', existsSync(join(__dirname, '../../examples')));
 
 // Simple approach: try to find examples folder relative to the current script
 let examplesPath = join(__dirname, '../../examples');

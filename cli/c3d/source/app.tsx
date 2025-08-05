@@ -2,13 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {Text, Box} from 'ink';
 import {ServerManager} from './server-manager.js';
 import {GenerationService, GenerationProgress} from './generation-service.js';
-import {getConfig, updateConfig} from './c3d.config.js';
+import {updateConfig} from './c3d.config.js';
 import {UIPlayground} from './ui-playground.js';
 import {StaticPlayground} from './static-playground.js';
 import {ShimmerPlayground} from './shimmer-playground.js';
 import {ScreenTester} from './screen-tester.js';
 import {ViewerLauncher} from './viewer-launcher.js';
 import {LibraryScreen} from './screens/library-screen.js';
+import {ConfigScreen} from './screens/config-screen.js';
 import {exec} from 'child_process';
 import {promisify} from 'util';
 
@@ -46,6 +47,10 @@ export default function App({command, subCommand, scriptFile, generatePrompt, sc
 
 	if (command === 'list') {
 		return <LibraryScreen />;
+	}
+
+	if (command === 'config') {
+		return <ConfigScreen />;
 	}
 
 	if (command === 'ui') {
@@ -128,24 +133,7 @@ export default function App({command, subCommand, scriptFile, generatePrompt, sc
 						}
 						break;
 
-					case 'config':
-						const config = getConfig();
-						setMessage(`📋 Current Configuration:
-AI Settings:
-  Model: ${config.ollamaModel}
-  Max Retries: ${config.maxRetries}
-  Temperature: ${config.temperature}
-  Host: ${config.ollamaHost}
-
-Server Settings:
-  Default Port: ${config.defaultPort}
-  Timeout: ${config.serverStartTimeout}ms
-
-Output Settings:
-  Format: ${config.defaultOutputFormat}
-  Keep Working Dir: ${config.keepWorkingDirectory}`);
-						setStatus('success');
-						break;
+					// config command is handled above with ConfigScreen component
 
 					case 'deload':
 						setMessage('Removing C3D AI model from local storage...');
