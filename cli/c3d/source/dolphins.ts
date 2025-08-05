@@ -100,3 +100,51 @@ export const DOLPHIN_BANNER: string = DOLPHIN_BANNER_ROWS.join("\n");
 
 // If you want to access a specific column for animation, use DOLPHIN_BANNER_COLUMNS[columnIndex]
 // Or, for named variables: DOLPHIN_BANNER_COL_VARS["DOLPHIN_BANNER_COL_0"], etc.
+
+// Color palette system for random selection
+export interface ColorScheme {
+  primary: string;    // Main color for headers/emphasis
+  secondary: string;  // Secondary color for content
+  accent: string;     // Accent color for highlights
+  name: string;       // Human-readable name
+}
+
+export const COLOR_SCHEMES: ColorScheme[] = [
+  // {
+  //   primary: 'cyan',
+  //   secondary: 'blue', 
+  //   accent: 'white',
+  //   name: 'Ocean Blue'
+  // },
+  {
+    primary: 'blue',
+    secondary: 'cyan',
+    accent: 'white', 
+    name: 'Deep Blue'
+  },
+  {
+    primary: 'yellow',
+    secondary: 'yellow',
+    accent: 'white', 
+    name: 'Sunset Orange'
+  },
+  {
+    primary: 'green',
+    secondary: 'greenBright',
+    accent: 'white', 
+    name: 'Forest Green'
+  }
+];
+
+// Helper function to get a random color scheme (similar to random dolphin selection)
+export function getRandomColorScheme(): ColorScheme {
+  return COLOR_SCHEMES[Math.floor(Math.random() * COLOR_SCHEMES.length)]!;
+}
+
+// Special color scheme for error contexts
+export const ERROR_COLOR_SCHEME: ColorScheme = {
+  primary: 'red',
+  secondary: 'redBright',
+  accent: 'white',
+  name: 'Error Red'
+};

@@ -1,25 +1,34 @@
 import React, {useState, useEffect} from 'react';
 import {Box, Text, useInput} from 'ink';
-import {DOLPHIN_ANSI_ONE, DOLPHIN_ANSI_TWO, DOLPHIN_BANNER_COLUMNS} from '../dolphins.js';
+import {DOLPHIN_ANSI_ONE, DOLPHIN_ANSI_TWO, DOLPHIN_BANNER_COLUMNS, getRandomColorScheme, type ColorScheme} from '../dolphins.js';
 
 interface Props {
-	children: React.ReactNode;
+	children: React.ReactNode | ((colorScheme: ColorScheme) => React.ReactNode);
 	title?: string;
 	showExitAnimation?: boolean;
+	forceColorScheme?: ColorScheme;
 }
 
-export function BaseScreen({children, title, showExitAnimation = false}: Props) {
+export function BaseScreen({children, title, showExitAnimation = false, forceColorScheme}: Props) {
 	const [selectedDolphin, setSelectedDolphin] = useState(DOLPHIN_ANSI_ONE);
+	const [colorScheme, setColorScheme] = useState<ColorScheme>(getRandomColorScheme());
 	const [animationPhase, setAnimationPhase] = useState(0);
 	const totalCols = DOLPHIN_BANNER_COLUMNS.length;
 	const totalRows = DOLPHIN_BANNER_COLUMNS[0]?.length || 0;
 
-	// Randomly choose dolphin on component mount
+	// Randomly choose dolphin and color scheme on component mount
 	useEffect(() => {
 		const dolphins = [DOLPHIN_ANSI_ONE, DOLPHIN_ANSI_TWO];
 		const randomDolphin = dolphins[Math.floor(Math.random() * dolphins.length)]!;
 		setSelectedDolphin(randomDolphin);
-	}, []);
+		
+		// Use forced color scheme if provided, otherwise randomly select
+		if (forceColorScheme) {
+			setColorScheme(forceColorScheme);
+		} else {
+			setColorScheme(getRandomColorScheme());
+		}
+	}, [forceColorScheme]);
 
 	// Handle quit
 	useInput((input, key) => {
@@ -67,7 +76,7 @@ export function BaseScreen({children, title, showExitAnimation = false}: Props) 
 							const char = DOLPHIN_BANNER_COLUMNS[colIndex]?.[rowIndex] || ' ';
 							
 							let isVisible = false;
-							let color: string = 'cyan';
+							let color: string = colorScheme.primary;
 							
 							if (showExitAnimation) {
 								// Exit animation logic (same as Letter Animation 1)
@@ -82,23 +91,23 @@ export function BaseScreen({children, title, showExitAnimation = false}: Props) 
 										if (distanceFromFront < -5 && Math.random() > 0.95) {
 											isVisible = false;
 										}
-										color = 'cyan';
+										color = colorScheme.primary;
 									} else if (distanceFromFront <= 3) {
 										if (distanceFromFront === 1) {
-											color = 'yellow';
+											color = colorScheme.secondary;
 											isVisible = Math.random() > 0.3;
 										} else if (distanceFromFront === 2) {
-											color = 'white';
+											color = colorScheme.accent;
 											isVisible = Math.random() > 0.6;
 										} else {
-											color = 'blue';
+											color = colorScheme.secondary;
 											isVisible = Math.random() > 0.8;
 										}
 									}
 								} else if (animationPhase < totalCols + pauseSteps) {
 									// Pause
 									isVisible = true;
-									color = 'cyan';
+									color = colorScheme.primary;
 									if (Math.random() > 0.98) {
 										isVisible = false;
 									}
@@ -112,13 +121,13 @@ export function BaseScreen({children, title, showExitAnimation = false}: Props) 
 										isVisible = false;
 									} else if (distanceFromFadeOut <= 3) {
 										if (distanceFromFadeOut === 0) {
-											color = 'yellow';
+											color = colorScheme.secondary;
 											isVisible = Math.random() > 0.3;
 										} else if (distanceFromFadeOut === 1) {
-											color = 'white';
+											color = colorScheme.accent;
 											isVisible = Math.random() > 0.6;
 										} else {
-											color = 'blue';
+											color = colorScheme.secondary;
 											isVisible = Math.random() > 0.8;
 										}
 									} else {
@@ -126,7 +135,7 @@ export function BaseScreen({children, title, showExitAnimation = false}: Props) 
 										if (Math.random() > 0.95) {
 											isVisible = false;
 										}
-										color = 'cyan';
+										color = colorScheme.primary;
 									}
 								}
 							} else {
@@ -143,24 +152,24 @@ export function BaseScreen({children, title, showExitAnimation = false}: Props) 
 										if (distanceFromFront < -5 && Math.random() > 0.95) {
 											isVisible = false; // Occasional flicker
 										}
-										color = 'cyan';
+										color = colorScheme.primary;
 									} else if (distanceFromFront <= 3) {
 										// In the reveal zone
 										if (distanceFromFront === 1) {
-											color = 'yellow'; // Leading edge
+											color = colorScheme.secondary; // Leading edge
 											isVisible = Math.random() > 0.3; // Some uncertainty
 										} else if (distanceFromFront === 2) {
-											color = 'white'; 
+											color = colorScheme.accent; 
 											isVisible = Math.random() > 0.6; // More uncertainty
 										} else {
-											color = 'blue';
+											color = colorScheme.secondary;
 											isVisible = Math.random() > 0.8; // High uncertainty
 										}
 									}
 								} else {
 									// Phase 2: Freeze - all letters visible and completely static
 									isVisible = true;
-									color = 'cyan';
+									color = colorScheme.primary;
 									// No flicker - completely static after fade-in
 								}
 							}
@@ -182,7 +191,7 @@ export function BaseScreen({children, title, showExitAnimation = false}: Props) 
 			<Box flexDirection="row">
 				{/* Left: Dolphin */}
 				<Box flexDirection="column" marginRight={4}>
-					<Text color="cyan">{selectedDolphin}</Text>
+					<Text color={colorScheme.primary}>{selectedDolphin}</Text>
 				</Box>
 
 				{/* Right Column */}
@@ -194,7 +203,7 @@ export function BaseScreen({children, title, showExitAnimation = false}: Props) 
 
 					{/* Bottom Right: Content Area - full width and thin */}
 					<Box flexDirection="column">
-						{children}
+						{typeof children === 'function' ? children(colorScheme) : children}
 					</Box>
 				</Box>
 			</Box>

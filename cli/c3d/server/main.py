@@ -19,26 +19,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve frontend static files
+# Get frontend path
 frontend_path = Path(__file__).parent.parent / "frontend-dist"
-if frontend_path.exists():
-    app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
-    
-    # Serve React app on root
-    @app.get("/")
-    async def serve_frontend():
-        return FileResponse(str(frontend_path / "index.html"))
-    
-    # Catch-all for React Router (SPA routing)
-    @app.get("/{path:path}")
-    async def serve_frontend_routes(path: str):
-        if path.startswith("api/") or path.startswith("files/"):
-            raise HTTPException(404)
-        return FileResponse(str(frontend_path / "index.html"))
-
-# Serve generated CAD files
-temp_files_dir = Path(tempfile.gettempdir())
-app.mount("/files", StaticFiles(directory=str(temp_files_dir)), name="files")
 
 class RenderRequest(BaseModel):
     script: str
@@ -121,6 +103,21 @@ async def health_check():
         "api_version": "1.0.0"
     }
 
+# Frontend routes (must be defined before mounts)
+@app.get("/")
+async def serve_frontend():
+    """Serve the React frontend"""
+    if frontend_path.exists():
+        return FileResponse(str(frontend_path / "index.html"))
+    raise HTTPException(404, "Frontend not found")
+
+@app.get("/vite.svg")
+async def serve_vite_svg():
+    """Serve vite.svg file"""
+    if frontend_path.exists():
+        return FileResponse(str(frontend_path / "vite.svg"))
+    raise HTTPException(404, "File not found")
+
 def find_available_port(start_port=8765):
     for port in range(start_port, start_port + 100):
         try:
@@ -130,6 +127,17 @@ def find_available_port(start_port=8765):
         except OSError:
             continue
     raise RuntimeError("No available ports found")
+
+# Mount static files AFTER all API routes are defined
+# This ensures API routes take precedence over static file serving
+
+# Serve generated CAD files
+temp_files_dir = Path(tempfile.gettempdir())
+app.mount("/files", StaticFiles(directory=str(temp_files_dir)), name="files")
+
+# Serve frontend assets
+if frontend_path.exists():
+    app.mount("/assets", StaticFiles(directory=str(frontend_path / "assets")), name="assets")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", find_available_port()))

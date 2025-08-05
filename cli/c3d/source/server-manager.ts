@@ -4,6 +4,7 @@ import {readFile} from 'fs/promises';
 import path from 'path';
 import {fileURLToPath} from 'url';
 import {createConnection} from 'net';
+import {getConfig} from './c3d.config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -86,9 +87,13 @@ export class ServerManager {
 				}
 			});
 
-			// Wait for server to start
+			// Wait for server to start (using configurable timeout)
+			const config = getConfig();
+			const timeoutMs = config.serverStartTimeout;
+			const maxAttempts = Math.floor(timeoutMs / 1000); // Convert ms to seconds for attempts
+			
 			let attempts = 0;
-			while (attempts < 15) {
+			while (attempts < maxAttempts) {
 				await new Promise(resolve => setTimeout(resolve, 1000));
 				if (await this.isRunning(actualPort)) {
 					this.currentPort = actualPort;
@@ -97,7 +102,7 @@ export class ServerManager {
 				attempts++;
 			}
 			
-			throw new Error('Server failed to start within 15 seconds');
+			throw new Error(`Server failed to start within ${timeoutMs / 1000} seconds`);
 		} catch (error) {
 			this.process = null;
 			this.currentPort = null;

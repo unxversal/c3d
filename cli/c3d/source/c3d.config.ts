@@ -28,7 +28,7 @@ export const defaultConfig: C3DConfig = {
 	
 	// Server Settings
 	defaultPort: 8765,
-	serverStartTimeout: 15000, // 15 seconds
+	serverStartTimeout: 45000, // 45 seconds
 	
 	// Output Settings
 	defaultOutputFormat: 'stl',

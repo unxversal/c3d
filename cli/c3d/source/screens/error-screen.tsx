@@ -1,6 +1,7 @@
 import React from 'react';
 import {Box, Text} from 'ink';
 import {BaseScreen} from '../components/base-screen.js';
+import {ERROR_COLOR_SCHEME} from '../dolphins.js';
 
 interface Props {
 	message: string;
@@ -10,7 +11,7 @@ interface Props {
 
 export function ErrorScreen({message, details, suggestions}: Props) {
 	return (
-		<BaseScreen title="Error">
+		<BaseScreen title="Error" forceColorScheme={ERROR_COLOR_SCHEME}>
 			<Box flexDirection="column">
 				<Box borderStyle="single" padding={1} marginBottom={1}>
 					<Box flexDirection="column">
