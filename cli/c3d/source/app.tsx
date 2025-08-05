@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Text, Box} from 'ink';
 import {ServerManager} from './server-manager.js';
-import {GenerationService, GenerationProgress} from './generation-service.js';
+
 import {updateConfig} from './c3d.config.js';
 import {UIPlayground} from './ui-playground.js';
 import {StaticPlayground} from './static-playground.js';
@@ -10,10 +10,11 @@ import {ScreenTester} from './screen-tester.js';
 import {ViewerLauncher} from './viewer-launcher.js';
 import {LibraryScreen} from './screens/library-screen.js';
 import {ConfigScreen} from './screens/config-screen.js';
-import {exec} from 'child_process';
-import {promisify} from 'util';
+import {GenerationScreen} from './screens/generation-screen.js';
+import {ServerScreen} from './screens/server-screen.js';
+import {RenderScreen} from './screens/render-screen.js';
+import {DeloadScreen} from './screens/deload-screen.js';
 
-const execAsync = promisify(exec);
 
 type Props = {
 	command: string;
@@ -31,14 +32,12 @@ type Props = {
 };
 
 const serverManager = new ServerManager();
-const generationService = new GenerationService();
 
 export default function App({command, subCommand, scriptFile, generatePrompt, screenName, flags}: Props) {
 	const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 	const [message, setMessage] = useState('');
 	const [serverRunning, setServerRunning] = useState(false);
 	const [actualPort, setActualPort] = useState<number | null>(null);
-	const [generationProgress, setGenerationProgress] = useState<GenerationProgress | null>(null);
 
 	// UI Playground modes
 	if (command === 'viewer') {
@@ -51,6 +50,22 @@ export default function App({command, subCommand, scriptFile, generatePrompt, sc
 
 	if (command === 'config') {
 		return <ConfigScreen />;
+	}
+
+	if (command === 'generate' && generatePrompt) {
+		return <GenerationScreen prompt={generatePrompt} flags={flags} />;
+	}
+
+	if (command === 'server' && subCommand) {
+		return <ServerScreen subCommand={subCommand as 'start' | 'stop' | 'status'} flags={flags} />;
+	}
+
+	if (command === 'render' && scriptFile) {
+		return <RenderScreen scriptFile={scriptFile} flags={flags} />;
+	}
+
+	if (command === 'deload') {
+		return <DeloadScreen flags={flags} />;
 	}
 
 	if (command === 'ui') {
@@ -90,123 +105,8 @@ export default function App({command, subCommand, scriptFile, generatePrompt, sc
 			}
 			
 			try {
+				// All main commands are now handled by their respective screen components above
 				switch (command) {
-					case 'generate':
-						if (!generatePrompt) {
-							setMessage('Error: Please provide a description of what you want to generate');
-							setStatus('error');
-							return;
-						}
-						
-						// Auto-start server if not running
-						const generationServerRunning = await updateServerStatus();
-						if (!generationServerRunning) {
-							setMessage('Starting CADQuery server...');
-							const autoStartPort = await serverManager.start(flags.port || 8765);
-							setActualPort(autoStartPort);
-							await updateServerStatus();
-						}
-						
-						setMessage('Starting CAD generation...');
-						const generationResult = await generationService.generateCADFromText(generatePrompt, (progress) => {
-							setGenerationProgress(progress);
-							setMessage(progress.message);
-						});
-						
-						if (generationResult.success) {
-							setMessage(`✅ Generation complete!\nOutput: ${generationResult.outputPath}\nAttempts: ${generationResult.attempts}\nWorking directory: ${generationResult.workingDirectory}`);
-							setStatus('success');
-							
-							// Auto-open frontend with the generated model
-							if (!flags.noViewer && generationResult.outputPath) {
-								try {
-									setMessage((prev) => prev + '\n\n🌐 Opening 3D viewer...');
-									await openFrontendWithModel(generationResult.outputPath, actualPort || 8765, generatePrompt);
-									setMessage((prev) => prev + '\n✅ 3D viewer opened successfully!');
-								} catch (error) {
-									setMessage((prev) => prev + `\n⚠️  3D viewer failed to open: ${error}`);
-								}
-							}
-						} else {
-							setMessage(`❌ Generation failed after ${generationResult.attempts} attempts.\nError: ${generationResult.error}`);
-							setStatus('error');
-						}
-						break;
-
-					// config command is handled above with ConfigScreen component
-
-					case 'deload':
-						setMessage('Removing C3D AI model from local storage...');
-						const modelAvailable = await generationService.testOllamaConnection();
-						if (!modelAvailable) {
-							setMessage('❌ Cannot connect to Ollama. Make sure Ollama is running.');
-							setStatus('error');
-							return;
-						}
-
-						const hasModel = await generationService.checkModelAvailability();
-						if (!hasModel) {
-							setMessage('ℹ️  C3D model is not currently installed.');
-							setStatus('success');
-							return;
-						}
-
-						try {
-							await generationService.deleteModel();
-							setMessage('✅ C3D AI model successfully removed from local storage.\n💾 Freed up ~4-8GB of disk space.');
-							setStatus('success');
-						} catch (error) {
-							setMessage(`❌ Failed to remove model: ${error instanceof Error ? error.message : String(error)}`);
-							setStatus('error');
-						}
-						break;
-					case 'server':
-						if (subCommand === 'start') {
-							const startedPort = await serverManager.start(flags.port || 8765);
-							setActualPort(startedPort);
-							await updateServerStatus();
-							setMessage(`Server started on port ${startedPort}${startedPort !== (flags.port || 8765) ? ` (requested: ${flags.port || 8765})` : ''}`);
-							setStatus('success');
-						} else if (subCommand === 'stop') {
-							await serverManager.stop();
-							setActualPort(null);
-							await updateServerStatus();
-							setMessage('Server stopped');
-							setStatus('success');
-						} else if (subCommand === 'status') {
-							const isRunning = await updateServerStatus();
-							const currentPort = serverManager.getCurrentPort();
-							setMessage(isRunning ? 
-								`Server is running on port ${currentPort || flags.port || 8765}` : 
-								'Server is not running'
-							);
-							setStatus('success');
-						} else {
-							setMessage('Error: Unknown server command. Use: start, stop, or status');
-							setStatus('error');
-						}
-						break;
-
-					case 'render':
-						if (!scriptFile) {
-							setMessage('Error: Please specify a Python script file to render (e.g., c3d render script.py)');
-							setStatus('error');
-							return;
-						}
-						
-						// Auto-start server if not running
-						const running = await updateServerStatus();
-						if (!running) {
-							setMessage('Starting server...');
-							const autoStartPort = await serverManager.start(flags.port || 8765);
-							setActualPort(autoStartPort);
-							await updateServerStatus();
-						}
-						
-						const renderResult = await serverManager.render(scriptFile, flags.output);
-						setMessage(`Render complete! Output: ${renderResult.output_paths.join(', ')}`);
-						setStatus('success');
-						break;
 
 					case 'hello':
 					default:
@@ -251,14 +151,7 @@ export default function App({command, subCommand, scriptFile, generatePrompt, sc
 						<Text color="yellow">
 							⏳ Processing...
 						</Text>
-						{generationProgress && (
-							<Text color="gray" dimColor>
-								{generationProgress.message}
-								{generationProgress.attempt && generationProgress.maxAttempts && 
-									` (${generationProgress.attempt}/${generationProgress.maxAttempts})`
-								}
-							</Text>
-						)}
+
 					</Box>
 				)}
 				
@@ -272,18 +165,4 @@ export default function App({command, subCommand, scriptFile, generatePrompt, sc
 	);
 }
 
-// Helper function to open frontend with model
-async function openFrontendWithModel(modelPath: string, port: number, prompt?: string) {
-	const modelFileName = modelPath.split('/').pop() || 'model.stl';
-	const encodedPrompt = prompt ? encodeURIComponent(prompt) : '';
-	const url = `http://localhost:${port}?model=${modelFileName}&from=cli${prompt ? `&prompt=${encodedPrompt}` : ''}`;
-	
-	const platform = process.platform;
-	if (platform === 'darwin') {
-		await execAsync(`open "${url}"`);
-	} else if (platform === 'win32') {
-		await execAsync(`start "${url}"`);
-	} else {
-		await execAsync(`xdg-open "${url}"`);
-	}
-}
+

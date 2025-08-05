@@ -8,6 +8,7 @@ import {RenderScreen} from './screens/render-screen.js';
 import {ModelScreen} from './screens/model-screen.js';
 import {ErrorScreen} from './screens/error-screen.js';
 import {InteractiveScreen} from './screens/interactive-screen.js';
+import {DeloadScreen} from './screens/deload-screen.js';
 
 interface Props {
 	screenName: string;
@@ -20,16 +21,17 @@ export function ScreenTester({screenName}: Props) {
 				return <HomeScreen />;
 			case 'generation':
 			case 'generate':
-				return <GenerationScreen prompt="a simple gear with 12 teeth" />;
+				return <GenerationScreen prompt="a simple gear with 12 teeth" flags={{}} />;
 			case 'server':
-				return <ServerScreen />;
+				return <ServerScreen subCommand="status" flags={{}} />;
 			case 'config':
 				return <ConfigScreen />;
 			case 'render':
-				return <RenderScreen scriptFile="example-model.py" />;
+				return <RenderScreen scriptFile="example-model.py" flags={{}} />;
 			case 'model':
-			case 'deload':
 				return <ModelScreen />;
+			case 'deload':
+				return <DeloadScreen flags={{}} />;
 			case 'error':
 				return <ErrorScreen message="Connection failed" details="Could not connect to server on port 8765" />;
 			case 'interactive':

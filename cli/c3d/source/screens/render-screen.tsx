@@ -2,113 +2,102 @@ import React, {useState, useEffect} from 'react';
 import {Box, Text} from 'ink';
 import {BaseScreen} from '../components/base-screen.js';
 import {ShimmerText} from '../components/shimmer-text.js';
+import {ServerManager} from '../server-manager.js';
+import {updateConfig} from '../c3d.config.js';
 
 interface Props {
 	scriptFile: string;
-	isRendering?: boolean;
-	progress?: {
-		stage: string;
-		percentage: number;
-	};
-	result?: {
-		success: boolean;
-		outputPaths?: string[];
-		error?: string;
+	flags: {
+		port?: number;
+		output?: string;
 	};
 }
 
-export function RenderScreen({scriptFile = "my_cad_model.py", isRendering: _isRendering = false, progress: _progress, result: _result}: Props) {
-	const [demoState, setDemoState] = useState(0);
-	
-	// Cycle through different states every 2.5 seconds
+const serverManager = new ServerManager();
+
+export function RenderScreen({scriptFile, flags}: Props) {
+	const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
+	const [message, setMessage] = useState('');
+	const [actualPort, setActualPort] = useState<number | null>(null);
+
 	useEffect(() => {
-		const interval = setInterval(() => {
-			setDemoState(prev => (prev + 1) % 4);
-		}, 2500);
-		return () => clearInterval(interval);
-	}, []);
-
-	const states = [
-		{
-			isRendering: true,
-			progress: { stage: "PARSING SCRIPT", percentage: 25 },
-			result: null
-		},
-		{
-			isRendering: true, 
-			progress: { stage: "EXECUTING CADQUERY", percentage: 65 },
-			result: null
-		},
-		{
-			isRendering: true,
-			progress: { stage: "EXPORTING FILES", percentage: 90 },
-			result: null
-		},
-		{
-			isRendering: false,
-			progress: null,
-			result: { 
-				success: true, 
-				outputPaths: ["/tmp/model.stl", "/tmp/model.step", "/tmp/preview.png"],
-				error: undefined
+		const renderScript = async () => {
+			// Update config with CLI flags
+			if (flags.port) {
+				updateConfig({ defaultPort: flags.port });
 			}
-		}
-	];
 
-	const currentState = states[demoState]!;
+			try {
+				// Auto-start server if not running
+				const isRunning = await serverManager.isRunning();
+				if (!isRunning) {
+					setMessage('Starting server...');
+					const startedPort = await serverManager.start(flags.port || 8765);
+					setActualPort(startedPort);
+				} else {
+					const currentPort = serverManager.getCurrentPort() || 8765;
+					setActualPort(currentPort);
+				}
+
+				setMessage('Rendering CADQuery script...');
+				const renderResult = await serverManager.render(scriptFile, flags.output);
+				setMessage(`✅ Render complete!\nOutput: ${renderResult.output_paths.join(', ')}`);
+				setStatus('success');
+			} catch (error) {
+				setMessage(`❌ Render failed: ${error instanceof Error ? error.message : String(error)}`);
+				setStatus('error');
+			}
+		};
+
+		renderScript();
+	}, [scriptFile, flags]);
+
+	const getStatusColor = () => {
+		switch (status) {
+			case 'loading': return 'yellow';
+			case 'success': return 'green';
+			case 'error': return 'red';
+			default: return 'white';
+		}
+	};
+
 	return (
 		<BaseScreen title="Script Rendering">
 			<Box flexDirection="column">
 				<Box borderStyle="single" padding={1} marginBottom={1}>
-					<Text color="cyan" bold>📄 Input File: </Text>
-					<Text color="white">{scriptFile}</Text>
+					<Text color="cyan" bold>🔧 CADQuery Script Renderer</Text>
 				</Box>
 
 				<Box borderStyle="single" padding={1} marginBottom={1}>
 					<Box flexDirection="column">
-						<Text color="yellow" bold>⚡ Render Status</Text>
-						{currentState.isRendering && currentState.progress ? (
-							<Box flexDirection="column">
-								<ShimmerText text={currentState.progress.stage} />
-								<Text color="cyan">
-									{'█'.repeat(Math.floor(currentState.progress.percentage / 10))}
-									{'░'.repeat(10 - Math.floor(currentState.progress.percentage / 10))}
-								</Text>
-								<Text color="gray">{currentState.progress.percentage}%</Text>
-							</Box>
-						) : currentState.result ? (
-							<Box flexDirection="column">
-								{currentState.result.success ? (
-									<>
-										<Text color="green">✅ Render Complete!</Text>
-										{currentState.result.outputPaths && (
-											<Box flexDirection="column">
-												{currentState.result.outputPaths.map((path, index) => (
-													<Text key={index} color="gray">  • {path}</Text>
-												))}
-											</Box>
-										)}
-									</>
-								) : (
-									<>
-										<Text color="red">❌ Render Failed</Text>
-										<Text color="gray">{currentState.result.error}</Text>
-									</>
-								)}
-							</Box>
+						<Text color="yellow" bold>📄 Script File</Text>
+						<Text color="white">  {scriptFile}</Text>
+					</Box>
+				</Box>
+
+				<Box borderStyle="single" padding={1} marginBottom={1}>
+					<Box flexDirection="column">
+						<Text color="blue" bold>⚡ Render Status</Text>
+						{status === 'loading' ? (
+							<ShimmerText text="PROCESSING..." />
 						) : (
-							<Text color="gray">Ready to render...</Text>
+							<Text color={getStatusColor()}>
+								{message}
+							</Text>
+						)}
+						{flags.output && (
+							<Text color="gray" dimColor>Output: {flags.output}</Text>
 						)}
 					</Box>
 				</Box>
 
 				<Box borderStyle="single" padding={1}>
 					<Box flexDirection="column">
-						<Text color="blue" bold>🎯 Output Formats</Text>
-						<Text color="gray">  • STL (3D printing)</Text>
-						<Text color="gray">  • STEP (CAD exchange)</Text>
-						<Text color="gray">  • PNG (preview image)</Text>
-						<Text color="gray" dimColor>  State {demoState + 1}/4 - Auto-cycling every 2.5s</Text>
+						<Text color="magenta" bold>🎮 Controls</Text>
+						<Text color="gray">  • Q: Return to main menu</Text>
+						{actualPort && (
+							<Text color="gray">  • Server running on port {actualPort}</Text>
+						)}
 					</Box>
 				</Box>
 			</Box>

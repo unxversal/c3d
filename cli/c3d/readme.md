@@ -6,8 +6,8 @@ A powerful command-line interface that generates 3D CAD models from natural lang
 
 - 🤖 **AI Generation**: Create CAD models from natural language using Ollama
 - 🌐 **Integrated 3D Viewer**: React Three Fiber web interface with interactive controls
-- 🖥️ **Beautiful CLI**: ASCII art interface with animations and real-time status
-- 📱 **Screen Testing**: Interactive UI components for development and testing
+- 🖥️ **Interactive CLI**: Beautiful terminal interface with real-time status screens and animations
+- 📱 **Professional UI**: Rich interactive screens for all commands with dynamic color schemes
 - 🔄 **Auto-Launch**: Generated models open automatically in 3D viewer
 - 📦 **Complete Package**: Backend, frontend, and CLI bundled together
 
@@ -95,27 +95,32 @@ c3d generate "a complex bracket" --no-viewer
 - `c3d generate <description>` - Generate CAD from text description
 - `c3d viewer` - Launch 3D web interface
 - `c3d server start/stop/status` - Manage Python backend server
-- `c3d config` - View current configuration settings
+- `c3d config` - Interactive configuration editor
 - `c3d render <script.py>` - Render Python CADQuery scripts
 - `c3d deload` - Remove C3D AI model from local storage
+- `c3d list` - Browse and open local STL files from directories
 
 ### Development & Testing
 - `c3d ui` - Launch UI development playground
 - `c3d ui static` - ASCII layout slideshow (dolphin + banner)
 - `c3d ui shimmer` - Animation effects showcase
-- `c3d ui screen <name>` - Test specific screen components
+- `c3d ui screen <n>` - Test interactive screen components used by commands
 
-### Available Screen Components
+### Interactive Screen Components
+All main commands now use beautiful interactive screens instead of plain text output:
+
 ```sh
-c3d ui screen home          # Home/welcome screen
-c3d ui screen generation    # Model generation screen
-c3d ui screen server        # Server management screen
-c3d ui screen config        # Configuration screen
-c3d ui screen render        # Script rendering screen
-c3d ui screen model         # Model management screen
-c3d ui screen error         # Error handling screen
-c3d ui screen interactive   # Interactive/collaboration features
+c3d ui screen home          # Home/welcome screen (demo)
+c3d ui screen generation    # Model generation interface (used by 'generate')
+c3d ui screen server        # Server management interface (used by 'server')
+c3d ui screen config        # Configuration editor (used by 'config')
+c3d ui screen render        # Script rendering interface (used by 'render')
+c3d ui screen deload        # Model deloader interface (used by 'deload')
+c3d ui screen error         # Error handling screen (used for errors)
+c3d ui screen interactive   # Interactive/collaboration features (demo)
 ```
+
+**Note:** Each command (`generate`, `server`, `config`, etc.) now launches its corresponding interactive screen with real-time status updates, progress indicators, and professional UI styling.
 
 ## 🛠️ CLI Options
 
@@ -137,7 +142,32 @@ c3d render my_model.py --output=custom_name.stl
 c3d generate "a gear" --no-viewer
 ```
 
-## 🖥️ CLI Interface & Development
+## 🖥️ CLI Interface & Interactive Experience
+
+### Interactive Command Screens
+
+C3D features beautiful, professional interactive screens for all main commands:
+
+```sh
+# Launch generation with real-time progress tracking
+c3d generate "a gear with 12 teeth"
+
+# Interactive server management with status indicators
+c3d server start
+
+# Browse local STL files with arrow key navigation
+c3d list
+
+# Interactive configuration editor
+c3d config
+```
+
+Each screen includes:
+- **Dynamic Color Schemes**: Randomly selected blue, green, orange themes
+- **Real-time Status Updates**: Progress bars and shimmer effects
+- **Professional Branding**: ASCII dolphin art and bordered layouts
+- **Interactive Controls**: Arrow key navigation, live editing
+- **Error Handling**: Always red-colored error screens override random themes
 
 ### UI Development Playground
 
@@ -154,14 +184,8 @@ c3d ui static
 c3d ui shimmer
 
 # Test specific application screens
-c3d ui screen <name>
+c3d ui screen <n>
 ```
-
-Each screen demonstrates:
-- Real-time status updates with shimmer effects
-- Auto-cycling demo states showing different phases
-- Professional ASCII art layouts with UNXVERSAL dolphin branding
-- Interactive navigation controls (arrow keys, 'q' to quit)
 
 ### Animation Features
 
@@ -209,8 +233,8 @@ cli/c3d/
 │   ├── app.tsx            # Main CLI application
 │   ├── cli.tsx            # Command parsing and help
 │   ├── components/        # Reusable UI components
-│   ├── screens/           # Screen testing components
-│   ├── dolphins.ts        # ASCII art assets
+│   ├── screens/           # Interactive screen components
+│   ├── dolphins.ts        # ASCII art assets and color schemes
 │   └── server/            # Python FastAPI backend
 ├── frontend-dist/         # Built React frontend (generated)
 ├── dist/                  # Compiled TypeScript (generated)
@@ -245,16 +269,16 @@ node dist/cli.js ui screen home
 
 ### Server Commands
 ```sh
-c3d server start          # Start Python backend
-c3d server stop           # Stop Python backend
-c3d server status         # Check server status
+c3d server start          # Start Python backend (interactive screen)
+c3d server stop           # Stop Python backend (interactive screen)
+c3d server status         # Check server status (interactive screen)
 ```
 
 ### Configuration
 
-View current settings:
+Interactive configuration editor:
 ```sh
-c3d config
+c3d config               # Launch interactive editor with arrow keys
 ```
 
 Default configuration includes:
@@ -263,6 +287,8 @@ Default configuration includes:
 - **Max Retries**: 5 attempts for generation
 - **Temperature**: 0.7 for AI model creativity
 - **Host**: `127.0.0.1:11434` for Ollama connection
+- **Server Timeout**: 45 seconds for startup
+- **Stop Server on Quit**: Configurable option to kill server when exiting CLI
 
 ## 🔍 Troubleshooting
 
@@ -292,7 +318,7 @@ Default configuration includes:
 
 ### Model Management
 ```sh
-# Remove model to free disk space (4-8GB)
+# Remove model to free disk space (4-8GB) - interactive screen
 c3d deload
 
 # Check model status
@@ -328,10 +354,11 @@ npm install -g c3d
 
 ### Development Guidelines
 - Follow TypeScript best practices
-- Test UI components with `c3d ui screen <name>`
+- Test UI components with `c3d ui screen <n>`
 - Ensure ASCII art alignment in terminal
 - Maintain dark theme consistency
 - Add comprehensive error handling
+- Use interactive screens for new commands
 
 ## 📄 License
 
