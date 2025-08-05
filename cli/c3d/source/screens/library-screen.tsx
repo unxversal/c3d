@@ -39,7 +39,11 @@ const SEARCH_PATHS = [
   '/tmp'
 ];
 
-export function LibraryScreen() {
+interface Props {
+	initialSelectedFile?: string;
+}
+
+export function LibraryScreen({initialSelectedFile}: Props) {
   const [files, setFiles] = useState<FileInfo[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileInfo[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -86,6 +90,14 @@ export function LibraryScreen() {
       
       setFiles(foundFiles);
       setFilteredFiles(foundFiles);
+
+      if (initialSelectedFile) {
+        const initialIndex = foundFiles.findIndex(file => file.path === initialSelectedFile);
+        if (initialIndex !== -1) {
+          setSelectedIndex(initialIndex);
+        }
+      }
+      
       setLoading(false);
       setStatus(`Found ${foundFiles.length} STL files`);
     };

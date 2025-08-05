@@ -21,6 +21,7 @@ interface Props {
 		retries?: number;
 		noViewer?: boolean;
 	};
+	navigateTo: (screen: 'list', selectedFile?: string) => void; 
 }
 
 type EditorMode = 'generating' | 'waiting' | 'editing_code' | 'editing_prompt' | 'success' | 'error';
@@ -29,11 +30,10 @@ type EditingFocus = 'prompt' | 'code';
 const serverManager = new ServerManager();
 const generationService = new GenerationService();
 
-export function EditorScreen({prompt: initialPrompt, flags}: Props) {
+export function EditorScreen({prompt: initialPrompt, flags, navigateTo}: Props) {
 	const [mode, setMode] = useState<EditorMode>('generating');
 	const [editingFocus, setEditingFocus] = useState<EditingFocus>('prompt');
-	const [currentPrompt] = useState(initialPrompt);
-	// Note: setCurrentPrompt removed for now - prompt editing requires external editor
+	const [currentPrompt, setCurrentPrompt] = useState(initialPrompt);
 	const [currentCode, setCurrentCode] = useState('');
 	const [message, setMessage] = useState('Starting interactive CAD generation...');
 	const [progress, setProgress] = useState<GenerationProgress | null>(null);
@@ -53,9 +53,29 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 
 	// Handle key inputs
 	useInput((input, key) => {
-		if (key.tab && (mode === 'editing_code' || mode === 'editing_prompt')) {
-			// Toggle between editing prompt and code
-			setEditingFocus(editingFocus === 'prompt' ? 'code' : 'prompt');
+		if (key.tab && (mode === 'editing_code' || mode === 'editing_prompt' || mode === 'success')) {
+			if (mode === 'success') {
+				// From success mode → start editing (prompt first)
+				setMode('editing_prompt');
+				setEditingFocus('prompt');
+				setMessage('Edit mode: Editing prompt. Press Tab to switch to code or return to view.');
+			} else if (mode === 'editing_prompt') {
+				// From prompt editing → code editing
+				setMode('editing_code');
+				setEditingFocus('code');
+				setMessage('Edit mode: Editing code. Press Tab to return to view or switch to prompt.');
+			} else if (mode === 'editing_code') {
+				// From code editing → back to success/view mode
+				if (successResult) {
+					setMode('success');
+					setMessage(`✅ Generation complete!\nOutput: ${successResult.outputPath}\nAttempts: ${successResult.attempts}\n\nPress Tab to edit, Ctrl+L for library`);
+				} else {
+					// If no success result yet, go to prompt editing
+					setMode('editing_prompt');
+					setEditingFocus('prompt');
+					setMessage('Edit mode: Editing prompt. Press Tab to switch to code.');
+				}
+			}
 		}
 		
 		if (key.ctrl && input === 'c') {
@@ -66,9 +86,11 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 			}
 		}
 		
-		if (key.return && key.shift && (mode === 'editing_code' || mode === 'editing_prompt')) {
-			// Resend/regenerate with current prompt
-			attemptGeneration();
+		if (key.ctrl && input === 'r') {
+			// Resend/regenerate with current prompt (Ctrl+R)
+			if (mode === 'editing_code' || mode === 'editing_prompt') {
+				attemptGeneration();
+			}
 		}
 		
 		// Code scrolling with arrow keys (when not in editing mode)
@@ -85,23 +107,10 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 		
 		// Open library shortcut (Ctrl+L)
 		if (key.ctrl && input.toLowerCase() === 'l') {
-			if (mode === 'success' && successResult) {
-				try {
-					// Show generated files directory info and suggest c3d list
-					const documentsDir = `${process.env['HOME'] || '~'}/Documents/C3D Generated`;
-					const command = process.platform === 'darwin' ? 'pbcopy' : 
-								   process.platform === 'win32' ? 'clip' : 'xclip -selection clipboard';
-					
-					execAsync(`echo "${documentsDir}" | ${command}`).then(() => {
-						setMessage(prev => prev + '\n\n📚 Path copied! Exit editor (Ctrl+C) and run: c3d list\nGenerated files in: ~/Documents/C3D Generated/');
-					}).catch(() => {
-						setMessage(prev => prev + '\n\n📚 Exit editor (Ctrl+C) and run: c3d list\nGenerated files in: ~/Documents/C3D Generated/');
-					});
-				} catch (error) {
-					setMessage(prev => prev + '\n\n📚 Exit editor (Ctrl+C) and run: c3d list\nGenerated files in: ~/Documents/C3D Generated/');
-				}
+			if (successResult && successResult.outputPath) {
+				navigateTo('list', successResult.outputPath);
 			} else {
-				setMessage(prev => prev + '\n\n📚 Library: Exit editor (Ctrl+C) and run: c3d list');
+				navigateTo('list');
 			}
 		}
 	});
@@ -221,22 +230,22 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 				<Text color="cyan" bold>
 					{(mode === 'editing_code' || mode === 'editing_prompt') ? '✏️  Edit' : '📋 Code'}
 					{(mode === 'editing_code' || mode === 'editing_prompt') && (
-						<Text color="gray"> (Tab: switch, Shift+Enter: regenerate)</Text>
+						<Text color="gray"> (Tab: cycle modes, Ctrl+R: regenerate, Ctrl+L: library)</Text>
 					)}
 				</Text>
 				
 				{(mode === 'editing_code' || mode === 'editing_prompt') ? (
 					editingFocus === 'prompt' ? (
-						<Box marginTop={1} flexDirection="column" height={26}>
-							<Text color="white">Current Prompt:</Text>
-							<Box borderStyle="round" padding={1} marginTop={1}>
-								<Text color="cyan" wrap="wrap">
-									{currentPrompt}
-								</Text>
+						<Box marginTop={1} height={26}>
+							<Box marginBottom={1}>
+								<Text color="white">Edit Prompt:</Text>
 							</Box>
-							<Text color="gray" italic>
-								Note: Use external editor to modify prompt, then restart.
-							</Text>
+							<CodeEditor
+								value={currentPrompt}
+								onChange={setCurrentPrompt}
+								placeholder="Enter your CAD generation prompt here..."
+								maxHeight={24}
+							/>
 						</Box>
 					) : (
 						<Box marginTop={1} height={26}>
@@ -355,7 +364,7 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 					<Box flexDirection="column">
 						<Text color="magenta" bold>🎮 Controls</Text>
 						<Text color="gray">  • Tab: Switch between prompt/code editing</Text>
-						<Text color="gray">  • Shift+Enter: Regenerate with current settings</Text>
+						<Text color="gray">  • Ctrl+R: Regenerate with current settings</Text>
 						<Text color="gray">  • ↑↓: Scroll code display</Text>
 						<Text color="gray">  • Ctrl+L: Open in library (after success)</Text>
 						<Text color="gray">  • Ctrl+C: Cancel waiting period</Text>

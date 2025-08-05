@@ -35,56 +35,56 @@ type Props = {
 
 const serverManager = new ServerManager();
 
+type Screen = 'home' | 'viewer' | 'list' | 'config' | 'generate' | 'editor' | 'server' | 'render' | 'deload' | 'ui_playground' | 'static_playground' | 'shimmer_playground' | 'screen_tester';
+
 export default function App({command, subCommand, scriptFile, generatePrompt, editorPrompt, screenName, flags}: Props) {
+	const [activeScreen, setActiveScreen] = useState<Screen>(command as Screen);
+	const [initialFile, setInitialFile] = useState<string | undefined>(undefined);
+	
+	const navigateTo = (screen: Screen, selectedFile?: string) => {
+		setActiveScreen(screen);
+		if (selectedFile) {
+			setInitialFile(selectedFile);
+		}
+	};
+	
 	const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 	const [message, setMessage] = useState('');
 	const [serverRunning, setServerRunning] = useState(false);
 	const [actualPort, setActualPort] = useState<number | null>(null);
 
-	// UI Playground modes
-	if (command === 'viewer') {
-		return <ViewerLauncher />;
-	}
-
-	if (command === 'list') {
-		return <LibraryScreen />;
-	}
-
-	if (command === 'config') {
-		return <ConfigScreen />;
-	}
-
-	if (command === 'generate' && generatePrompt) {
-		return <GenerationScreen prompt={generatePrompt} flags={flags} />;
-	}
-
-	if (command === 'editor' && editorPrompt) {
-		return <EditorScreen prompt={editorPrompt} flags={flags} />;
-	}
-
-	if (command === 'server' && subCommand) {
-		return <ServerScreen subCommand={subCommand as 'start' | 'stop' | 'status'} flags={flags} />;
-	}
-
-	if (command === 'render' && scriptFile) {
-		return <RenderScreen scriptFile={scriptFile} flags={flags} />;
-	}
-
-	if (command === 'deload') {
-		return <DeloadScreen flags={flags} />;
-	}
-
-	if (command === 'ui') {
-		if (subCommand === 'static') {
-			return <StaticPlayground />;
-		}
-		if (subCommand === 'shimmer') {
-			return <ShimmerPlayground />;
-		}
-		if (subCommand === 'screen') {
-			return <ScreenTester screenName={screenName || 'home'} />;
-		}
-		return <UIPlayground />;
+	switch (activeScreen) {
+		case 'viewer':
+			return <ViewerLauncher />;
+		case 'list':
+			return <LibraryScreen initialSelectedFile={initialFile} />;
+		case 'config':
+			return <ConfigScreen />;
+		case 'generate':
+			if (!generatePrompt) return <Text>Error: 'generate' command requires a prompt.</Text>;
+			return <GenerationScreen prompt={generatePrompt} flags={flags} />;
+		case 'editor':
+			if (!editorPrompt) return <Text>Error: 'editor' command requires a prompt.</Text>;
+			return <EditorScreen prompt={editorPrompt} flags={flags} navigateTo={navigateTo} />;
+		case 'server':
+			if (!subCommand) return <Text>Error: 'server' command requires a subcommand (start, stop, status).</Text>;
+			return <ServerScreen subCommand={subCommand as 'start' | 'stop' | 'status'} flags={flags} />;
+		case 'render':
+			if (!scriptFile) return <Text>Error: 'render' command requires a script file path.</Text>;
+			return <RenderScreen scriptFile={scriptFile} flags={flags} />;
+		case 'deload':
+			return <DeloadScreen flags={flags} />;
+		case 'ui_playground':
+		case 'static_playground':
+		case 'shimmer_playground':
+		case 'screen_tester':
+			if (subCommand === 'static') return <StaticPlayground />;
+			if (subCommand === 'shimmer') return <ShimmerPlayground />;
+			if (subCommand === 'screen') return <ScreenTester screenName={screenName || 'home'} />;
+			return <UIPlayground />;
+		default:
+			// Fallback to the original "hello" / default screen logic
+			break;
 	}
 
 	const updateServerStatus = async () => {

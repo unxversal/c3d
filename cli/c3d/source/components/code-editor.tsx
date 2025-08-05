@@ -84,18 +84,17 @@ export function CodeEditor({value, onChange, placeholder = '', maxHeight = 20}: 
 			setCursorLine(cursorLine + 1);
 			setCursorColumn(0);
 		} else if (key.backspace) {
+			const currentLine = lines[cursorLine] || '';
 			if (cursorColumn > 0) {
-				// Delete character before cursor
-				const currentLine = lines[cursorLine] || '';
+				// Delete character at cursor position (the character the cursor is on)
 				const newLine = currentLine.slice(0, cursorColumn - 1) + currentLine.slice(cursorColumn);
 				const newLines = [...lines];
 				newLines[cursorLine] = newLine;
 				setLines(newLines);
 				setCursorColumn(cursorColumn - 1);
 			} else if (cursorLine > 0) {
-				// Merge with previous line
+				// At beginning of line - merge with previous line
 				const prevLine = lines[cursorLine - 1] || '';
-				const currentLine = lines[cursorLine] || '';
 				const newLines = [
 					...lines.slice(0, cursorLine - 1),
 					prevLine + currentLine,
@@ -108,13 +107,14 @@ export function CodeEditor({value, onChange, placeholder = '', maxHeight = 20}: 
 		} else if (key.delete) {
 			const currentLine = lines[cursorLine] || '';
 			if (cursorColumn < currentLine.length) {
-				// Delete character at cursor
+				// Delete character after cursor (at cursorColumn position)
 				const newLine = currentLine.slice(0, cursorColumn) + currentLine.slice(cursorColumn + 1);
 				const newLines = [...lines];
 				newLines[cursorLine] = newLine;
 				setLines(newLines);
+				// Cursor stays at same position
 			} else if (cursorLine < lines.length - 1) {
-				// Merge with next line
+				// At end of line - merge with next line
 				const nextLine = lines[cursorLine + 1] || '';
 				const newLines = [
 					...lines.slice(0, cursorLine),
@@ -122,6 +122,7 @@ export function CodeEditor({value, onChange, placeholder = '', maxHeight = 20}: 
 					...lines.slice(cursorLine + 2)
 				];
 				setLines(newLines);
+				// Cursor stays at same position
 			}
 		} else if (input && !key.ctrl && !key.meta) {
 			// Insert character

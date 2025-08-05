@@ -1267,3 +1267,75 @@ Response JSON:
 }
 ================================================================================
 
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T19:55:19.390Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T19:56:40.396Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T20:00:40.812Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T20:26:18.271Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 5x2.5x1.25 cube\nresult = cq.Workplane(\"XY\").box(5, 2.5, 1.25).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T20:37:58.786Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T20:41:24.138Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the dimensions of the cube\nwidth = 20\ndepth = 10\nheight = 5\n\n# Create the cube with rounded edges\nresult = cq.Workplane(\"XY\").box(width, depth, height).edges().fillet(1)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T20:48:04.021Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T20:49:36.582Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T20:49:53.948Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
