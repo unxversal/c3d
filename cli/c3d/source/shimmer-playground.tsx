@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Text, Box, useInput} from 'ink';
-import {DOLPHIN_ANSI_ONE, DOLPHIN_ANSI_TWO, DOLPHIN_BANNER, DOLPHIN_BANNER_COLUMNS} from './dolphins.js';
+import {DOLPHIN_ANSI_ONE, DOLPHIN_ANSI_TWO, DOLPHIN_BANNER, DOLPHIN_BANNER_COLUMNS, getRandomColorScheme, type ColorScheme} from './dolphins.js';
 
 // Shimmer/ripple effects playground
 export function ShimmerPlayground() {
@@ -9,6 +9,7 @@ export function ShimmerPlayground() {
 	const [pulseIntensity, setPulseIntensity] = useState(0);
 	const [focusedSection, setFocusedSection] = useState(0);
 	const [selectedDolphin, setSelectedDolphin] = useState(DOLPHIN_ANSI_ONE);
+	const [colorScheme] = useState<ColorScheme>(getRandomColorScheme());
 
 	const sections = ['Wave Ripple', 'Color Shimmer', 'Pulse Effect', 'Character Shimmer', 'Letter Animation', 'Sliding Highlight', 'Flash Animation', 'Static Shimmer', 'Letter Animation 2'];
 
@@ -56,7 +57,7 @@ export function ShimmerPlayground() {
 
 	// Create shimmer effect by cycling through colors
 	const getShimmerColor = (index: number): string => {
-		const colors = ['blue', 'cyan', 'white', 'cyan'];
+		const colors = [colorScheme.secondary, colorScheme.primary, colorScheme.accent, colorScheme.primary];
 		return colors[(shimmerPhase + index) % colors.length]!;
 	};
 
@@ -65,17 +66,17 @@ export function ShimmerPlayground() {
 		const waveCenter = (wavePosition / 100) * 35; // Assuming ~35 lines in dolphin
 		const distance = Math.abs(lineIndex - waveCenter);
 		
-		if (distance < 2) return 'white';
-		if (distance < 4) return 'cyan';
-		if (distance < 6) return 'blue';
-		return 'blue';
+		if (distance < 2) return colorScheme.accent;
+		if (distance < 4) return colorScheme.primary;
+		if (distance < 6) return colorScheme.secondary;
+		return colorScheme.secondary;
 	};
 
 	// Create pulse effect
 	const getPulseProps = () => {
 		const intensity = pulseIntensity / 10;
 		return {
-			color: intensity > 0.7 ? 'white' : intensity > 0.4 ? 'cyan' : 'blue' as const,
+			color: intensity > 0.7 ? colorScheme.accent : intensity > 0.4 ? colorScheme.primary : colorScheme.secondary,
 			dimColor: intensity < 0.3
 		};
 	};

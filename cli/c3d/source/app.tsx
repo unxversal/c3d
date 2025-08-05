@@ -8,6 +8,7 @@ import {StaticPlayground} from './static-playground.js';
 import {ShimmerPlayground} from './shimmer-playground.js';
 import {ScreenTester} from './screen-tester.js';
 import {ViewerLauncher} from './viewer-launcher.js';
+import {LibraryScreen} from './screens/library-screen.js';
 import {exec} from 'child_process';
 import {promisify} from 'util';
 
@@ -41,6 +42,10 @@ export default function App({command, subCommand, scriptFile, generatePrompt, sc
 	// UI Playground modes
 	if (command === 'viewer') {
 		return <ViewerLauncher />;
+	}
+
+	if (command === 'list') {
+		return <LibraryScreen />;
 	}
 
 	if (command === 'ui') {

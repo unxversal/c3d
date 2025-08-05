@@ -103,6 +103,34 @@ async def health_check():
         "api_version": "1.0.0"
     }
 
+@app.get("/api/load-stl")
+async def load_stl_file(file_path: str):
+    """Load a local STL file by copying it to the temp directory"""
+    try:
+        # Validate file exists and is STL
+        file_path_obj = Path(file_path)
+        if not file_path_obj.exists():
+            raise HTTPException(404, f"STL file not found: {file_path}")
+        
+        if not file_path_obj.suffix.lower() == '.stl':
+            raise HTTPException(400, "File must be an STL file")
+        
+        # Copy to temp directory with a safe name
+        safe_filename = f"library_{uuid.uuid4().hex[:8]}_{file_path_obj.name}"
+        temp_path = temp_files_dir / safe_filename
+        
+        shutil.copy2(file_path_obj, temp_path)
+        
+        return {
+            "success": True,
+            "temp_filename": safe_filename,
+            "original_path": str(file_path_obj),
+            "size": file_path_obj.stat().st_size
+        }
+        
+    except Exception as e:
+        raise HTTPException(500, f"Failed to load STL file: {str(e)}")
+
 # Frontend routes (must be defined before mounts)
 @app.get("/")
 async def serve_frontend():

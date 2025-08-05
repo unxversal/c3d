@@ -38,7 +38,7 @@ export function ViewerLauncher() {
 				setMessage('🌐 Opening web viewer...');
 				
 				// Open browser (cross-platform)
-				const url = `http://localhost:${serverPort || 8765}`;
+				const url = `http://localhost:${serverPort || 8765}?from=cli`;
 				const platform = process.platform;
 				
 				if (platform === 'darwin') {

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Text, Box} from 'ink';
-import {DOLPHIN_ANSI_ONE, DOLPHIN_BANNER} from './dolphins.js';
+import {DOLPHIN_ANSI_ONE, DOLPHIN_BANNER, getRandomColorScheme, ColorScheme} from './dolphins.js';
 import {ServerManager} from './server-manager.js';
 import {GenerationService, GenerationProgress} from './generation-service.js';
 import {getConfig, updateConfig} from './c3d.config.js';
@@ -27,6 +27,7 @@ export default function BrandedInterface({command, subCommand, scriptFile, gener
 	const [serverRunning, setServerRunning] = useState(false);
 	const [actualPort, setActualPort] = useState<number | null>(null);
 	const [generationProgress, setGenerationProgress] = useState<GenerationProgress | null>(null);
+	const [colorScheme] = useState<ColorScheme>(getRandomColorScheme());
 
 	const updateServerStatus = async () => {
 		const currentPort = serverManager.getCurrentPort();
@@ -211,7 +212,7 @@ Output Settings:
 		<Box flexDirection="column" padding={1}>
 			{/* Top Banner */}
 			<Box marginBottom={2}>
-				<Text color="cyan">
+				<Text color={colorScheme.primary}>
 					{DOLPHIN_BANNER}
 				</Text>
 			</Box>
@@ -220,7 +221,7 @@ Output Settings:
 			<Box flexDirection="row">
 				{/* Left Side - Dolphin */}
 				<Box flexDirection="column" marginRight={4}>
-					<Text color="blue">
+					<Text color={colorScheme.secondary}>
 						{DOLPHIN_ANSI_ONE}
 					</Text>
 				</Box>
@@ -230,7 +231,7 @@ Output Settings:
 					{/* Server Status */}
 					<Box marginBottom={2} borderStyle="single" padding={1}>
 						<Box flexDirection="column">
-							<Text color="cyan" bold>🖥️  Server Status</Text>
+							<Text color={colorScheme.primary} bold>🖥️  Server Status</Text>
 							<Box marginTop={1}>
 								<Text color={serverRunning ? 'green' : 'red'}>
 									{serverRunning ? '🟢 Running' : '🔴 Stopped'}
@@ -243,7 +244,7 @@ Output Settings:
 					{/* Current Operation */}
 					<Box marginBottom={2} borderStyle="single" padding={1}>
 						<Box flexDirection="column">
-							<Text color="cyan" bold>⚡ Current Operation</Text>
+							<Text color={colorScheme.primary} bold>⚡ Current Operation</Text>
 							<Box marginTop={1}>
 								{status === 'loading' && (
 									<Box flexDirection="column">
@@ -275,9 +276,9 @@ Output Settings:
 					{/* AI Model Status */}
 					<Box marginBottom={2} borderStyle="single" padding={1}>
 						<Box flexDirection="column">
-							<Text color="cyan" bold>🤖 AI Model</Text>
+							<Text color={colorScheme.primary} bold>🤖 AI Model</Text>
 							<Box marginTop={1}>
-								<Text color="magenta">joshuaokolo/C3Dv0</Text>
+								<Text color={colorScheme.accent}>joshuaokolo/C3Dv0</Text>
 							</Box>
 							<Box>
 								<Text color="gray" dimColor>Two-stage CAD generation</Text>
@@ -288,12 +289,12 @@ Output Settings:
 					{/* Quick Commands */}
 					<Box borderStyle="single" padding={1}>
 						<Box flexDirection="column">
-							<Text color="cyan" bold>🚀 Quick Commands</Text>
+							<Text color={colorScheme.primary} bold>🚀 Quick Commands</Text>
 							<Box marginTop={1} flexDirection="column">
-								<Text color="yellow">c3d generate "your idea"</Text>
-								<Text color="green">c3d server start</Text>
-								<Text color="blue">c3d config</Text>
-								<Text color="red">c3d deload</Text>
+								<Text color={colorScheme.secondary}>c3d generate "your idea"</Text>
+								<Text color={colorScheme.secondary}>c3d server start</Text>
+								<Text color={colorScheme.secondary}>c3d config</Text>
+								<Text color={colorScheme.secondary}>c3d deload</Text>
 							</Box>
 						</Box>
 					</Box>
