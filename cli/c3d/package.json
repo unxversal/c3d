@@ -30,6 +30,7 @@
 		"meow": "^11.0.0",
 		"node-fetch": "^3.3.2",
 		"ollama": "^0.5.16",
+		"openai": "^5.11.0",
 		"react": "^18.2.0",
 		"zod": "^3.25.76",
 		"zod-to-json-schema": "^3.24.6"

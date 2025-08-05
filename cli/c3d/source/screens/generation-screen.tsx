@@ -4,6 +4,7 @@ import {BaseScreen} from '../components/base-screen.js';
 import {ShimmerText} from '../components/shimmer-text.js';
 import {ServerManager} from '../server-manager.js';
 import {GenerationService, GenerationProgress} from '../generation-service.js';
+import {DescriptionResult} from '../ai-service.js';
 import {updateConfig} from '../c3d.config.js';
 import {exec} from 'child_process';
 import {promisify} from 'util';
@@ -29,6 +30,7 @@ export function GenerationScreen({prompt, flags}: Props) {
 	const [message, setMessage] = useState('');
 	const [progress, setProgress] = useState<GenerationProgress | null>(null);
 	const [actualPort, setActualPort] = useState<number | null>(null);
+	const [descriptionResult, setDescriptionResult] = useState<DescriptionResult | null>(null);
 
 	useEffect(() => {
 		const generateModel = async () => {
@@ -56,6 +58,11 @@ export function GenerationScreen({prompt, flags}: Props) {
 				const result = await generationService.generateCADFromText(prompt, (progressUpdate) => {
 					setProgress(progressUpdate);
 					setMessage(progressUpdate.message);
+					
+					// Capture the description result for UI display
+					if (progressUpdate.descriptionResult) {
+						setDescriptionResult(progressUpdate.descriptionResult);
+					}
 				});
 
 				if (result.success) {
@@ -129,9 +136,7 @@ export function GenerationScreen({prompt, flags}: Props) {
 						<Text color="blue" bold>⚡ Generation Status</Text>
 						{status === 'loading' && (
 							<Box flexDirection="column">
-								<Text color="yellow">
-									{progress ? <ShimmerText text={progress.step.toUpperCase() || 'PROCESSING'} /> : <ShimmerText text="INITIALIZING" />}
-								</Text>
+								{progress ? <ShimmerText text={progress.step.toUpperCase() || 'PROCESSING'} /> : <ShimmerText text="INITIALIZING" />}
 								<Text color="gray" dimColor>
 									{progress?.message || 'Starting generation...'}
 								</Text>
@@ -149,6 +154,25 @@ export function GenerationScreen({prompt, flags}: Props) {
 						)}
 					</Box>
 				</Box>
+
+				{/* Debug: LLM Response Display */}
+				{descriptionResult && (
+					<Box borderStyle="single" padding={1} marginBottom={1}>
+						<Box flexDirection="column">
+							<Text color="green" bold>🤖 LLM Description Response (DEBUG)</Text>
+							<Box flexDirection="column">
+								{JSON.stringify(descriptionResult, null, 2)
+									.split('\n')
+									.map((line, index) => (
+										<Text key={index} color="white" wrap="wrap">
+											{line.length > 64 ? line.substring(0, 64) + '...' : line}
+										</Text>
+									))
+								}
+							</Box>
+						</Box>
+					</Box>
+				)}
 
 				<Box borderStyle="single" padding={1}>
 					<Box flexDirection="column">

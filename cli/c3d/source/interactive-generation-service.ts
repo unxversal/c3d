@@ -159,7 +159,7 @@ export class InteractiveGenerationService {
 					if (codeResponse.response_type === 'code') {
 						// Agent provided code, test it
 						this.conversationManager.addCodeAgentMessage(
-							`Generated CADQuery code:\n\`\`\`python\n${codeResponse.cadquery_code}\n\`\`\`\n\n${codeResponse.explanation || ''}`
+							`Generated CADQuery code:\n\`\`\`python\n${codeResponse.cadquery_code}\n\`\`\``
 						);
 
 						onProgress?.({

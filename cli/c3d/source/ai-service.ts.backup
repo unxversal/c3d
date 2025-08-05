@@ -81,26 +81,10 @@ You must respond with structured JSON containing a detailed description, key fea
 
 CRITICAL REQUIREMENTS:
 - Always import cadquery as cq
+- Always end with: cq.exporters.export(result, "output.stl")
 - Use cq.Workplane("XY") to start
-- Assign final object to variable named "result"
 - Make code complete and runnable
 - Use realistic dimensions
-
-MANDATORY FINAL LINE - COPY EXACTLY:
-cq.exporters.export(result, "output.stl")
-
-WRONG EXPORT METHODS (DO NOT USE):
-- cq.exporters.stl.export() ❌
-- cq.exporters.stl() ❌  
-- result.exportSTL() ❌
-- any other export method ❌
-
-ONLY USE: cq.exporters.export(result, "output.stl") ✅
-
-Example complete code:
-import cadquery as cq
-result = cq.Workplane("XY").box(1, 1, 1)
-cq.exporters.export(result, "output.stl")
 
 RESPONSE FORMAT: JSON with only "cadquery_code" field containing complete Python code.`;
 

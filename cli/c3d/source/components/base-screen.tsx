@@ -200,23 +200,25 @@ export function BaseScreen({children, title, showExitAnimation = false, forceCol
 		);
 	};
 
+	const bannerWidth = DOLPHIN_BANNER_COLUMNS.length;
+
 	return (
 		<Box flexDirection="column" padding={1}>
 			<Box flexDirection="row">
 				{/* Left: Dolphin */}
-				<Box flexDirection="column" marginRight={4}>
+				<Box flexDirection="column" marginRight={4} flexShrink={0}>
 					<Text color={colorScheme.primary}>{selectedDolphin}</Text>
 				</Box>
 
-				{/* Right Column */}
-				<Box flexDirection="column">
+				{/* Right Column - constrained to banner width */}
+				<Box flexDirection="column" width={bannerWidth} flexShrink={0}>
 					{/* Top Right: Banner */}
 					<Box marginBottom={1}>
 						{renderBanner()}
 					</Box>
 
-					{/* Bottom Right: Content Area - full width and thin */}
-					<Box flexDirection="column">
+					{/* Bottom Right: Content Area - constrained to banner width */}
+					<Box flexDirection="column" width={bannerWidth}>
 						{typeof children === 'function' ? children(colorScheme) : children}
 					</Box>
 				</Box>

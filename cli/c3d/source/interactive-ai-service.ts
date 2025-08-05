@@ -1,4 +1,4 @@
-import { Ollama } from 'ollama';
+import OpenAI from 'openai';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { getConfig } from './c3d.config.js';
@@ -20,8 +20,6 @@ const CodeAgentResponseSchema = z.object({
 	response_type: z.enum(['code', 'question_to_description', 'request_clarification']).describe('Type of response from the code agent'),
 	content: z.string().describe('The main content of the response'),
 	cadquery_code: z.string().optional().describe('CADQuery Python code if providing code'),
-	explanation: z.string().optional().describe('Explanation of the code approach'),
-	estimated_complexity: z.enum(['simple', 'moderate', 'complex']).optional().describe('Complexity estimate'),
 	question: z.string().optional().describe('Question to ask description agent if response_type is question_to_description'),
 	clarification_needed: z.string().optional().describe('What clarification is needed'),
 });
@@ -47,13 +45,14 @@ export interface InteractiveGenerationResult {
 }
 
 export class InteractiveAIService {
-	private ollama: Ollama;
+	private openai: OpenAI;
 	private conversationManager: ConversationManager;
 
 	constructor() {
 		const config = getConfig();
-		this.ollama = new Ollama({ 
-			host: config.ollamaHost 
+		this.openai = new OpenAI({
+			baseURL: `${config.ollamaHost}/v1`,
+			apiKey: 'ollama', // Required but ignored by Ollama
 		});
 		this.conversationManager = new ConversationManager();
 	}
@@ -96,19 +95,31 @@ You must respond with structured JSON.`;
 			conversationContext += `${roleLabel}: ${msg.content}\n`;
 		});
 
-		const response = await this.ollama.chat({
+		const response = await this.openai.chat.completions.create({
 			model: config.ollamaModel,
 			messages: [
 				{ role: 'system', content: systemPrompt },
 				{ role: 'user', content: conversationContext }
 			],
-			format: zodToJsonSchema(DescriptionAgentResponseSchema),
-			options: {
-				temperature: config.temperature,
+			response_format: {
+				type: 'json_schema',
+				json_schema: {
+					name: 'description_agent_response',
+					strict: true,
+					schema: zodToJsonSchema(DescriptionAgentResponseSchema)
+				}
 			},
+			temperature: config.temperature,
+			stream: false,
+			max_tokens: config.maxTokens, // Use configured token limit
 		});
 
-		return DescriptionAgentResponseSchema.parse(JSON.parse(response.message.content));
+		const content = response.choices[0]?.message?.content;
+		if (!content) {
+			throw new Error('No response content received from OpenAI API');
+		}
+
+		return DescriptionAgentResponseSchema.parse(JSON.parse(content));
 	}
 
 	async processCodeAgent(contextMessages: Message[]): Promise<CodeAgentResponse> {
@@ -166,19 +177,31 @@ You must respond with structured JSON.`;
 			conversationContext += `${roleLabel}: ${msg.content}\n`;
 		});
 
-		const response = await this.ollama.chat({
+		const response = await this.openai.chat.completions.create({
 			model: config.ollamaModel,
 			messages: [
 				{ role: 'system', content: systemPrompt },
 				{ role: 'user', content: conversationContext }
 			],
-			format: zodToJsonSchema(CodeAgentResponseSchema),
-			options: {
-				temperature: config.temperature,
+			response_format: {
+				type: 'json_schema',
+				json_schema: {
+					name: 'code_agent_response',
+					strict: true,
+					schema: zodToJsonSchema(CodeAgentResponseSchema)
+				}
 			},
+			temperature: config.temperature,
+			stream: false,
+			max_tokens: config.maxTokens, // Use configured token limit
 		});
 
-		return CodeAgentResponseSchema.parse(JSON.parse(response.message.content));
+		const content = response.choices[0]?.message?.content;
+		if (!content) {
+			throw new Error('No response content received from OpenAI API');
+		}
+
+		return CodeAgentResponseSchema.parse(JSON.parse(content));
 	}
 
 	getConversationManager(): ConversationManager {
@@ -188,8 +211,8 @@ You must respond with structured JSON.`;
 	async checkModelAvailability(): Promise<boolean> {
 		try {
 			const config = getConfig();
-			const models = await this.ollama.list();
-			return models.models.some(model => model.name.includes(config.ollamaModel));
+			const models = await this.openai.models.list();
+			return models.data.some((model: any) => model.id.includes(config.ollamaModel));
 		} catch (error) {
 			return false;
 		}
@@ -197,10 +220,26 @@ You must respond with structured JSON.`;
 
 	async pullModel(): Promise<void> {
 		const config = getConfig();
-		await this.ollama.pull({ 
-			model: config.ollamaModel,
-			stream: false 
-		});
+		// OpenAI compatibility API doesn't support model pulling
+		// Fall back to direct Ollama HTTP API call
+		try {
+			const response = await fetch(`${config.ollamaHost}/api/pull`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					name: config.ollamaModel,
+					stream: false
+				})
+			});
+			
+			if (!response.ok) {
+				throw new Error(`Failed to pull model: ${response.statusText}`);
+			}
+		} catch (error) {
+			throw new Error(`Failed to pull model: ${error instanceof Error ? error.message : String(error)}`);
+		}
 	}
 
 	reset(): void {

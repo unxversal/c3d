@@ -4,6 +4,7 @@ export interface C3DConfig {
 	ollamaModel: string;
 	ollamaHost: string;
 	temperature: number;
+	maxTokens: number;
 	
 	// Server Settings
 	defaultPort: number;
@@ -26,6 +27,7 @@ export const defaultConfig: C3DConfig = {
 	ollamaModel: 'joshuaokolo/C3Dv0',
 	ollamaHost: 'http://127.0.0.1:11434',
 	temperature: 0.9, // Low temperature for more deterministic output
+	maxTokens: 32768, // Maximum tokens for LLM responses
 	
 	// Server Settings
 	defaultPort: 8765,
