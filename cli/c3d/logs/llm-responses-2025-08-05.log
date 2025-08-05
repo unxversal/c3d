@@ -1259,3 +1259,11 @@ Response JSON:
 }
 ================================================================================
 
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T19:45:49.068Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 5x7.5x2.5 cube\nresult = cq.Workplane(\"XY\").box(5, 7.5, 2.5).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
