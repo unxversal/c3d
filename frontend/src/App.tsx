@@ -14,11 +14,13 @@ function App() {
   const [originalPrompt, setOriginalPrompt] = useState(''); // Store the original prompt
   const [interactiveMode, setInteractiveMode] = useState(false); // Interactive mode for live collaboration
   const [showUpload, setShowUpload] = useState(false); // Show upload controls
+  const [isFromLibrary, setIsFromLibrary] = useState(false); // Track if opened from library
 
   // Check URL params for auto-loading models
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const modelFile = urlParams.get('model');
+    const stlFile = urlParams.get('stl');
     const promptParam = urlParams.get('prompt');
     const fromCLI = urlParams.get('from') === 'cli';
     const interactive = urlParams.get('mode') === 'interactive';
@@ -26,6 +28,11 @@ function App() {
     if (interactive) {
       setInteractiveMode(true);
       setShowUpload(true); // Enable upload controls in interactive mode
+    }
+    
+    // Enable upload button when launched from CLI (c3d viewer) but NOT when viewing a specific STL file
+    if (fromCLI && !stlFile) {
+      setShowUpload(true); // Enable upload controls for testing
     }
     
     // Enable upload button in development mode for debugging
@@ -47,6 +54,12 @@ function App() {
       if (promptParam) {
         setPrompt(decodeURIComponent(promptParam));
       }
+    } else if (stlFile && fromCLI) {
+      // Library mode - opened from CLI library with local STL file
+      setViewMode(true);
+      setIsFromLibrary(true);
+      setOriginalPrompt(`Loaded from library: ${decodeURIComponent(stlFile).split('/').pop()}`);
+      loadSTLFromPath(decodeURIComponent(stlFile));
     }
   }, []);
 
@@ -114,6 +127,40 @@ function App() {
     }
   };
 
+  const loadSTLFromPath = async (filePath: string) => {
+    try {
+      // First, ask the server to load the STL file
+      const loadResponse = await fetch(`/api/load-stl?file_path=${encodeURIComponent(filePath)}`);
+      if (!loadResponse.ok) {
+        throw new Error(`Failed to load file: ${loadResponse.statusText}`);
+      }
+      
+      const loadResult = await loadResponse.json();
+      if (!loadResult.success) {
+        throw new Error('Server failed to load STL file');
+      }
+      
+      // Now download the copied file from the temp directory
+      const fileResponse = await fetch(`/files/${loadResult.temp_filename}`);
+      if (!fileResponse.ok) {
+        throw new Error(`Failed to download file: ${fileResponse.statusText}`);
+      }
+      
+      const arrayBuffer = await fileResponse.arrayBuffer();
+      setStlData(arrayBuffer);
+      setResult({
+        success: true,
+        output_path: filePath,
+        message: `Loaded ${filePath.split('/').pop()}`
+      });
+    } catch (error) {
+      setResult({
+        success: false,
+        error: `Failed to load ${filePath}: ${error instanceof Error ? error.message : 'Unknown error'}`
+      });
+    }
+  };
+
   return (
     <div className={styles.app}>
       {/* Full-screen 3D viewer */}
@@ -150,18 +197,20 @@ function App() {
               </div>
               <div className={styles.promptText}>{originalPrompt}</div>
             </div>
-            <button
-              className={styles.newModelButton}
-              onClick={() => {
-                setViewMode(false);
-                setPrompt('');
-                setOriginalPrompt('');
-                setResult(null);
-                setStlData(null);
-              }}
-            >
-              Generate New Model
-            </button>
+            {!isFromLibrary && (
+              <button
+                className={styles.newModelButton}
+                onClick={() => {
+                  setViewMode(false);
+                  setPrompt('');
+                  setOriginalPrompt('');
+                  setResult(null);
+                  setStlData(null);
+                }}
+              >
+                Generate New Model
+              </button>
+            )}
           </div>
         ) : (
           // Create Mode - Input form
