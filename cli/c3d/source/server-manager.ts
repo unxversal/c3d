@@ -205,10 +205,29 @@ export class ServerManager {
 		});
 
 		if (!response.ok) {
-			const error = await response.json() as any;
-			throw new Error(`Render failed: ${error.detail?.message || error.detail || response.statusText}`);
+			let errorMessage = `Render failed: ${response.statusText}`;
+			try {
+				const errorText = await response.text();
+				// Try to parse as JSON first
+				try {
+					const error = JSON.parse(errorText);
+					errorMessage = `Render failed: ${error.detail?.message || error.detail || response.statusText}`;
+				} catch {
+					// If not JSON, use the raw text (likely HTML error page)
+					errorMessage = `Render failed: ${errorText.substring(0, 200)}...`;
+				}
+			} catch {
+				// If we can't even read the response, use status text
+				errorMessage = `Render failed: ${response.statusText}`;
+			}
+			throw new Error(errorMessage);
 		}
 
-		return response.json() as Promise<RenderResult>;
+		try {
+			return await response.json() as RenderResult;
+		} catch (error) {
+			// If JSON parsing fails, we need to get a fresh response since we already consumed it
+			throw new Error(`Render failed: Invalid JSON response from server`);
+		}
 	}
 }

@@ -38,8 +38,8 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 	const [message, setMessage] = useState('Starting interactive CAD generation...');
 	const [progress, setProgress] = useState<GenerationProgress | null>(null);
 	const [actualPort, setActualPort] = useState<number | null>(null);
-	const [attempt, setAttempt] = useState(1);
-	const [maxRetries, setMaxRetries] = useState(5);
+
+
 
 	const [lastError, setLastError] = useState('');
 	const [successResult, setSuccessResult] = useState<any>(null);
@@ -83,20 +83,25 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 			}
 		}
 		
-		// Open in library shortcut
-		if (input.toLowerCase() === 'l' && mode === 'success' && successResult?.outputPath) {
-			try {
-				// Copy file path to clipboard using pbcopy (macOS) or other clipboard tools
-				const command = process.platform === 'darwin' ? 'pbcopy' : 
-							   process.platform === 'win32' ? 'clip' : 'xclip -selection clipboard';
-				
-				execAsync(`echo "${successResult.outputPath}" | ${command}`).then(() => {
-					setMessage(prev => prev + '\n\n📚 File path copied to clipboard! Run: c3d list');
-				}).catch(() => {
-					setMessage(prev => prev + '\n\n📚 File location: ' + successResult.outputPath);
-				});
-			} catch (error) {
-				setMessage(prev => prev + '\n\n📚 File location: ' + successResult.outputPath);
+		// Open library shortcut (Ctrl+L)
+		if (key.ctrl && input.toLowerCase() === 'l') {
+			if (mode === 'success' && successResult) {
+				try {
+					// Show generated files directory info and suggest c3d list
+					const documentsDir = `${process.env['HOME'] || '~'}/Documents/C3D Generated`;
+					const command = process.platform === 'darwin' ? 'pbcopy' : 
+								   process.platform === 'win32' ? 'clip' : 'xclip -selection clipboard';
+					
+					execAsync(`echo "${documentsDir}" | ${command}`).then(() => {
+						setMessage(prev => prev + '\n\n📚 Path copied! Exit editor (Ctrl+C) and run: c3d list\nGenerated files in: ~/Documents/C3D Generated/');
+					}).catch(() => {
+						setMessage(prev => prev + '\n\n📚 Exit editor (Ctrl+C) and run: c3d list\nGenerated files in: ~/Documents/C3D Generated/');
+					});
+				} catch (error) {
+					setMessage(prev => prev + '\n\n📚 Exit editor (Ctrl+C) and run: c3d list\nGenerated files in: ~/Documents/C3D Generated/');
+				}
+			} else {
+				setMessage(prev => prev + '\n\n📚 Library: Exit editor (Ctrl+C) and run: c3d list');
 			}
 		}
 	});
@@ -110,7 +115,7 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 			// Update config with CLI flags
 			if (flags.retries) {
 				updateConfig({ maxRetries: flags.retries });
-				setMaxRetries(flags.retries);
+		
 			}
 			if (flags.port) {
 				updateConfig({ defaultPort: flags.port });
@@ -168,42 +173,21 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 					}
 				}
 			} else {
-				// Generation failed - enter waiting period before allowing retry
+				// Generation failed after all internal retries - switch to edit mode
 				setLastError(result.error || 'Unknown error');
-				setCurrentCode(result.finalCode || '');
-				enterWaitingPeriod();
+				setCurrentCode(result.finalCode || '// No code generated\n// Edit this code or press Tab to edit prompt');
+				setMode('editing_code');
+				setMessage(`❌ Generation failed after ${result.attempts} attempts.\n\nLast error: ${result.error}\n\nEdit the code below or press Tab to edit the prompt.`);
 			}
 		} catch (error) {
 			setLastError(error instanceof Error ? error.message : String(error));
 			setCurrentCode('// Error occurred during generation\n// Edit this code or press Tab to edit prompt');
-			enterWaitingPeriod();
+			setMode('editing_code');
+			setMessage(`❌ Unexpected error: ${error instanceof Error ? error.message : String(error)}\n\nEdit the code below or press Tab to edit the prompt.`);
 		}
 	}, [currentPrompt, flags, actualPort]);
 
-	const enterWaitingPeriod = () => {
-		setAttempt(prev => prev + 1);
-		if (attempt >= maxRetries) {
-			setMode('editing_code');
-			setMessage(`❌ Max retries (${maxRetries}) reached. Edit code below or press Tab to edit prompt.`);
-			return;
-		}
 
-		setMode('waiting');
-		let timeLeft = 2;
-		setMessage(`❌ Attempt ${attempt} failed: ${lastError}\n\n⏱️  Next attempt in 2 seconds... (Ctrl+C to cancel and edit)`);
-		
-		// Countdown timer
-		const timer = setInterval(() => {
-			timeLeft--;
-			if (timeLeft <= 0) {
-				clearInterval(timer);
-				// Auto-retry after wait period
-				attemptGeneration();
-			} else {
-				setMessage(`❌ Attempt ${attempt} failed: ${lastError}\n\n⏱️  Next attempt in ${timeLeft} seconds... (Ctrl+C to cancel and edit)`);
-			}
-		}, 1000);
-	};
 
 	// Helper function to open frontend with model
 	const openFrontendWithModel = async (servedFileName: string, port: number, prompt?: string) => {
@@ -234,8 +218,37 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 	const codeDisplay = (
 		<Box borderStyle="single" padding={1} width={60} height={30}>
 			<Box flexDirection="column">
-				<Text color="cyan" bold>📋 Current Code</Text>
-				{currentCode ? (
+				<Text color="cyan" bold>
+					{(mode === 'editing_code' || mode === 'editing_prompt') ? '✏️  Edit' : '📋 Code'}
+					{(mode === 'editing_code' || mode === 'editing_prompt') && (
+						<Text color="gray"> (Tab: switch, Shift+Enter: regenerate)</Text>
+					)}
+				</Text>
+				
+				{(mode === 'editing_code' || mode === 'editing_prompt') ? (
+					editingFocus === 'prompt' ? (
+						<Box marginTop={1} flexDirection="column" height={26}>
+							<Text color="white">Current Prompt:</Text>
+							<Box borderStyle="round" padding={1} marginTop={1}>
+								<Text color="cyan" wrap="wrap">
+									{currentPrompt}
+								</Text>
+							</Box>
+							<Text color="gray" italic>
+								Note: Use external editor to modify prompt, then restart.
+							</Text>
+						</Box>
+					) : (
+						<Box marginTop={1} height={26}>
+							<CodeEditor
+								value={currentCode}
+								onChange={setCurrentCode}
+								placeholder="// Generated CADQuery code will appear here..."
+								maxHeight={24}
+							/>
+						</Box>
+					)
+				) : currentCode ? (
 					<Box marginTop={1} flexDirection="column" height={26}>
 						{(() => {
 							const lines = currentCode.split('\n');
@@ -281,17 +294,16 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 				<Box borderStyle="single" padding={1} marginBottom={1} height={15}>
 					<Box flexDirection="column">
 						<Text color={getStatusColor()} bold>
-							📝 Editor Mode - Attempt {attempt}/{maxRetries}
+							📝 Editor Mode
 						</Text>
 						
 						{/* Show streaming text when active */}
 						{isStreaming && (
 							<Box marginTop={1} flexDirection="column">
-								<Text color="yellow" bold>🔄 Streaming...</Text>
 								<StreamingText 
 									streamingText={streamingText}
 									isComplete={false}
-									height={8}
+									height={10}
 								/>
 							</Box>
 						)}
@@ -303,7 +315,7 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 									<Box flexDirection="column">
 										<Text color="green" bold>🎉 Generation Successful!</Text>
 										<Text color="gray">Final code displayed on the right →</Text>
-										<Text color="cyan">Press L to open in library</Text>
+										<Text color="cyan">Press Ctrl+L to open in library</Text>
 									</Box>
 								)}
 								
@@ -336,41 +348,7 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 					</Box>
 				</Box>
 
-				{/* Editing Interface */}
-				{(mode === 'editing_code' || mode === 'editing_prompt') && (
-					<Box borderStyle="single" padding={1} marginBottom={1}>
-						<Box flexDirection="column">
-							<Text color="cyan" bold>
-								✏️  {editingFocus === 'prompt' ? 'Edit Prompt' : 'Edit Code'} 
-								<Text color="gray"> (Tab to switch, Shift+Enter to regenerate)</Text>
-							</Text>
-							
-							{editingFocus === 'prompt' ? (
-								<Box marginTop={1} flexDirection="column">
-									<Text color="white">Current Prompt:</Text>
-									<Box borderStyle="round" padding={1} marginTop={1}>
-										<Text color="cyan" wrap="wrap">
-											{currentPrompt}
-										</Text>
-									</Box>
-									<Text color="gray" italic>
-										Note: Use external editor to modify prompt, then restart with new prompt.
-									</Text>
-								</Box>
-							) : (
-								<Box marginTop={1} flexDirection="column">
-									<Text color="white">CADQuery Code:</Text>
-									<CodeEditor
-										value={currentCode}
-										onChange={setCurrentCode}
-										placeholder="// Generated CADQuery code will appear here..."
-										maxHeight={15}
-									/>
-								</Box>
-							)}
-						</Box>
-					</Box>
-				)}
+
 
 				{/* Controls */}
 				<Box borderStyle="single" padding={1}>
@@ -379,7 +357,7 @@ export function EditorScreen({prompt: initialPrompt, flags}: Props) {
 						<Text color="gray">  • Tab: Switch between prompt/code editing</Text>
 						<Text color="gray">  • Shift+Enter: Regenerate with current settings</Text>
 						<Text color="gray">  • ↑↓: Scroll code display</Text>
-						<Text color="gray">  • L: Open in library (after success)</Text>
+						<Text color="gray">  • Ctrl+L: Open in library (after success)</Text>
 						<Text color="gray">  • Ctrl+C: Cancel waiting period</Text>
 						<Text color="gray">  • Q: Return to main menu</Text>
 						{actualPort && (

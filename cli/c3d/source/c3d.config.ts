@@ -17,6 +17,9 @@ export interface C3DConfig {
 	defaultOutputFormat: string;
 	keepWorkingDirectory: boolean;
 	
+	// Debug Settings
+	debugLogging: boolean; // Whether to show detailed debug logs during generation
+	
 	// Conversation Management (for future interactive features)
 	keepFirstPrompt: boolean;
 	keepLatestExplanation: boolean;
@@ -41,6 +44,9 @@ export const defaultConfig: C3DConfig = {
 	// Output Settings
 	defaultOutputFormat: 'stl',
 	keepWorkingDirectory: false,
+	
+	// Debug Settings
+	debugLogging: false, // Default to no debug logs
 	
 	// Conversation Management (for future interactive features)
 	keepFirstPrompt: true,

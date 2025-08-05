@@ -379,3 +379,883 @@ Response JSON:
 }
 ================================================================================
 
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:09:31.584Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_radius = 5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Translate the cylinder to the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:15:00.848Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20 * math.sqrt(2)  # Scaled cube size\n\n# Hole dimensions\nhole_radius = 10 * math.sqrt(2)  # Scaled hole radius\nhole_center = (0, 0)  # Center of the hole\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).translate(hole_center)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:15:08.545Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20 * 20  # Scaled width\ncube_depth = 20 * 20  # Scaled depth\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10 * 20  # Scaled radius\nhole_center = (cube_width / 2, cube_depth / 2)  # Scaled center\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).translate(hole_center)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:15:16.361Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_radius = 10\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:15:23.862Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:15:31.389Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20\n\n# Cylinder dimensions\ncylinder_radius = 5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Translate the cylinder to the center of the cube\ncylinder = cylinder.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:15:39.857Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:15:46.269Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:15:53.802Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 8.333333333333333e-6\nhole_center = (cube_size / 2, cube_size / 2)\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).translate(hole_center)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:16:00.318Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:16:07.926Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_size = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Define the cylinder dimensions\ncylinder_height = 8.5\ncylinder_radius = 8.5\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_size/2 - cylinder_radius*2, cube_size/2 - cylinder_radius*2, cylinder_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:16:17.039Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20 * math.sqrt(2)  # Approximate size based on the diagonal\n\n# Hole dimensions\nhole_radius = 10\nhole_center = (cube_size / 2, cube_size / 2)\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).translate(hole_center)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:16:24.911Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:16:33.621Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_size = 20 * cq.Workplane(\"XY\").workplane().val()  # Scale the cube size\n\n# Define the cylinder dimensions\ncylinder_radius = 5 * cq.Workplane(\"XY\").workplane().val()  # Scale the cylinder radius\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cylinder_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_size/2 - cylinder_radius, cube_size/2 - cylinder_radius, cylinder_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:16:41.120Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:16:48.786Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:16:57.176Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:17:03.667Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:17:09.838Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:17:18.159Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_radius = 5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder at the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:17:26.393Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the cylinder dimensions (hole)\ncylinder_height = 20\ncylinder_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder (hole)\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder (hole) in the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder (hole) from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:17:34.860Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:17:42.499Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Cylinder dimensions\ncylinder_radius = 5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder at the center of the cube\ncylinder = cylinder.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:17:49.347Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_size)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:17:57.366Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_radius = 5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder at the center of the cube\ncylinder = cylinder.translate((cube_size/2 - cylinder_radius*2, cube_size/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:18:04.105Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_size = 20 * cq.Workplane(\"XY\").scaleOnPlane(cq.Vector(20, 20, 20))\n\n# Define the hole dimensions\nhole_radius = 5 * cq.Workplane(\"XY\").scaleOnPlane(cq.Vector(20, 20, 20))\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size[0], cube_size[1], cube_size[2]).faces(\">Z\").workplane().circle(hole_radius).cutThruAll()\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:18:13.815Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:18:21.220Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20\n\n# Cylinder dimensions\ncylinder_radius = 5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder at the center of the cube\ncylinder = cylinder.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:18:27.176Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_size = 20 * cq.Workplane(\"XY\").polyline(cq.Workplane(\"XY\").circle(5))\n\n# Create the cube with a hole\nresult = cq.Workplane(\"XY\").box(cube_size[0], cube_size[1], cube_size[2]).cut(cq.Workplane(\"XY\").circle(5).translate((cube_size[0]/2, cube_size[1]/2, cube_size[2]/2)))\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:18:35.801Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_size = 20\ncube = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Define the hole dimensions\nhole_radius = 4.1666666666666667 / 2\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_size)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_size/2 - hole_radius, cube_size/2 - hole_radius, cube_size/2))\n\n# Cut the hole from the cube\nresult = cube.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:18:44.196Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20 * cq.Workplane(\"XY\").scale(20)  # Scale the cube size\nhole_radius = 5 * cq.Workplane(\"XY\").scale(20)  # Scale the hole radius\ncube_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_height)\n\n# Create the cylinder for the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_size/2, cube_size/2, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result to STL\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:18:54.946Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the cylinder dimensions (hole)\ncylinder_radius = 5\ncylinder_height = cube_height  # Extrude the cylinder to the same height as the cube\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder (hole)\nhole = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder (hole) in the center of the cube\nhole = hole.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder (hole) from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:19:04.096Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 4.1666666666666667 / 2\nhole_center_x = cube_width / 2\nhole_center_y = cube_depth / 2\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).translate((hole_center_x, hole_center_y, 0))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:19:10.886Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_size)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:19:18.498Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 8.5\nhole_center_x = 10\nhole_center_y = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).translate((hole_center_x, hole_center_y, 0))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:19:24.172Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_size)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:19:32.765Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_size)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:19:39.641Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:19:47.774Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the cylinder dimensions\ncylinder_radius = 10\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:19:54.338Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20 * cq.Workplane().rect(20, 20).val().x\n\n# Cylinder dimensions\ncylinder_radius = 5 * cq.Workplane().circle(5).val().r\ncylinder_height = 20\n\n# Create the cube with a hole\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size).cut(cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height))\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:20:02.384Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_radius = 5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder at the center of the cube\ncylinder = cylinder.translate((cube_size/2 - cylinder_radius * 2, cube_size/2 - cylinder_radius * 2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:20:10.627Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:20:18.108Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Cylinder dimensions\ncylinder_radius = 5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder at the center of the cube\ncylinder = cylinder.translate((cube_size/2, cube_size/2, cylinder_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:20:24.119Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:20:32.018Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_radius = 10\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:20:39.639Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:20:48.016Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:20:56.165Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_radius = 10\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:21:03.883Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius*2, cube_depth/2 - hole_radius*2, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:21:10.236Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:21:16.557Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:21:26.732Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20 * math.sqrt(2)  # Scaled cube size\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10 * math.sqrt(2)  # Scaled hole radius\nhole_center = (cube_size / 2, cube_size / 2)  # Scaled hole center\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).translate(hole_center)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:21:34.667Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_height = 20\ncylinder_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius, cube_depth/2 - cylinder_radius, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:21:42.263Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:21:48.136Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_size)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:21:55.185Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_size = 20\ncube = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Define the cylinder dimensions\ncylinder_radius = 5\ncylinder_height = cube_size\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_size/2 - cylinder_radius*2, cube_size/2 - cylinder_radius*2, cylinder_height/2))\n\n# Cut the cylinder from the cube\nresult = cube.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:22:03.838Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:22:12.111Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20 * math.sqrt(2)  # Scaled cube size\n\n# Hole dimensions\nhole_radius = 10 * math.sqrt(2)  # Scaled hole radius\nhole_depth = 10  # Depth of the hole\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(hole_depth)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:22:20.518Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_radius = 5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:22:27.741Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_size)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_size/2, cube_size/2, 0))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:22:34.690Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:22:42.680Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_size)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:22:50.133Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 17.3333 * 2  # Radius is twice the diameter\nhole_center = (cube_size / 2, cube_size / 2)  # Center of the cube\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).translate(hole_center)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:22:56.381Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:23:04.278Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:37:32.146Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_height = 20\ncylinder_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:37:40.318Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_radius = 8.5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder at the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:37:47.996Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_radius = 5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:37:54.101Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:38:00.367Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:38:10.299Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Cylinder dimensions\ncylinder_radius = 10\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder at the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:38:17.308Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_size)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:39:28.144Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:39:35.633Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:39:42.620Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_size)\n\n# Translate the hole to the center of the cube\nhole = hole.translate((cube_size/2, cube_size/2, cube_size/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:39:50.025Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_size = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Define the cylinder dimensions\ncylinder_height = 8.5\ncylinder_radius = 8.5\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_size/2 - cylinder_radius, cube_size/2 - cylinder_radius, cylinder_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:39:57.877Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the hole parameters\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole at the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:40:06.289Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole radius\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:40:12.435Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:40:44.021Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:40:53.997Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20 * 10  # Scale the width by 10\ncube_depth = 20 * 10  # Scale the depth by 10\ncube_height = 20 * 10  # Scale the height by 10\n\n# Define the cylinder dimensions\ncylinder_height = 20 * 10  # Scale the height by 10\ncylinder_radius = 10 * 10  # Scale the radius by 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder in the center of the cube\ncylinder = cylinder.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:41:02.268Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Define the cylinder dimensions (hole)\ncylinder_radius = 10\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the cylinder (hole)\nhole = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder (hole) in the center of the cube\nhole = hole.translate((cube_width/2 - cylinder_radius*2, cube_depth/2 - cylinder_radius*2, cube_height/2))\n\n# Cut the cylinder (hole) from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:41:10.051Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Position the hole in the center of the cube\nhole = hole.translate((cube_width/2 - hole_radius, cube_depth/2 - hole_radius, cube_height/2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:41:16.219Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 10\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:41:25.595Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20 * cq.Workplane().rect(20, 20).val().width\ncube_height = 20 * cq.Workplane().rect(20, 20).val().height\n\n# Hole dimensions\nhole_radius = 5 * cq.Workplane().circle(5).val().radius\nhole_center = (cube_width / 2, cube_height / 2)\n\n# Create the cube with a hole\nresult = cq.Workplane(\"XY\").box(cube_width, cube_height, cube_height).faces(\">Z\").workplane().circle(hole_radius).cutThruAll()\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:46:07.386Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Hole dimensions\nhole_radius = 5\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_height)\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:46:12.737Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Cube dimensions\ncube_size = 10\n\n# Fillet radius\nfillet_radius = math.sqrt(cube_size/2) * 0.7  # Adjust fillet radius as needed\n\n# Create the cube with a fillet\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size).fillet(fillet_radius)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:50:29.943Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Create a 20x20x20 cube\ncube = cq.Workplane(\"XY\").box(20, 20, 20)\n\n# Create a hole in the center of the cube\nhole = cq.Workplane(\"XY\").circle(5).extrude(20)\n\n# Cut the hole from the cube\nresult = cube.cut(hole)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:50:35.856Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Add fillets to the edges\nresult = result.edges(\"|Z\").fillet(1)\n\n# Export the result to STL\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:50:41.949Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height).fillet(1)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:50:50.466Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_height = 20\ncube_depth = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_height, cube_depth).fillet(1)\n\n# Create a hole in the center of the cube\nhole_radius = 5\nhole_x = cube_width / 2\nhole_y = cube_height / 2\nhole_z = cube_depth / 2\n\nhole = cq.Workplane(\"XY\").circle(hole_radius).translate((hole_x, hole_y, hole_z))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:50:56.437Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height).fillet(1)\n\n# Export the result to STL\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:53:22.399Z ===
+Prompt: generate a pain simple cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define cube dimensions\ncube_width = 20\ncube_height = 20\ncube_depth = 20\n\n# Create the cube\ncube = cq.Workplane(\"XY\").box(cube_width, cube_height, cube_depth)\n\n# Define hole dimensions\nhole_radius = 5\n\n# Create the hole in the cube\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(cube_depth)\n\n# Cut the hole from the cube\nresult = cube.cut(hole.translate((cube_width/2, cube_height/2, cube_depth/2)))\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:53:28.874Z ===
+Prompt: generate a pain simple cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Create a 20x20x20 cube\ncube_width = 20\ncube_height = 20\ncube_depth = 20\n\nresult = cq.Workplane(\"XY\").box(cube_width, cube_height, cube_depth).fillet(1)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:53:34.798Z ===
+Prompt: generate a pain simple cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ncube_width = 20\ncube_height = 20\ncube_depth = 20\n\nresult = cq.Workplane(\"XY\").box(cube_width, cube_height, cube_depth).fillet(1)\n\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:53:51.858Z ===
+Prompt: generate a simple cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height)\n\n# Hole parameters\nhole_radius = 5\nhole_x = cube_width / 2\nhole_y = cube_depth / 2\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).translate((hole_x, hole_y, cube_height / 2))\n\n# Cut the hole from the cube\nresult = result.cut(hole)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:53:58.194Z ===
+Prompt: generate a simple cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height).fillet(1)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:54:04.273Z ===
+Prompt: generate a simple cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height).fillet(1)\n\n# Export the result to STL\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:54:09.829Z ===
+Prompt: generate a simple cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 20x20x20 cube\nresult = cq.Workplane(\"XY\").box(20, 20, 20).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:54:18.479Z ===
+Prompt: generate a simple cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_width = 20\ncube_depth = 20\ncube_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_width, cube_depth, cube_height).fillet(1)\n\n# Create a hole in the center of the cube\nhole_size = 5\nhole_x = cube_width / 2\nhole_y = cube_depth / 2\n\nhole = cq.Workplane(\"XY\").circle(hole_size).translate((hole_x, hole_y, cube_height / 2))\n\n# Cut the hole from the cube\nresult = result.faces(\">Z\").workplane().circle(hole_size).cutThruAll()\n\n# Export the result to STL\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:57:22.880Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube dimensions\ncube_size = 20\n\n# Cylinder dimensions\ncylinder_radius = 5\ncylinder_height = 20\n\n# Create the cube\nresult = cq.Workplane(\"XY\").box(cube_size, cube_size, cylinder_height)\n\n# Create the cylinder\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder at the center of the cube\ncylinder = cylinder.translate((cube_size/2 - cylinder_radius, cube_size/2 - cylinder_radius, cylinder_height/2))\n\n# Cut the cylinder from the cube\nresult = result.cut(cylinder)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:57:26.662Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:57:30.615Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:57:33.976Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T18:57:36.942Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T19:11:29.067Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 5x7.5x2.5 cube\nresult = cq.Workplane(\"XY\").box(5, 7.5, 2.5).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T19:11:32.324Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T19:11:35.893Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T19:30:27.564Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n\n# Apply fillets to all edges\nresult = result.edges().fillet(1)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T19:30:33.935Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a 10x10x10 cube\nresult = cq.Workplane(\"XY\").box(10, 10, 10).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+

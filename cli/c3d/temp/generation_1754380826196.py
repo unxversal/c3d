@@ -1,1 +1,0 @@
-{cadquery_code} extrude(0.1) of (circle(0.05))

@@ -1,8 +1,7 @@
 import { AIService, DescriptionResult } from './ai-service.js';
 import { ServerManager } from './server-manager.js';
 import { getConfig } from './c3d.config.js';
-import { writeFile, mkdir, copyFile } from 'fs/promises';
-import { homedir } from 'os';
+import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -216,9 +215,21 @@ export class GenerationService {
 						maxAttempts: config.maxRetries
 					});
 
+					// On retry attempts, include previous error information
+					let enhancedPrompt = prompt;
+					if (attempts > 1 && lastError) {
+						enhancedPrompt = `${prompt}
+
+IMPORTANT: Previous attempt failed with error: "${lastError}"
+Please fix the code to avoid this error. Make sure to:
+- Use correct CADQuery syntax
+- Ensure all variables are properly defined
+- Check that geometric operations are valid`;
+					}
+
 					const codeResult = config.useStreamingMode 
-						? await this.aiService.generateStreamingCADQueryCode(prompt, onStream)
-						: await this.aiService.generateDirectCADQueryCode(prompt);
+						? await this.aiService.generateStreamingCADQueryCode(enhancedPrompt, onStream)
+						: await this.aiService.generateDirectCADQueryCode(enhancedPrompt);
 					
 					// Log the code generation result for debugging
 					await this.logLLMResponse('direct_cadquery_code', codeResult, prompt);
@@ -236,38 +247,25 @@ export class GenerationService {
 					const scriptPath = path.join(tempDir, `generation_${Date.now()}.py`);
 					await writeFile(scriptPath, codeResult.cadquery_code);
 
+					if (config.debugLogging) {
+						console.log(`🔧 Generated code being sent to server (attempt ${attempts}):`);
+						console.log(`📝 Code length: ${codeResult.cadquery_code.length} characters`);
+						console.log(`📄 First 200 chars: ${codeResult.cadquery_code.substring(0, 200)}...`);
+						console.log(`📄 Last 100 chars: ...${codeResult.cadquery_code.slice(-100)}`);
+					}
+
 					// Test the code with the server
 					const renderResult = await this.serverManager.render(scriptPath, 'output.stl');
 					
-					// Success! Copy to persistent location and return result
+					// Success! Server has already copied to persistent location
 					onProgress?.({
 						step: 'completed',
 						message: 'CAD object generated successfully!'
 					});
 
-					// Copy generated STL to user's Documents folder for persistence
-					let persistentPath = renderResult.output_paths[0];
-					try {
-						const originalFile = renderResult.output_paths[0];
-						if (originalFile) {
-							const documentsDir = path.join(homedir(), 'Documents', 'C3D Generated');
-							await mkdir(documentsDir, { recursive: true });
-							
-							const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-							const persistentFile = path.join(documentsDir, `generated_${timestamp}.stl`);
-							
-							await copyFile(originalFile, persistentFile);
-							persistentPath = persistentFile;
-							
-							console.log(`✅ File saved to: ${persistentFile}`);
-						}
-					} catch (error) {
-						console.warn(`⚠️  Could not copy to persistent location: ${error}`);
-					}
-
 					return {
 						success: true,
-						outputPath: persistentPath,
+						outputPath: renderResult.output_paths[0], // Server returns persistent path
 						servedFiles: renderResult.served_files,
 						attempts,
 						finalCode: codeResult.cadquery_code,

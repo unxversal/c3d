@@ -80,32 +80,20 @@ You must respond with structured JSON containing a detailed description, key fea
 		
 		console.log('🔧 Starting direct CADQuery code generation...');
 		
-				const systemPrompt = `You are an AI CAD assistant expert at writing CADQuery code. Your response must answer the user's prompt.
+				const systemPrompt = `You are an AI CAD assistant. Write CADQuery Python code.
 
-CADQuery Quick Reference:
-- Import: import cadquery as cq
-- Start: cq.Workplane("XY")
-- Basic shapes: .box(w, d, h), .cylinder(h, r), .sphere(r)
-- 2D shapes: .rect(w, h), .circle(r)
-- Operations: .extrude(h), .cut(), .union(), .fillet(r)
-- Positioning: .translate((x,y,z)), .rotate((0,0,1), angle)
+Simple patterns:
+- Box: cq.Workplane("XY").box(w, d, h)
+- Cylinder: cq.Workplane("XY").cylinder(h, r)
 - Export: cq.exporters.export(result, "output.stl")
 
-Example:
-import cadquery as cq
-result = cq.Workplane("XY").box(10, 10, 5).fillet(1)
-cq.exporters.export(result, "output.stl")
-
-CRITICAL: You MUST respond with valid JSON in this EXACT format:
+CRITICAL: Respond with valid JSON:
 {"cadquery_code": "your_python_code_here"}
 
-DO NOT generate any other JSON structure. DO NOT include extra fields like "parameters", "faces", or "size".
-The "cadquery_code" field must contain complete, executable Python code.
-
-Example response:
+Example:
 {"cadquery_code": "import cadquery as cq\\nresult = cq.Workplane(\\"XY\\").box(10, 10, 5)\\ncq.exporters.export(result, \\"output.stl\\")"}
 
-Make sure you are conscious of every character you write because it will be run as a Python script.`;
+Keep it simple.`;
 
 		try {
 			console.log('🔧 Making OpenAI API call for direct code generation...');
@@ -355,25 +343,22 @@ Key features: ${description.key_features.join(', ')}`;
 	): Promise<CADQueryResult> {
 		const config = getConfig();
 		
-		console.log('🔧 Starting streaming CADQuery code generation...');
+		if (config.debugLogging) {
+			console.log('🔧 Starting streaming CADQuery code generation...');
+		}
 		
-		const systemPrompt = `You are an AI CAD assistant expert at writing CADQuery code. Your response must answer the user's prompt.
+		const systemPrompt = `you are an AI cad assistant. your abilties are being very good at writing cadquery code. your response must generate the user’s prompt. You are an AI CAD assistant. Write CADQuery Python code.
 
-Write your response as natural text with explanations, but include exactly ONE Python code block containing the complete CADQuery code.
-
-CADQuery Quick Reference:
+Simple CADQuery patterns:
 - Import: import cadquery as cq
-- Start: cq.Workplane("XY")  
-- Basic shapes: .box(w, d, h), .cylinder(h, r), .sphere(r)
-- 2D shapes: .rect(w, h), .circle(r)
-- Operations: .extrude(h), .cut(), .union(), .fillet(r)
-- Positioning: .translate((x,y,z)), .rotate((0,0,1), angle)
+- Box: cq.Workplane("XY").box(w, d, h)
+- Cylinder: cq.Workplane("XY").cylinder(h, r)
 - Export: cq.exporters.export(result, "output.stl")
 
-CRITICAL: Your code block must end with exactly this line:
+Keep it simple. Always end with:
 cq.exporters.export(result, "output.stl")
 
-Example response:
+Example response (always format your response in this way):
 I'll create a simple cube for you. Here's the CADQuery code:
 
 \`\`\`python
@@ -388,11 +373,39 @@ cq.exporters.export(result, "output.stl")
 
 This creates a cube with rounded edges (fillet).`;
 
+// const systemPrompt = `you are an AI cad assistant. your abilties are being very good at writing cadquery code. your response must generate the user’s prompt. You are an AI CAD assistant. Write CADQuery Python code.
+
+// Simple CADQuery patterns:
+// - Import: import cadquery as cq
+// - Box: cq.Workplane("XY").box(w, d, h)
+// - Cylinder: cq.Workplane("XY").cylinder(h, r)
+// - Export: cq.exporters.export(result, "output.stl")
+
+// Keep it simple. Always end with:
+// cq.exporters.export(result, "output.stl")
+
+// Example response:
+// I'll create a simple cube for you. Here's the CADQuery code:
+
+// \`\`\`python
+// import cadquery as cq
+
+// # Create a 10x10x10 cube
+// result = cq.Workplane("XY").box(10, 10, 10).fillet(1)
+
+// # Export the result
+// cq.exporters.export(result, "output.stl")
+// \`\`\`
+
+// This creates a cube with rounded edges (fillet).`;
+
 		try {
 			// Initialize Ollama client for streaming
 			const ollama = new Ollama({ host: config.ollamaHost });
 			
+			if (config.debugLogging) {
 			console.log('🔧 Making Ollama streaming API call...');
+		}
 			
 			let fullResponse = '';
 			const stream = await ollama.generate({
@@ -412,13 +425,17 @@ This creates a cube with rounded edges (fillet).`;
 				}
 				
 				if (chunk.done) {
-					console.log('✅ Streaming complete');
+					if (config.debugLogging) {
+						console.log('✅ Streaming complete');
+					}
 					break;
 				}
 			}
 
-			console.log(`📝 Full response length: ${fullResponse.length} characters`);
-			console.log(`📋 Response preview: ${fullResponse.substring(0, 200)}...`);
+			if (config.debugLogging) {
+				console.log(`📝 Full response length: ${fullResponse.length} characters`);
+				console.log(`📋 Response preview: ${fullResponse.substring(0, 200)}...`);
+			}
 			
 			// Extract Python code block
 			const extractedCode = this.extractPythonCodeBlock(fullResponse);
@@ -426,7 +443,9 @@ This creates a cube with rounded edges (fillet).`;
 				throw new Error('No Python code block found in response');
 			}
 
-			console.log(`🔧 Extracted code length: ${extractedCode.length} characters`);
+			if (config.debugLogging) {
+				console.log(`🔧 Extracted code length: ${extractedCode.length} characters`);
+			}
 			
 			// Validate that the code ends with the correct export statement
 			const lines = extractedCode.split('\n');

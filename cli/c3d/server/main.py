@@ -55,12 +55,34 @@ async def render_cadquery(req: RenderRequest):
             # Find generated files
             output_files = []
             served_files = []
+            persistent_files = []
+            
             for ext in [".stl", ".step", ".png"]:
                 for file_path in workdir.glob(f"*{ext}"):
                     # Copy file to temp directory for serving
                     safe_filename = f"render_{uuid.uuid4().hex[:8]}_{file_path.name}"
                     served_path = temp_files_dir / safe_filename
                     shutil.copy2(file_path, served_path)
+                    
+                    # Also copy to persistent location for library
+                    try:
+                        from datetime import datetime
+                        
+                        home_dir = os.path.expanduser("~")
+                        persistent_dir = Path(home_dir) / "Documents" / "C3D Generated"
+                        persistent_dir.mkdir(parents=True, exist_ok=True)
+                        
+                        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                        persistent_filename = f"generated_{timestamp}_{file_path.name}"
+                        persistent_path = persistent_dir / persistent_filename
+                        
+                        shutil.copy2(file_path, persistent_path)
+                        persistent_files.append(str(persistent_path))
+                        print(f"✅ File saved to: {persistent_path}")
+                        
+                    except Exception as e:
+                        print(f"⚠️  Could not copy to persistent location: {e}")
+                        persistent_files.append(str(file_path))  # Fallback to temp path
                     
                     output_files.append(str(file_path))
                     served_files.append(safe_filename)
@@ -70,7 +92,7 @@ async def render_cadquery(req: RenderRequest):
             
             return {
                 "success": True,
-                "output_paths": output_files, 
+                "output_paths": persistent_files if persistent_files else output_files, 
                 "served_files": served_files,  # Files accessible via /files/ endpoint
                 "workdir": str(workdir)
             }
