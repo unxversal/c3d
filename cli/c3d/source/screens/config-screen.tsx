@@ -27,6 +27,7 @@ export function ConfigScreen() {
 		{ key: 'useJsonSchema', description: 'Use strict JSON schema validation', type: 'boolean', category: 'AI Generation' },
 		{ key: 'useStreamingMode', description: 'Use streaming markdown mode instead of JSON', type: 'boolean', category: 'AI Generation' },
 		{ key: 'repromptWithError', description: 'Include previous error in retry prompts', type: 'boolean', category: 'AI Generation' },
+		{ key: 'errorContextResetAfter', description: 'Reset error context after N consecutive errors', type: 'number', category: 'AI Generation' },
 		{ key: 'thinking', description: 'Use structured thinking prompts', type: 'boolean', category: 'AI Generation' },
 		{ key: 'promptMode', description: 'Prompt style (instructional/completion/thinking_instructional/thinking_completion)', type: 'string', category: 'AI Generation' },
 		

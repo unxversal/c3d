@@ -232,12 +232,22 @@ export class GenerationService {
 					// Prepare error context for retries
 					let errorContext: any = undefined;
 					if (attempts > 1 && lastError && lastCode && config.repromptWithError) {
-						errorContext = {
-							failedCode: lastCode,
-							errorMessage: lastError,
-							attemptNumber: attempts,
-							maxAttempts: config.maxRetries
-						};
+						// Check if we should reset error context for a fresh start
+						// Reset every (errorContextResetAfter + 1) attempts starting from attempt (errorContextResetAfter + 1)
+						const shouldResetContext = (attempts - 1) % (config.errorContextResetAfter + 1) === config.errorContextResetAfter;
+						
+						if (!shouldResetContext) {
+							errorContext = {
+								failedCode: lastCode,
+								errorMessage: lastError,
+								attemptNumber: attempts,
+								maxAttempts: config.maxRetries
+							};
+						} else {
+							// Fresh start - send message through stream
+							const resetMessage = `\n\n🔄 **Fresh Start (Attempt ${attempts}/${config.maxRetries}):**\nResetting context to try a different approach...\n\n`;
+							onStream?.(resetMessage);
+						}
 					}
 
 					const codeResult = config.useStreamingMode 

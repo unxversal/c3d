@@ -14,6 +14,7 @@ export interface C3DConfig {
 	repromptWithError: boolean; // Whether to include the previous error in the next prompt
 	thinking: boolean; // Whether to use structured thinking prompts for better reasoning
 	promptMode: 'instructional' | 'completion' | 'thinking_instructional' | 'thinking_completion'; // Prompt style to use
+	errorContextResetAfter: number; // Reset error context (fresh start) after this many consecutive errors
 	
 	// Server Settings
 	defaultPort: number;
@@ -35,7 +36,7 @@ export interface C3DConfig {
 
 export const defaultConfig: C3DConfig = {
 	// AI Generation Settings
-	maxRetries: 5,
+	maxRetries: 9,
 	ollamaModel: 'joshuaokolo/C3Dv0',
 	ollamaHost: 'http://127.0.0.1:11434',
 	temperature: 1.0, // Recommended temperature for better creativity
@@ -45,6 +46,7 @@ export const defaultConfig: C3DConfig = {
 	repromptWithError: true, // Default to reprompting with the error context
 	thinking: true, // Default to using structured thinking prompts
 	promptMode: 'thinking_instructional', // Default to thinking instructional prompts
+	errorContextResetAfter: 2, // Reset error context after 2 consecutive errors for fresh start
 	
 	// Server Settings
 	defaultPort: 8765,

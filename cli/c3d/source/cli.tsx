@@ -10,8 +10,8 @@ const cli = meow(
 	  $ c3d [command] [arguments]
 
 	Commands
-		generate <prompt>   Generate CAD object from text description
-		editor <prompt>     Interactive collaborative CAD generation with code editing
+		generate <prompt>   Interactive CAD generation with code editing and re-running
+		editor <prompt>     Interactive CAD generation (alias for generate)
 		server start        Start the CADQuery rendering server
 		server stop         Stop the CADQuery rendering server  
 		server status       Check if the server is running

@@ -4,11 +4,13 @@ A powerful command-line interface that generates 3D CAD models from natural lang
 
 ## ✨ Key Features
 
-- 🤖 **AI Generation**: Create CAD models from natural language using Ollama
+- 🤖 **Interactive AI Generation**: Create CAD models with live code editing, re-running, and streaming responses
+- 🛠️ **Built-in Code Editor**: Edit generated CADQuery code directly in terminal with arrow keys and backspace
+- 🔄 **Smart Retry System**: Auto-retry with error context reset every 3 attempts for better success rates (default 9 total attempts)
+- 📁 **Model Library**: Browse, rename, and manage generated STL files with arrow key navigation
 - 🌐 **Integrated 3D Viewer**: React Three Fiber web interface with interactive controls
-- 🖥️ **Interactive CLI**: Beautiful terminal interface with real-time status screens and animations
-- 📱 **Professional UI**: Rich interactive screens for all commands with dynamic color schemes
-- 🔄 **Auto-Launch**: Generated models open automatically in 3D viewer
+- ⚙️ **Persistent Configuration**: Save settings to `~/.c3d/config.json` with interactive editor
+- 🖥️ **Professional CLI**: Beautiful terminal interface with streaming responses and animations
 - 📦 **Complete Package**: Backend, frontend, and CLI bundled together
 
 ## Prerequisites
@@ -54,17 +56,20 @@ c3d generate "a simple cube"
 
 ## 🚀 Basic Usage
 
-### Generate a CAD Model
+### Interactive CAD Generation
 
 ```sh
 c3d generate "a simple cube"
 ```
 
-This will:
-1. Start the Python backend server automatically
-2. Generate a CAD model using AI
-3. **Auto-open the 3D viewer** in your browser
-4. Display the model with interactive controls
+This launches the **interactive editor** which:
+1. Starts the Python backend server automatically
+2. Generates CAD code using AI with streaming responses (`<thinking>`, `<description>`, `<explanation>`, `<code>`)
+3. Lets you **edit the generated code** with arrow keys, backspace, etc.
+4. **Re-run generation** with Shift+Enter to try again
+5. **Switch modes** with Tab (edit prompt vs edit code)
+6. **Auto-opens the 3D viewer** in your browser on success
+7. **Access library** with Ctrl+L to browse saved STL files
 
 ### Skip Auto-Viewer
 ```sh
@@ -92,13 +97,14 @@ c3d generate "a complex bracket" --no-viewer
 ## 📋 All Commands
 
 ### Core Commands
-- `c3d generate <description>` - Generate CAD from text description
+- `c3d generate <description>` - Interactive CAD generation with live code editing and re-running
+- `c3d editor <description>` - Alias for generate (same interactive functionality)
 - `c3d viewer` - Launch 3D web interface
 - `c3d server start/stop/status` - Manage Python backend server
-- `c3d config` - Interactive configuration editor
+- `c3d config` - Interactive configuration editor with persistent settings
 - `c3d render <script.py>` - Render Python CADQuery scripts
 - `c3d deload` - Remove C3D AI model from local storage
-- `c3d list` - Browse and open local STL files from directories
+- `c3d list` - Browse, rename, and manage STL files with arrow key navigation
 
 ### Development & Testing
 - `c3d ui` - Launch UI development playground
@@ -126,7 +132,7 @@ c3d ui screen interactive   # Interactive/collaboration features (demo)
 
 ### Global Options
 - `--port <number>` - Server port (default: 8765, auto-finds available)
-- `--retries <number>` - Max generation retries (default: 5)
+- `--retries <number>` - Max generation retries (default: 9)
 - `--output <filename>` - Custom output filename for render command
 - `--no-viewer` - Disable auto-opening web viewer after generation
 
@@ -149,17 +155,20 @@ c3d generate "a gear" --no-viewer
 C3D features beautiful, professional interactive screens for all main commands:
 
 ```sh
-# Launch generation with real-time progress tracking
+# Interactive generation with code editing and re-running
 c3d generate "a gear with 12 teeth"
 
-# Interactive server management with status indicators
-c3d server start
+# Same interactive functionality (editor is alias for generate)
+c3d editor "a phone case"
 
-# Browse local STL files with arrow key navigation
+# Browse, rename, and manage STL files with arrow key navigation
 c3d list
 
-# Interactive configuration editor
+# Interactive configuration editor with persistent settings
 c3d config
+
+# Interactive server management with status indicators  
+c3d server start
 ```
 
 Each screen includes:
@@ -214,6 +223,23 @@ The integrated web viewer features:
 - **Right Mouse Drag**: Pan camera
 - **Mouse Wheel**: Zoom in/out
 - **Control Panel**: Model info and generation settings
+
+## 🛠️ Interactive Editor Features
+
+### Code Editing Controls
+- **Arrow Keys**: Navigate through code
+- **Backspace/Delete**: Edit code character by character
+- **Shift+Enter**: Re-run generation with current prompt
+- **Tab**: Switch between editing prompt and editing code
+- **Ctrl+L**: Switch to library view to browse saved STL files
+- **Esc**: Exit the editor
+
+### Smart Generation Features
+- **Streaming Responses**: See AI thinking process in real-time with `<thinking>`, `<description>`, `<explanation>`, `<code>` format
+- **Error Context**: Failed attempts include error details in retry prompts
+- **Fresh Start**: After 2 consecutive errors, context resets for different approach
+- **Format Preservation**: Error retries maintain structured format instructions
+- **Inline Error Display**: Errors appear in streaming content (no console spam)
 
 ## 🔧 Development
 
@@ -284,11 +310,15 @@ c3d config               # Launch interactive editor with arrow keys
 Default configuration includes:
 - **AI Model**: `joshuaokolo/C3Dv0` (Ollama)
 - **Server Port**: 8765 (auto-detects available ports)
-- **Max Retries**: 5 attempts for generation
-- **Temperature**: 0.7 for AI model creativity
+- **Max Retries**: 9 attempts for generation
+- **Error Context Reset**: After 2 consecutive errors for fresh start
+- **Temperature**: 1.0 for AI model creativity
+- **Max Tokens**: 32768 for longer responses
+- **Prompt Mode**: `thinking_instructional` (structured `<thinking>`, `<description>`, `<explanation>`, `<code>` format)
 - **Host**: `127.0.0.1:11434` for Ollama connection
 - **Server Timeout**: 45 seconds for startup
-- **Stop Server on Quit**: Configurable option to kill server when exiting CLI
+- **Debug Logging**: False by default (configurable for troubleshooting)
+- **Persistent Settings**: Saved to `~/.c3d/config.json`
 
 ## 🔍 Troubleshooting
 

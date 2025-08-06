@@ -10,7 +10,7 @@ import {ScreenTester} from './screen-tester.js';
 import {ViewerLauncher} from './viewer-launcher.js';
 import {LibraryScreen} from './screens/library-screen.js';
 import {ConfigScreen} from './screens/config-screen.js';
-import {GenerationScreen} from './screens/generation-screen.js';
+
 import {EditorScreen} from './screens/editor-screen.js';
 import {ServerScreen} from './screens/server-screen.js';
 import {RenderScreen} from './screens/render-screen.js';
@@ -62,7 +62,7 @@ export default function App({command, subCommand, scriptFile, generatePrompt, ed
 			return <ConfigScreen />;
 		case 'generate':
 			if (!generatePrompt) return <Text>Error: 'generate' command requires a prompt.</Text>;
-			return <GenerationScreen prompt={generatePrompt} flags={flags} />;
+			return <EditorScreen prompt={generatePrompt} flags={flags} navigateTo={navigateTo} />;
 		case 'editor':
 			if (!editorPrompt) return <Text>Error: 'editor' command requires a prompt.</Text>;
 			return <EditorScreen prompt={editorPrompt} flags={flags} navigateTo={navigateTo} />;

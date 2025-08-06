@@ -436,3 +436,115 @@ Response JSON:
 }
 ================================================================================
 
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:43:07.364Z ===
+Prompt: generate a bowl
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Outer cylinder parameters\nouter_radius = 1.0\nouter_height = 1.0\n\n# Inner cylinder parameters\ninner_radius = 0.9\ninner_height = 1.0\n\n# Create the outer cylinder\nouter_cylinder = cq.Workplane(\"XY\").circle(outer_radius).extrude(outer_height)\n\n# Create the inner cylinder (cavity)\ninner_cylinder = cq.Workplane(\"XY\").circle(inner_radius).extrude(inner_height)\n\n# Subtract the inner cylinder from the outer cylinder to create the bowl wall\nbowl_wall = outer_cylinder.cut(inner_cylinder)\n\n# Export the bowl to an STL file\ncq.exporters.export(bowl_wall, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:43:34.688Z ===
+Prompt: generate a cylindrical bowl
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Bowl parameters\nbowl_radius = 75 * 0.75  # Outer radius, scaled\nbowl_inner_radius = 50 * 0.75  # Inner radius, scaled\nbowl_height = 50\n\n# Create the outer bowl\nouter_bowl = cq.Workplane(\"XY\").circle(bowl_radius).extrude(bowl_height)\n\n# Create the inner bowl (hole)\ninner_bowl = cq.Workplane(\"XY\").circle(bowl_inner_radius).extrude(bowl_height)\n\n# Subtract the inner bowl from the outer bowl to create the bowl walls\nbowl = outer_bowl.cut(inner_bowl)\n\n# Export the bowl to an STL file\ncq.exporters.export(bowl, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:44:27.557Z ===
+Prompt: I want a cylindrical bowl. the inside cylinder shouldn't extend too deep into the exterior cylinder
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nfrom cadquery import exporters\n\n# Bowl parameters\nbowl_outer_radius = 2.0\nbowl_inner_radius = 1.9\nbowl_height = 0.2\nbowl_wall_thickness = bowl_outer_radius - bowl_inner_radius\n\n# Create the outer bowl\nbowl_outer = cq.Workplane(\"XY\").circle(bowl_outer_radius).extrude(bowl_height)\n\n# Create the inner bowl (cavity)\nbowl_inner = cq.Workplane(\"XY\").circle(bowl_inner_radius).extrude(bowl_height)\n\n# Subtract the inner bowl from the outer bowl to create the bowl walls\nbowl_walls = bowl_outer.cut(bowl_inner)\n\n# Fillet the top edge of the bowl\nbowl_fillet = bowl_walls.edges(\"|Z\").fillet(bowl_wall_thickness / 2)\n\n# Export the bowl to a STL file\ncq.exporters.export(bowl_fillet, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:44:42.990Z ===
+Prompt: I want a cylindrical bowl. the inside cylinder shouldn't extend too deep into the exterior cylinder
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nfrom cadquery import exporters\n# Bowl parameters\nbowl_outer_radius = 2.0\nbowl_inner_radius = 1.9\nbowl_height = 0.2\nbowl_wall_thickness = bowl_outer_radius - bowl_inner_radius\n\n# Create the outer bowl\nbowl_outer = cq.Workplane(\"XY\").circle(bowl_outer_radius).extrude(bowl_height)\n\n# Create the inner bowl (cavity)\nbowl_inner = cq.Workplane(\"XY\").circle(bowl_inner_radius).extrude(bowl_height)\n\n# Subtract the inner bowl from the outer bowl to create the bowl walls\nbowl_walls = bowl_outer.cut(bowl_inner)\n\n# Fillet the top edge of the bowl\nbowl_fillet = bowl_walls.edges(\"|Z\").fillet(bowl_wall_thickness / 2)\n\n# Export the bowl to a STL file\ncq.exporters.export(bowl_fillet, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:45:01.413Z ===
+Prompt: I want a cylindrical bowl. the inside cylinder shouldn't extend too deep into the exterior cylinder
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nfrom cadquery import exporters\n\n# Bowl parameters\nbowl_outer_radius = 2.0\nbowl_inner_radius = 1.9\nbowl_height = 0.2\nbowl_wall_thickness = bowl_outer_radius - bowl_inner_radius\n\n# Create the outer bowl\nbowl_outer = cq.Workplane(\"XY\").circle(bowl_outer_radius).extrude(bowl_height)\n\n# Create the inner bowl (cavity)\nbowl_inner = cq.Workplane(\"XY\").circle(bowl_inner_radius).extrude(bowl_height)\n\n# Subtract the inner bowl from the outer bowl to create the bowl walls\nbowl_walls = bowl_outer.cut(bowl_inner)\n\n# Fillet the top edge of the bowl\nbowl_fillet = bowl_walls.edges(\"|Z\").fillet(bowl_wall_thickness / 2)\n\n# Export the bowl to a STL file\ncq.exporters.export(bowl_fillet, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:45:18.064Z ===
+Prompt: I want a cylindrical bowl. the inside cylinder shouldn't extend too deep into the exterior cylinder
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nfrom cadquery import exporters\n# Bowl parameters\nbowl_outer_radius = 2.0\nbowl_inner_radius = 1.9\nbowl_height = 0.2\nbowl_wall_thickness = bowl_outer_radius - bowl_inner_radius\n\n# Create the outer bowl\nbowl_outer = cq.Workplane(\"XY\").circle(bowl_outer_radius).extrude(bowl_height)\n\n# Create the inner bowl (cavity)\nbowl_inner = cq.Workplane(\"XY\").circle(bowl_inner_radius).extrude(bowl_height)\n\n# Subtract the inner bowl from the outer bowl to create the bowl walls\nbowl_walls = bowl_outer.cut(bowl_inner)\n\n# Fillet the top edges of the bowl\nbowl_fillet = bowl_walls.selectEdges(\"|Z\").fillet(bowl_wall_thickness / 2)\n\n# Export the bowl to a STL file\ncq.exporters.export(bowl_fillet, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:45:31.283Z ===
+Prompt: I want a cylindrical bowl. the inside cylinder shouldn't extend too deep into the exterior cylinder
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nfrom cadquery import exporters\n\n# Bowl parameters\nbowl_outer_radius = 2.0\nbowl_inner_radius = 1.9\nbowl_height = 0.2\nbowl_wall_thickness = bowl_outer_radius - bowl_inner_radius\n\n# Create the outer bowl\nbowl_outer = cq.Workplane(\"XY\").circle(bowl_outer_radius).extrude(bowl_height)\n\n# Create the inner bowl (cavity)\nbowl_inner = cq.Workplane(\"XY\").circle(bowl_inner_radius).extrude(bowl_height)\n\n# Subtract the inner bowl from the outer bowl to create the bowl walls\nbowl_walls = bowl_outer.cut(bowl_inner)\n\n# Fillet the top edges of the bowl\nbowl_fillet = bowl_walls.faces(\">Z\").fillet(bowl_wall_thickness / 2)\n\n# Export the bowl to a STL file\ncq.exporters.export(bowl_fillet, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:46:21.144Z ===
+Prompt: generate a rectangular bowl
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Bowl dimensions\nouter_rect_width = 12 * 0.75\nouter_rect_height = 8 * 0.75\ninner_rect_width = 9 * 0.75\ninner_rect_height = 6 * 0.75\nwall_thickness = outer_rect_width - inner_rect_width\nfillet_radius = 1\n\n# Create the outer rectangle\nouter_rect = cq.Workplane(\"XY\").rect(outer_rect_width, outer_rect_height)\n\n# Create the inner rectangle\ninner_rect = cq.Workplane(\"XY\").rect(inner_rect_width, inner_rect_height)\n\n# Subtract the inner rectangle from the outer rectangle to create the bowl walls\nbowl_walls = outer_rect.cut(inner_rect)\n\n# Round the bowl's edge\nbowl_edge = bowl_walls.edges().fillet(fillet_radius)\n\n# Extrude the bowl walls to create the bowl\nbowl = bowl_edge.extrude(2)\n\n# Export the bowl to an STL file\ncq.exporters.export(bowl, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:46:37.840Z ===
+Prompt: generate a rectangular bowl
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Bowl dimensions\nouter_rect_width = 12 * 0.75\nouter_rect_height = 8 * 0.75\ninner_rect_width = 9 * 0.75\ninner_rect_height = 6 * 0.75\nwall_thickness = outer_rect_width - inner_rect_width\nfillet_radius = 1\n\n# Create the outer solid rectangle\nouter_solid = cq.Workplane(\"XY\").rect(outer_rect_width, outer_rect_height).extrude(2)\n\n# Create the inner solid rectangle\ninner_solid = cq.Workplane(\"XY\").rect(inner_rect_width, inner_rect_height).extrude(2)\n\n# Subtract the inner solid from the outer solid to create the bowl walls\nbowl_walls = outer_solid.cut(inner_solid)\n\n# Round the bowl's edge\nbowl_edge = bowl_walls.edges().fillet(fillet_radius)\n\n# Extrude the bowl walls to create the bowl\nbowl = bowl_edge.extrude(2)\n\n# Export the bowl to an STL file\ncq.exporters.export(bowl, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:46:53.627Z ===
+Prompt: generate a rectangular bowl
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Bowl dimensions\nouter_rect_width = 12 * 0.75\nouter_rect_height = 8 * 0.75\ninner_rect_width = 9 * 0.75\ninner_rect_height = 6 * 0.75\nwall_thickness = outer_rect_width - inner_rect_width\nfillet_radius = 1\n\n# Create the outer solid rectangle\nouter_solid = cq.Workplane(\"XY\").rect(outer_rect_width, outer_rect_height).extrude(2)\n\n# Create the inner solid rectangle\ninner_solid = cq.Workplane(\"XY\").rect(inner_rect_width, inner_rect_height).extrude(2)\n\n# Subtract the inner solid from the outer solid to create the bowl walls\nbowl_walls = outer_solid.cut(inner_solid)\n\n# Round the bowl's edge\nbowl_edge = bowl_walls\n\n# Extrude the bowl walls to create the bowl\nbowl = bowl_edge.extrude(2)\n\n# Export the bowl to an STL file\ncq.exporters.export(bowl, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:47:14.484Z ===
+Prompt: generate a rectangular bowl
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Bowl dimensions\nouter_rect_width = 12 * 0.75\nouter_rect_height = 8 * 0.75\ninner_rect_width = 9 * 0.75\ninner_rect_height = 6 * 0.75\nwall_thickness = outer_rect_width - inner_rect_width\nfillet_radius = 1\n\n# Create the outer solid rectangle\nouter_solid = cq.Workplane(\"XY\").rect(outer_rect_width, outer_rect_height).extrude(2)\n\n# Create the inner solid rectangle\ninner_solid = cq.Workplane(\"XY\").rect(inner_rect_width, inner_rect_height).extrude(2)\n\n# Subtract the inner solid from the outer solid to create the bowl walls\nbowl_walls = outer_solid.cut(inner_solid)\n\n# Round the bowl's edge\nbowl_edge = bowl_walls.edges().fillet(fillet_radius)\n\n# Extrude the bowl walls to create the bowl\nbowl = bowl_edge.extrude(2)\n\n# Export the bowl to an STL file\ncq.exporters.export(bowl, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:54:54.528Z ===
+Prompt: generate a rectangular bowl
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Bowl dimensions\nbowl_length = 6 * 0.6  # Scaled length\nbowl_width = 4 * 0.6  # Scaled width\nbowl_height = 2\n\n# Inner bowl dimensions\ninner_length = 4 * 0.6  # Scaled inner length\ninner_width = 2 * 0.6  # Scaled inner width\ninner_height = bowl_height  # Same height as the outer bowl\n\n# Create the outer bowl\nouter_bowl = cq.Workplane(\"XY\").rect(bowl_length, bowl_width).extrude(bowl_height)\n\n# Create the inner bowl (the wall)\ninner_bowl = cq.Workplane(\"XY\").rect(inner_length, inner_width).extrude(inner_height)\n\n# Subtract the inner bowl from the outer bowl to create the hollow bowl\nresult = outer_bowl.cut(inner_bowl)\n\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:55:49.704Z ===
+Prompt: generate a rectangular bowl. make sure the bowl has a covered bottom and the extrude isn't all the way through
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Bowl dimensions\nbowl_length = 6 * 0.6  # Scaled length\nbowl_width = 4 * 0.6  # Scaled width\nbowl_height = 1\n\n# Inner bowl dimensions\ninner_length = 4 * 0.6  # Scaled inner length\ninner_width = 2 * 0.6  # Scaled inner width\ninner_height = bowl_height  # Same height as outer bowl\n\n# Create the outer bowl\nouter_bowl = cq.Workplane(\"XY\").rect(bowl_length, bowl_width).extrude(bowl_height)\n\n# Create the inner bowl (walls)\ninner_bowl = cq.Workplane(\"XY\").rect(inner_length, inner_width).extrude(inner_height)\n\n# Subtract the inner bowl from the outer bowl to create the walls\nbowl = outer_bowl.cut(inner_bowl)\n\n# Export the bowl to a STL file\ncq.exporters.export(bowl, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:56:26.731Z ===
+Prompt: generate a rectangular bowl. make sure the bowl has a covered bottom and the extrude isn't all the way through
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Bowl dimensions\nlength = 6 * 0.6  # Scaled length\nwidth = 4 * 0.6  # Scaled width\nheight = 0.5\n\n# Create the bowl profile\nbowl_profile = cq.Workplane().rect(length, width).extrude(height)\n\n# Export the bowl to an STL file\ncq.exporters.export(bowl_profile, \"bowl.stl\")"
+}
+================================================================================
+
