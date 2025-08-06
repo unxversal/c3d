@@ -548,3 +548,211 @@ Response JSON:
 }
 ================================================================================
 
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:09:09.036Z ===
+Prompt: generate a star
+Response JSON:
+{
+  "cadquery_code": "(0.0, 0.5878)\n(0.1004, 0.2964)\n(0.2964, 0.0)\n(0.4004, 0.2964)\n(0.5878, 0.1004)\n(0.4004, 0.5878)\n(0.2964, 0.7036)\n(0.1004, 0.7036)\n(0.0, 0.5878)"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:10:19.491Z ===
+Prompt: generate a star
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\ndef create_star(size=1.0):\n    star = cq.Workplane(\"XY\")\n\n    # Point 1\n    star = star.moveTo(size * math.cos(math.radians(15)), size * math.sin(math.radians(15)))\n\n    # Point 2\n    star = star.lineTo(size * math.cos(math.radians(30)), size * math.sin(math.radians(30)))\n\n    # Point 3\n    star = star.lineTo(size * math.cos(math.radians(45)), size * math.sin(math.radians(45)))\n\n    # Point 4\n    star = star.lineTo(size * math.cos(math.radians(60)), size * math.sin(math.radians(60)))\n\n    # Point 5\n    star = star.lineTo(size * math.cos(math.radians(75)), size * math.sin(math.radians(75)))\n\n    # Point 6\n    star = star.lineTo(size * math.cos(math.radians(90)), size * math.sin(math.radians(90)))\n\n    # Point 7\n    star = star.lineTo(size * math.cos(math.radians(105)), size * math.sin(math.radians(105)))\n\n    # Point 8\n    star = star.lineTo(size * math.cos(math.radians(120)), size * math.sin(math.radians(120)))\n\n    # Point 9\n    star = star.lineTo(size * math.cos(math.radians(135)), size * math.sin(math.radians(135)))\n\n    # Point 10\n    star = star.lineTo(size * math.cos(math.radians(150)), size * math.sin(math.radians(150)))\n\n    # Point 11\n    star = star.lineTo(size * math.cos(math.radians(165)), size * math.sin(math.radians(165)))\n\n    # Point 12\n    star = star.lineTo(size * math.cos(math.radians(180)), size * math.sin(math.radians(180)))\n\n    # Point 13\n    star = star.lineTo(size * math.cos(math.radians(195)), size * math.sin(math.radians(195)))\n\n    # Point 14\n    star = star.lineTo(size * math.cos(math.radians(210)), size * math.sin(math.radians(210)))\n\n    # Point 15\n    star = star.lineTo(size * math.cos(math.radians(225)), size * math.sin(math.radians(225)))\n\n    # Point 16\n    star = star.lineTo(size * math.cos(math.radians(240)), size * math.sin(math.radians(240)))\n\n    # Point 17\n    star = star.lineTo(size * math.cos(math.radians(270)), size * math.sin(math.radians(270)))\n\n    # Point 18\n    star = star.lineTo(size * math.cos(math.radians(300)), size * math.sin(math.radians(300)))\n\n    # Point 19\n    star = star.lineTo(size * math.cos(math.radians(330)), size * math.sin(math.radians(330)))\n\n    # Point 20\n    star = star.lineTo(size * math.cos(math.radians(360)), size * math.sin(math.radians(360)))\n\n    star = star.closeLoop()\n    return star.extrude(size)\n\nresult = create_star()\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:10:36.475Z ===
+Prompt: generate a star
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\ndef create_star(size=1.0):\n  star = cq.Workplane(\"XY\")\n  points = []\n  for i in range(20):\n    angle = math.radians(i * 180 / 20)\n    x = size * math.cos(angle)\n    y = size * math.sin(angle)\n    points.append((x, y))\n\n  for i in range(20):\n    angle = math.radians(i * 180 / 20)\n    x = size * math.cos(angle)\n    y = size * math.sin(angle)\n    star = star.moveTo(x, y)\n  star = star.closeLoop()\n  return star.extrude(size)\nresult = create_star()\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:10:55.160Z ===
+Prompt: generate a star
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\ndef create_star(size=1.0):\n    star = cq.Workplane(\"xy\")\n\n    star = star.moveTo(0, 0)\n    star = star.lineTo(size, 0)\n    star = star.lineTo(size, 0.5 * size)\n    star = star.lineTo(0.5 * size, 0.5 * size)\n    star = star.lineTo(0.5 * size, 1.0 * size)\n    star = star.lineTo(0, 1.0 * size)\n    star = star.lineTo(0, 0)\n\n    star = star.moveTo(size/2, size/2)\n    star = star.lineTo(size/2 + size/2*math.cos(math.pi/5), size/2 + size/2*math.sin(math.pi/5))\n    star = star.lineTo(size/2 + size/2*math.cos(math.pi/5), size/2 + size/2*math.sin(math.pi/5))\n    star = star.lineTo(size/2, size/2)\n\n    star = star.close()\n\n    return star\n\nstar = create_star()\ncq.exporters.export(star, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:11:08.515Z ===
+Prompt: generate a star
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\ndef create_star(size=1.0):\n    star = cq.Workplane(\"XY\")\n\n    star = star.moveTo(size/2, size/2)\n    star = star.lineTo(size/2 + size/2*math.cos(math.pi/5), size/2 + size/2*math.sin(math.pi/5))\n    star = star.lineTo(size/2 + size/2*math.cos(math.pi/5), size/2 + size/2*math.sin(math.pi/5))\n    star = star.lineTo(size/2, size/2)\n    star = star.close()\n\n    return star\n\nstar = create_star()\ncq.exporters.export(star, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:11:22.844Z ===
+Prompt: generate a star
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\ndef create_pentagon(size=1.0):\n  pentagon = cq.Workplane(\"XY\")\n  pentagon = pentagon.moveTo(size/2, size/2)\n  pentagon = pentagon.lineTo(size/2 + size/2*math.cos(math.pi/5), size/2 + size/2*math.sin(math.pi/5))\n  pentagon = pentagon.lineTo(size/2 + size/2*math.cos(math.pi/5), size/2 + size/2*math.sin(math.pi/5))\n  pentagon = pentagon.lineTo(size/2, size/2)\n  pentagon = pentagon.close()\n  return pentagon\n\nstar = create_pentagon()\ncq.exporters.export(star, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:21:24.242Z ===
+Prompt: generate a straw
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Straw parameters\nstraw_outer_radius = 0.05 * 2  # Total outer radius (2 * 0.05)\nstraw_inner_radius = 0.03 * 2  # Total inner radius (2 * 0.03)\nstraw_length = 0.1\n\n# Create the outer straw\nstraw_outer = cq.Workplane(\"XY\").circle(straw_outer_radius).extrude(straw_length)\n\n# Create the inner straw (hole)\nstraw_inner = cq.Workplane(\"XY\").circle(straw_inner_radius).extrude(straw_length)\n\n# Cut the inner straw from the outer straw to create the hollow straw\nstraw = straw_outer.cut(straw_inner)\n\n# Export the straw to an STL file\ncq.exporters.export(straw, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:22:02.607Z ===
+Prompt: generate a straw that is 10 units long, with a diameter of 1 unit
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\nstraw_outer_radius = 1 * 0.1  # 1 unit diameter, so radius is 0.1\nstraw_inner_radius = 0.99 * 0.1  # 0.99 unit diameter, so radius is 0.99\nstraw_length = 10 * 0.1  # 10 units length, so scale it\n\nstraw = (\n    cq.Workplane(\"XY\")\n    .circle(straw_outer_radius)\n    .extrude(straw_length)\n    .faces(\">Z\")\n    .workplane()\n    .circle(straw_inner_radius)\n    .extrude(straw_length)\n    .cutThruAll()\n)\n\ncq.exporters.export(straw, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:22:15.156Z ===
+Prompt: generate a straw that is 10 units long, with a diameter of 1 unit
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\nstraw_outer_radius = 1 * 0.1  # 1 unit diameter, so radius is 0.1\nstraw_inner_radius = 0.98 * 0.1  # 0.99 unit diameter, so radius is 0.98\nstraw_length = 10 * 0.1  # 10 units length, so scale it\n\nstraw = (\n  cq.Workplane(\"XY\")\n  .circle(straw_outer_radius)\n  .extrude(straw_length)\n  .faces(\">Z\")\n  .workplane()\n  .circle(straw_inner_radius)\n  .extrude(straw_length)\n  .cutThruAll()\n)\n\ncq.exporters.export(straw, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:22:24.055Z ===
+Prompt: generate a straw that is 10 units long, with a diameter of 1 unit
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Straw profile\nstraw = cq.Workplane(\"XY\").moveTo(0, 0).lineTo(10, 0).circle(1).extrude(10)\n\n# Export to STL\ncq.exporters.export(straw, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:24:06.836Z ===
+Prompt: generate text extrustion that says JOSHUA
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ntext_string = \"JOSHUA\"\nextrusion_depth = 0.1\n\ncadquery_text = cq.Workplane().text(text_string).extrude(extrusion_depth)\n\ncq.exporters.export(cadquery_text, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:24:13.286Z ===
+Prompt: generate text extrustion that says JOSHUA
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ntext_string = \"JOSHUA\"\nextrusion_depth = 0.1\nfontsize = 12\ndistance = 0.05\n\ncadquery_text = cq.Workplane().text(text_string, fontsize=fontsize, distance=distance).extrude(extrusion_depth)\n\ncq.exporters.export(cadquery_text, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:24:21.880Z ===
+Prompt: generate text extrustion that says JOSHUA
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ntext_string = \"JOSHUA\"\nextrusion_depth = 0.1\n\nresult = cq.Workplane().text(text_string).extrude(extrusion_depth)\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:24:28.948Z ===
+Prompt: generate text extrustion that says JOSHUA
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ntext_string = \"JOSHUA\"\nextrusion_depth = 0.1\nfont_size = 12\ndistance = 0\n\nresult = cq.Workplane().text(text_string, fontsize=font_size, distance=distance).extrude(extrusion_depth)\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:25:35.671Z ===
+Prompt: generate a thick text extrusion of UNXVERSAL
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ntext = \"UNXVERSAL\"\nextrusion_depth = 0.1\n\nresult = cq.Workplane(\"XY\").text(text).extrude(extrusion_depth)\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:25:43.125Z ===
+Prompt: generate a thick text extrusion of UNXVERSAL
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ntext = \"UNXVERSAL\"\nextrusion_depth = 0.1\nfontsize = 24  # Increased font size\ndistance = 0.01  # Added a small distance for spacing\n\nresult = cq.Workplane(\"XY\").text(text, fontsize=fontsize, distance=distance).extrude(extrusion_depth)\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:25:52.235Z ===
+Prompt: generate a thick text extrusion of UNXVERSAL
+Response JSON:
+{
+  "cadquery_code": "from cadquery import CQ\nfrom cadquery.workplanes import Workplane\n\ntext = CQ.Workplane(\"Workplane(\").Text(\"UNXVERSAL\", font=\"Arial Bold\", extrusionDepth=0.1)\nresult = text\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:25:57.969Z ===
+Prompt: generate a thick text extrusion of UNXVERSAL
+Response JSON:
+{
+  "cadquery_code": "from cadquery import Workplane\ntext = Workplane(\"Workplane(\").Text(\"UNXVERSAL\", font=\"Arial Bold\", extrusionDepth=0.1)\nresult = text\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:26:07.074Z ===
+Prompt: generate a thick text extrusion of UNXVERSAL
+Response JSON:
+{
+  "cadquery_code": "from cadquery import Workplane\ntext = Workplane().Text(\"UNXVERSAL\", font=\"Arial Bold\", extrusionDepth=0.1)\nresult = text\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:26:31.088Z ===
+Prompt: generate a thick text extrusion of UNXVERSAL
+Response JSON:
+{
+  "cadquery_code": "cq.Workplane(\"XY\").text()"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:26:34.322Z ===
+Prompt: generate a thick text extrusion of UNXVERSAL
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\nresult = cq.Workplane(\"XY\").text(\"UNXVERSAL\").val()\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:26:43.118Z ===
+Prompt: generate a thick text extrusion of UNXVERSAL
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nfrom cadquery.workplane import Workplane\n\n# Define the text string\ntext = \"UNXVERSAL\"\n\n# Create the CadQuery Text object\ntext_obj = Workplane().text(text)\n\n# Extrude the text object to create a 3D solid\nresult = text_obj.extrude(0.1)\n\n# Export the result to an STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:26:49.527Z ===
+Prompt: generate a thick text extrusion of UNXVERSAL
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nfrom Workplane import Workplane\n# Define the text string\ntext = \"UNXVERSAL\"\n# Create the CadQuery Text object\ntext_obj = Workplane().text(text)\n# Extrude the text object to create a 3D solid\nresult = text_obj.extrude(0.1)\n# Export the result to an STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:26:56.469Z ===
+Prompt: generate a thick text extrusion of UNXVERSAL
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nfrom Workplane import Workplane\n# Define the text string\ntext = \"UNXVERSAL\"\n# Create the CadQuery Text object\ntext_obj = Workplane().text(text)\n# Extrude the text object to create a 3D solid\nresult = text_obj.extrude(0.1)\n# Export the result to an STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:30:46.955Z ===
+Prompt: an octagonal prism
+Response JSON:
+{
+  "cadquery_code": "import math\nfrom cadquery import cq\n\n# Octagon parameters\noctagon_side = 1.036\noctagon_height = 0.036\noctagon_num_sides = 8\n\n# Rectangular prism parameters\nprism_width = 0.036\nprism_length = 0.036\nprism_height = octagon_height\n\n# Create the octagon\noctagon = cq.Workplane(\"XY\").polygon(octagon_num_sides, octagon_side)\n\n# Create the rectangular prism\nprism = cq.Workplane(\"XY\").rect(prism_length, prism_width, prism_height)\n\n# Translate the prism to the center of the octagon\nprism = prism.translate((octagon_side / 2, octagon_side / 2, octagon_height))\n\n# Combine the octagon and prism\nresult = octagon.union(prism)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T05:30:59.919Z ===
+Prompt: an octagonal prism
+Response JSON:
+{
+  "cadquery_code": "import math\nfrom cadquery import cq\n# Octagon parameters\noctagon_side = 1.036\noctagon_height = 0.036\noctagon_num_sides = 8\noctagon_center = (0.036, 0.036)\n\n# Rectangular prism parameters\nprism_width = 0.036\nprism_length = 0.036\nprism_height = octagon_height\nprism_translation = (octagon_center[0], octagon_center[1], octagon_height)\n\n# Create the octagon\noctagon = cq.Workplane(\"XY\").polygon(octagon_num_sides, octagon_side)\n\n# Create the rectangular prism\nprism = cq.Workplane(\"XY\").rect(prism_length, prism_width, prism_height)\n\n# Translate the prism to the center of the octagon\nprism = prism.translate(prism_translation)\n\n# Combine the octagon and prism\nresult = octagon.union(prism)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
