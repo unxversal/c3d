@@ -215,21 +215,32 @@ export class GenerationService {
 						maxAttempts: config.maxRetries
 					});
 
-					// On retry attempts, include previous error information
 					let enhancedPrompt = prompt;
-					if (attempts > 1 && lastError) {
-						enhancedPrompt = `${prompt}
+					let lastCode = '';
 
-IMPORTANT: Previous attempt failed with error: "${lastError}"
-Please fix the code to avoid this error. Make sure to:
-- Use correct CADQuery syntax
-- Ensure all variables are properly defined
-- Check that geometric operations are valid`;
+					if (attempts > 1 && lastError && config.repromptWithError) {
+						enhancedPrompt = `
+							The user wants to generate a CAD model.
+							Original prompt: "${prompt}"
+
+							A previous attempt to generate the code failed.
+							Failed Code:
+							\`\`\`python
+							${lastCode}
+							\`\`\`
+
+							Error Message: "${lastError}"
+
+							Please analyze the failed code and the error message, then generate a new, corrected version of the Python script that successfully produces the 3D model.
+						`;
 					}
 
 					const codeResult = config.useStreamingMode 
 						? await this.aiService.generateStreamingCADQueryCode(enhancedPrompt, onStream)
 						: await this.aiService.generateDirectCADQueryCode(enhancedPrompt);
+					
+					lastCode = codeResult.cadquery_code;
+
 					
 					// Log the code generation result for debugging
 					await this.logLLMResponse('direct_cadquery_code', codeResult, prompt);

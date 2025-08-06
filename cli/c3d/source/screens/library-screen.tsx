@@ -217,18 +217,43 @@ export function LibraryScreen({initialSelectedFile}: Props) {
                 <Text color="gray">No STL files found</Text>
               )
             ) : (
-              filteredFiles.slice(0, 6).map((file, index) => (
-                <Box key={file.path}>
-                  <Text color={index === selectedIndex ? 'white' : 'gray'} 
-                        backgroundColor={index === selectedIndex ? 'blue' : undefined}>
-                    {index === selectedIndex ? '▶ ' : '  '}
-                    {file.name} ({formatFileSize(file.size)}) - {formatDate(file.modified)}
-                  </Text>
-                </Box>
-              ))
-            )}
-            {filteredFiles.length > 6 && (
-              <Text color="gray">... and {filteredFiles.length - 6} more files</Text>
+              (() => {
+                // Calculate viewport for scrolling (show 6 items at a time)
+                const viewportSize = 6;
+                const totalFiles = filteredFiles.length;
+                
+                // Calculate start index to keep selected item visible
+                let startIndex = Math.max(0, selectedIndex - Math.floor(viewportSize / 2));
+                startIndex = Math.min(startIndex, totalFiles - viewportSize);
+                startIndex = Math.max(0, startIndex);
+                
+                const endIndex = Math.min(startIndex + viewportSize, totalFiles);
+                const visibleFiles = filteredFiles.slice(startIndex, endIndex);
+                
+                return (
+                  <>
+                    {visibleFiles.map((file, viewportIndex) => {
+                      const actualIndex = startIndex + viewportIndex;
+                      return (
+                        <Box key={file.path}>
+                          <Text color={actualIndex === selectedIndex ? 'white' : 'gray'} 
+                                backgroundColor={actualIndex === selectedIndex ? 'blue' : undefined}>
+                            {actualIndex === selectedIndex ? '▶ ' : '  '}
+                            {file.name} ({formatFileSize(file.size)}) - {formatDate(file.modified)}
+                          </Text>
+                        </Box>
+                      );
+                    })}
+                    {totalFiles > viewportSize && (
+                      <Text color="gray">
+                        Showing {startIndex + 1}-{endIndex} of {totalFiles} files
+                        {selectedIndex < startIndex && ' (scroll up for more)'}
+                        {selectedIndex >= endIndex && ' (scroll down for more)'}
+                      </Text>
+                    )}
+                  </>
+                );
+              })()
             )}
           </Box>
         </Box>

@@ -83,18 +83,19 @@ export function CodeEditor({value, onChange, placeholder = '', maxHeight = 20}: 
 			setLines(newLines);
 			setCursorLine(cursorLine + 1);
 			setCursorColumn(0);
-		} else if (key.backspace) {
-			const currentLine = lines[cursorLine] || '';
+		} else if (key.backspace || key.delete) {
 			if (cursorColumn > 0) {
-				// Delete character at cursor position (the character the cursor is on)
+				// Standard backspace behavior: delete character before cursor
+				const currentLine = lines[cursorLine] || '';
 				const newLine = currentLine.slice(0, cursorColumn - 1) + currentLine.slice(cursorColumn);
 				const newLines = [...lines];
 				newLines[cursorLine] = newLine;
 				setLines(newLines);
 				setCursorColumn(cursorColumn - 1);
 			} else if (cursorLine > 0) {
-				// At beginning of line - merge with previous line
+				// At beginning of a line, merge with the previous line
 				const prevLine = lines[cursorLine - 1] || '';
+				const currentLine = lines[cursorLine] || '';
 				const newLines = [
 					...lines.slice(0, cursorLine - 1),
 					prevLine + currentLine,
@@ -103,26 +104,6 @@ export function CodeEditor({value, onChange, placeholder = '', maxHeight = 20}: 
 				setLines(newLines);
 				setCursorLine(cursorLine - 1);
 				setCursorColumn(prevLine.length);
-			}
-		} else if (key.delete) {
-			const currentLine = lines[cursorLine] || '';
-			if (cursorColumn < currentLine.length) {
-				// Delete character after cursor (at cursorColumn position)
-				const newLine = currentLine.slice(0, cursorColumn) + currentLine.slice(cursorColumn + 1);
-				const newLines = [...lines];
-				newLines[cursorLine] = newLine;
-				setLines(newLines);
-				// Cursor stays at same position
-			} else if (cursorLine < lines.length - 1) {
-				// At end of line - merge with next line
-				const nextLine = lines[cursorLine + 1] || '';
-				const newLines = [
-					...lines.slice(0, cursorLine),
-					currentLine + nextLine,
-					...lines.slice(cursorLine + 2)
-				];
-				setLines(newLines);
-				// Cursor stays at same position
 			}
 		} else if (input && !key.ctrl && !key.meta) {
 			// Insert character

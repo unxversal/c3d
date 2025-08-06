@@ -7,6 +7,8 @@ export interface C3DConfig {
 	maxTokens: number;
 	useJsonSchema: boolean; // Whether to use strict JSON schema or simple JSON mode
 	useStreamingMode: boolean; // Whether to use streaming markdown mode instead of JSON
+	repromptWithError: boolean; // Whether to include the previous error in the next prompt
+	thinking: boolean; // Whether to use structured thinking prompts for better reasoning
 	
 	// Server Settings
 	defaultPort: number;
@@ -35,6 +37,8 @@ export const defaultConfig: C3DConfig = {
 	maxTokens: 32768, // Maximum tokens for LLM responses (match OLLAMA_CONTEXT_LENGTH)
 	useJsonSchema: false, // Default to simple JSON mode for better generation
 	useStreamingMode: true, // Default to streaming markdown mode
+	repromptWithError: true, // Default to reprompting with the error context
+	thinking: true, // Default to using structured thinking prompts
 	
 	// Server Settings
 	defaultPort: 8765,

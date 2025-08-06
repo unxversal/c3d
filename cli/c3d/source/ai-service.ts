@@ -15,6 +15,9 @@ const DescriptionSchema = z.object({
 // Schema for the CADQuery code generation phase
 const CADQueryCodeSchema = z.object({
 	cadquery_code: z.string().describe('Complete CADQuery Python code that generates the object'),
+	thinking: z.string().optional().describe("Your thought process for generating the code."),
+	description: z.string().optional().describe("A description of the part you've designed."),
+	explanation: z.string().optional().describe("An explanation of the generated code.")
 });
 
 export type DescriptionResult = z.infer<typeof DescriptionSchema>;
@@ -305,10 +308,22 @@ Key features: ${description.key_features.join(', ')}`;
 	}
 
 	/**
-	 * Parse Python code blocks from markdown text
+	 * Parse Python code blocks from markdown text (supports both thinking format and regular format)
 	 */
 	private extractPythonCodeBlock(markdownText: string): string | null {
-		// Look for ```python or ``` code blocks
+		const config = getConfig();
+		
+		// If thinking mode is enabled, try to extract from <code> tags first
+		if (config.thinking) {
+			const codeTagRegex = /<code>\s*```(?:python)?\n([\s\S]*?)\n```\s*<\/code>/g;
+			const codeTagMatches = [...markdownText.matchAll(codeTagRegex)];
+			
+			if (codeTagMatches.length > 0 && codeTagMatches[0] && codeTagMatches[0][1]) {
+				return codeTagMatches[0][1].trim();
+			}
+		}
+		
+		// Fallback to regular code block extraction
 		const pythonBlockRegex = /```(?:python)?\n([\s\S]*?)\n```/g;
 		const matches = [...markdownText.matchAll(pythonBlockRegex)];
 		
@@ -347,13 +362,58 @@ Key features: ${description.key_features.join(', ')}`;
 			console.log('🔧 Starting streaming CADQuery code generation...');
 		}
 		
-		const systemPrompt = `you are an AI cad assistant. your abilties are being very good at writing cadquery code. your response must generate the user’s prompt. You are an AI CAD assistant. Write CADQuery Python code.
+		const systemPrompt = config.thinking ? `You are an AI CAD assistant and CADQuery expert. When the user describes an object, respond using this exact format:
+
+<thinking>
+Analyze the user's request and think through the approach. Consider:
+- What geometric primitives are needed (boxes, cylinders, spheres, etc.)
+- How to break down complex shapes into simpler components
+- What CADQuery operations to use (extrude, revolve, fillet, chamfer, etc.)
+- Any parametric patterns or helper functions needed
+- Potential challenges and how to address them
+</thinking>
+
+<description>
+Provide a clear description of the part you're designing based on the user's request.
+</description>
+
+<explanation>
+Explain your approach and any key CADQuery concepts or techniques being used.
+</explanation>
+
+<code>
+\`\`\`python
+import cadquery as cq
+
+# Your CADQuery code here
+# Always end with: cq.exporters.export(result, "output.stl")
+\`\`\`
+</code>
 
 Simple CADQuery patterns:
 - Import: import cadquery as cq
 - Box: cq.Workplane("XY").box(w, d, h)
 - Cylinder: cq.Workplane("XY").cylinder(h, r)
 - Export: cq.exporters.export(result, "output.stl")
+
+Always end with: cq.exporters.export(result, "output.stl")` : 
+
+`you are an AI cad assistant. your abilties are being very good at writing cadquery code. your response must generate the user's prompt. You are an AI CAD assistant. Write CADQuery Python code.
+
+Simple CADQuery patterns:
+- Import: import cadquery as cq
+- Box: cq.Workplane("XY").box(w, d, h)
+- Cylinder: cq.Workplane("XY").cylinder(h, r)
+- Export: cq.exporters.export(result, "output.stl")
+
+You are an AI CAD assistant and a CadQuery expert. When the user describes an object, you should:
+
+• Generate concise, idiomatic CadQuery code that builds the part.  
+• Encapsulate repetitive or multi-step operations into helper functions rather than dumping long lists of commands.  
+• Default to parametric patterns: sketch one feature (e.g. a single tooth), then use loops or polar-patterns to replicate it.  
+• Apply any finishing touches (fillets, chamfers) via clearly named functions or selectors.  
+
+Always aim for readable, maintainable scripts—avoid enumerating dozens of operations inline; group them into well-named functions.
 
 Keep it simple. Always end with:
 cq.exporters.export(result, "output.stl")
@@ -451,7 +511,7 @@ This creates a cube with rounded edges (fillet).`;
 			const lines = extractedCode.split('\n');
 			const lastLine = lines[lines.length - 1]?.trim() || '';
 			
-			if (!lastLine.includes('cq.exporters.export(result, "output.stl")')) {
+			if (!lastLine.includes('cq.exporters.export(') || !lastLine.includes('"output.stl")')) {
 				throw new Error(`Code does not end with required export statement. Last line: ${lastLine}`);
 			}
 

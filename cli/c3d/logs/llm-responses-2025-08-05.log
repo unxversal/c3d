@@ -1339,3 +1339,96 @@ Response JSON:
 }
 ================================================================================
 
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T22:07:21.998Z ===
+Prompt: generate a gear
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Gear parameters\ngear_size = 10.1\ngear_teeth = 20\ngear_thickness = 0.5\ngear_profile = cq.Workplane(\"XY\")\n\n# Calculate tooth width\ntooth_width = gear_size / gear_teeth\n\n# Create a single tooth profile\ntooth = (\n    gear_profile\n    .moveTo(tooth_width / 2, 0)\n    .lineTo(gear_size / 2, tooth_width / 2)\n    .lineTo(gear_size / 2, tooth_width)\n    .lineTo(tooth_width / 2, tooth_width / 2)\n    .lineTo(tooth_width / 2, 0)\n    .close()\n)\n\n# Extrude the tooth profile to create a gear\ngear = tooth.extrude(gear_thickness)\n\n# Create the full gear by repeating the tooth profile\nfull_gear = gear.revolve(math.pi / gear_teeth)\n\n# Export the gear to an STL file\ncq.exporters.export(full_gear, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T22:07:34.793Z ===
+Prompt: generate a gear
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Gear parameters\ngear_teeth = 24  # Number of teeth on the gear\ngear_size = 20  # Overall size of the gear (diameter)\n\n# Create the gear profile\ngear_profile = cq.Workplane(\"XY\") \\\n    .moveTo(gear_size / 2, 0) \\\n    .lineTo(gear_size / 2 + (gear_size / gear_teeth) * math.pi / gear_teeth, 0) \\\n    .lineTo(gear_size / 2 + (gear_size / gear_teeth) * math.pi / gear_teeth, gear_size / gear_teeth) \\\n    .lineTo(gear_size / 2, gear_size / gear_teeth) \\\n    .lineTo(gear_size / 2, 0) \\\n    .close()\n\n# Revolve the gear profile to create the gear\nfull_gear = gear_profile.revolve(math.pi / gear_teeth)\n\n# Export the gear to a STL file\ncq.exporters.export(full_gear, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T23:16:20.897Z ===
+Prompt: generate a simple cylinder
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a cylinder with a height of 5\nresult = cq.Workplane(\"XY\").cylinder(5, 2)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T23:33:51.887Z ===
+Prompt: generate a simple gear
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Gear parameters\ngear_size = 20  # Overall gear size\ngear_teeth = 20  # Number of teeth\ngear_thickness = 2  # Gear thickness\ngear_angle = 360 / gear_teeth  # Gear rotation angle\n\n# Create the gear profile\nresult = cq.Workplane(\"XY\")\n\nfor i in range(gear_teeth):\n    angle = i * gear_angle\n    radius = gear_size / gear_teeth\n    result = result.moveTo(radius * math.cos(angle), radius * math.sin(angle)).circle(radius)\n\ngear = result.close().extrude(gear_thickness)\n\n# Export the gear to STL\ncq.exporters.export(gear, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T23:34:00.951Z ===
+Prompt: generate a simple gear
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ngear_thickness = 2\ngear_width = 1.5\ngear_height = 1.5\n\nresult = cq.Workplane(\"XY\") \\\n    .moveTo(0, 0) \\\n    .lineTo(gear_width, 0) \\\n    .lineTo(gear_width, gear_height) \\\n    .lineTo(gear_width - gear_thickness, gear_height) \\\n    .lineTo(gear_width - gear_thickness, gear_height - gear_thickness) \\\n    .lineTo(gear_thickness, gear_height - gear_thickness) \\\n    .lineTo(gear_thickness, gear_height) \\\n    .lineTo(0, gear_height) \\\n    .lineTo(0, 0) \\\n    .close() \\\n    .extrude(gear_thickness)\n\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T23:35:07.089Z ===
+Prompt: generate a spoon
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the spoon profile\nspoon_profile = (\n    cq.Workplane(\"XY\")\n    .moveTo(0, 0)\n    .lineTo(10, 0)\n    .lineTo(10, 10)\n    .lineTo(5, 10)\n    .lineTo(5, 5)\n    .lineTo(0, 5)\n    .lineTo(0, 0)\n    .close()\n)\n\n# Extrude the spoon profile to create the spoon shape\nspoon = spoon_profile.extrude(2)\n\n# Export the spoon shape to an STL file\ncq.exporters.export(spoon, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T23:37:03.675Z ===
+Prompt: generate a wheel
+r
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Create a wheel with a radius of 2.0 and a diameter of 4.0\nresult = cq.Workplane(\"XY\").circle(2.0).extrude(2.0).fillet(1)\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T23:37:07.608Z ===
+Prompt: generate a wheel
+r
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Create a wheel\nresult = cq.Workplane(\"XY\").circle(2.0).extrude(2.0).fillet(1)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T23:37:12.607Z ===
+Prompt: generate a wheel
+r
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Create a wheel\nresult = cq.Workplane(\"XY\").circle(2.0).extrude(2.0).fillet(1)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T23:37:18.443Z ===
+Prompt: generate a wheel
+r
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Create a wheel with a 2.0 radius and 2.0 extrusion depth\nresult = cq.Workplane(\"XY\").circle(2.0).extrude(2.0).fillet(1)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-05T23:37:23.399Z ===
+Prompt: generate a wheel
+r
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Create a wheel\nresult = cq.Workplane(\"XY\").circle(2.0).extrude(2.0).fillet(1)\n\n# Export the result\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+

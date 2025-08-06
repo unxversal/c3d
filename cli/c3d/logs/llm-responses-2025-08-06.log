@@ -1,0 +1,16 @@
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T00:58:39.076Z ===
+Prompt: generate a sample cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the dimensions of the cube\nwidth = 20 * 1  # Scaled width\ndepth = 10 * 1  # Scaled depth\nheight = 5 * 1  # Scaled height\n\n# Create the cube using the cq.Workplane() and .box() methods\ncube = cq.Workplane(\"XY\").box(width, depth, height)\n\n# Export the cube to an STL file\ncq.exporters.export(cube, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T00:59:26.541Z ===
+Prompt: generate a sample cube (same l, w, h)
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the size of the cube\ncube_size = 10\n\n# Create the cube with rounded edges and corners\nrounded_cube = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size).edges().fillet(cube_size / 20)\n\n# Export the result to an STL file\ncq.exporters.export(rounded_cube, \"output.stl\")"
+}
+================================================================================
+
