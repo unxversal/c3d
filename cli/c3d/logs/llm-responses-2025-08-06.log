@@ -1405,3 +1405,27 @@ Response JSON:
 }
 ================================================================================
 
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T17:47:05.775Z ===
+Prompt: generate a rounded cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube size\ncube_size = 10\n\n# Create the cube with rounded edges\nrounded_cube = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size).edges().fillet(1)\n\n# Export the result to a STL file\ncq.exporters.export(rounded_cube, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T17:48:49.591Z ===
+Prompt: generate a rounded cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_length = 10\ncube_width = 10\ncube_height = 10\n\n# Chamfer the edges\nchamfer_amount = 1\n\n# Create the cube with chamfered edges\nresult = cq.Workplane(\"XY\").box(cube_length, cube_width, cube_height).chamfer(chamfer_amount)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T17:49:24.297Z ===
+Prompt: generate a rounded cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Create a cube with a size of 10 units\ncube = cq.Workplane(\"XY\").box(10, 10, 10)\n\n# Apply a fillet to all edges with a radius of 1 unit\nrounded_cube = cube.edges().fillet(1)\n\n# Export the rounded cube to an STL file\ncq.exporters.export(rounded_cube, \"output.stl\")"
+}
+================================================================================
+
