@@ -308,3 +308,131 @@ Response JSON:
 }
 ================================================================================
 
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:24:51.779Z ===
+Prompt: generate a thin torus
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Torus parameters\nouter_radius = 1.0\ninner_radius = 0.5\nthickness = 0.01\nheight = 0.1\n\n# Create the torus profile\ntorus_profile = (\n    cq.Workplane(\"XY\")\n    .circle(outer_radius)\n    .circle(inner_radius)\n    .extrude(thickness)\n)\n\n# Create the thin torus shape\nthin_torus = torus_profile.val()\n\n# Export the thin torus to an STL file\ncq.exporters.export(thin_torus, \"thin_torus.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:27:09.948Z ===
+Prompt: generate an octagonal prism
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Octagon vertices\noctagon_vertices = [\n    (0.0, 0.5),\n    (0.25, 0.0),\n    (0.5, 0.0),\n    (0.75, 0.0),\n    (0.75, 0.5),\n    (0.5, 1.0),\n    (0.25, 1.0),\n    (0.0, 0.5)\n]\n\n# Octagon side length\noctagon_side_length = 1.0\n\n# Hole radius\nhole_radius = 0.05\n\n# Octagon height\noctagon_height = 1.0\n\n# Create the octagon\noctagon = cq.Workplane(\"XY\").polyline(octagon_vertices).close().extrude(octagon_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(octagon_height)\n\n# Subtract the hole from the octagon\nprism = octagon.cut(hole)\n\n# Export the prism to an STL file\ncq.exporters.export(prism, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:27:54.433Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube parameters\ncube_side = 10.0\ncube_height = 1.0\n\n# Hole parameters\nhole_radius = 2.0\nhole_center = (5.0, 5.0)\n\n# Create the cube\ncube = cq.Workplane(\"XY\").box(cube_side, cube_side, cube_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).translate(hole_center)\n\n# Subtract the hole from the cube\nresult = cube.cut(hole)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:28:13.656Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube parameters\ncube_size = 10  # Size of the cube\nfillet_radius = 0.1  # Radius of the fillets\n\n# Create the cube with rounded edges and corners\nrounded_cube = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size).edges().fillet(fillet_radius)\n\n# Export the result to an STL file\ncq.exporters.export(rounded_cube, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:29:04.952Z ===
+Prompt: generate a tube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Tube parameters\nouter_diameter = 2.5 * 2.5  # Outer diameter in mm, scaled\ninner_diameter = 2.0 * 2.5  # Inner diameter in mm, scaled\nlength = 1.0  # Tube length in mm\n\n# Create the outer cylinder\nouter_cylinder = cq.Workplane(\"XY\").circle(outer_diameter / 2).extrude(length)\n\n# Create the inner cylinder (hole)\ninner_cylinder = cq.Workplane(\"XY\").circle(inner_diameter / 2).extrude(length)\n\n# Cut the inner cylinder from the outer cylinder to create the tube\ntube = outer_cylinder.cut(inner_cylinder)\n\n# Export the tube to an STL file\ncq.exporters.export(tube, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:30:07.563Z ===
+Prompt: generate a sphere
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the sphere parameters\nsphere_radius = 1.0\nsphere_height = 1.0\n\n# Define the hole parameters\nhole_radius = 0.5\nhole_height = sphere_height\n\n# Create the sphere\nsphere = cq.Workplane(\"XY\").sphere(sphere_radius * sphere_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius * sphere_height).extrude(hole_height)\n\n# Subtract the hole from the sphere\nresult = sphere.cut(hole)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:31:13.833Z ===
+Prompt: generate a half-sphere
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the parameters for the half-sphere\ncenter_x = 0.0\ncenter_y = 0.0\nradius = 1.0\nhalf_angle = 180.0\n\n# Create the half-sphere by revolving a half-circle\nhalf_sphere = cq.Workplane(\"XY\") \\\n    .moveTo(center_x, center_y) \\\n    .lineTo(center_x + radius * half_angle, center_y) \\\n    .arcTo(cq.Math.HalfAngle(half_angle, center_x + radius * half_angle, center_y)) \\\n    .close() \\\n    .extrude(radius)\n\n# Export the half-sphere to an STL file\ncq.exporters.export(half_sphere, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:31:24.125Z ===
+Prompt: generate a half-sphere
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Define the parameters for the half-sphere\ncenter_x = 0.0\ncenter_y = 0.0\nradius = 1.0\nhalf_angle = 180.0\n\n# Create the half-sphere by revolving a half-circle\nhalf_sphere = cq.Workplane(\"XY\") \\\n  .moveTo(center_x, center_y) \\\n  .lineTo(center_x + radius * half_angle, center_y) \\\n  .arcTo(cq.Math.HalfAngle(half_angle, center_x + radius * half_angle, center_y)) \\\n  .close() \\\n  .extrude(radius)\n\n# Export the half-sphere to an STL file\ncq.exporters.export(half_sphere, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:31:36.341Z ===
+Prompt: generate a half-sphere
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n# Define the parameters for the half-sphere\ncenter_x = 0.0\ncenter_y = 0.0\nradius = 1.0\nhalf_angle = 180.0\nheight = radius\n\n# Create the half-sphere by revolving a half-circle\nhalf_sphere = cq.Workplane(\"XY\") \\\n  .moveTo(center_x, center_y) \\\n  .lineTo(center_x + radius * half_angle, center_y) \\\n  .arcTo(cq.Math.HalfAngle(half_angle, center_x + radius * half_angle, center_y)) \\\n  .close() \\\n  .extrude(height)\n# Export the half-sphere to an STL file\ncq.exporters.export(half_sphere, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:31:44.911Z ===
+Prompt: generate a half-sphere
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n# Define the parameters for the half-sphere\ncenter_x = 0.0\ncenter_y = 0.0\nradius = 1.0\nhalf_angle = 180.0\nheight = radius\n# Create the half-sphere by revolving a half-circle\nhalf_sphere = cq.Workplane(\"XY\") \\\n  .moveTo(center_x, center_y) \\\n  .lineTo(center_x + radius * half_angle, center_y) \\\n  .arcTo(cq.Math.HalfAngle(half_angle, center_x + radius * half_angle, center_y)) \\\n  .close() \\\n  .extrude(height)\n# Export the half-sphere to an STL file\ncq.exporters.export(half_sphere, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:32:29.636Z ===
+Prompt: generate a roof.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ndef roof(width, depth, height, roof_angle=30):\n    \"\"\"\n    Generates a simple roof CAD model.\n\n    Args:\n        width: The width of the roof.\n        depth: The depth of the roof.\n        height: The height of the roof.\n        roof_angle: The angle of the roof slope (in degrees).\n\n    Returns:\n        A CadQuery object representing the roof.\n    \"\"\"\n\n    roof_slope = roof_angle * (width / depth)\n    roof_height = depth * roof_slope\n\n    roof = cq.Workplane(\"XY\") \\\n        .rect(width, roof_slope) \\\n        .extrude(roof_height) \\\n        .translate((width / 2 - roof_slope / 2, roof_slope / 2 - roof_slope / 2, roof_height))\n\n    return roof\n\n# Example usage:\nroof_width = 10\nroof_depth = 20\nroof_height = 5\nroof_angle = 30\n\nresult = roof(roof_width, roof_depth, roof_height, roof_angle)\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:33:03.513Z ===
+Prompt: generate a plate.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Plate dimensions\nwidth = 0.5\ndepth = 0.25\nheight = 0.125\n\n# Create the plate\nplate = cq.Workplane(\"XY\").box(width, depth, height)\n\n# Export the plate to an STL file\ncq.exporters.export(plate, \"plate.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:34:56.020Z ===
+Prompt: generate a circular plate
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\nplate_radius = 0.03 * 0.06  # 60mm diameter\nplate_height = 0.003\n\nhole_radius = 0.005 * 0.01  # 10mm diameter\nhole_height = 0.003\n\nplate = cq.Workplane(\"XY\").circle(plate_radius).extrude(plate_height)\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(hole_height)\n\nresult = plate.cut(hole.translate((plate_radius, plate_radius, plate_height)))\n\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:35:45.564Z ===
+Prompt: generate a circular plate
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\nplate_radius = 50  # mm\nplate_thickness = 2  # mm\n\nplate = cq.Workplane(\"XY\").circle(plate_radius).extrude(plate_thickness)\n\ncq.exporters.export(plate, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:37:03.035Z ===
+Prompt: generate a bowl
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\ndef create_bowl(outer_arc_1_start=(0.0, 0.0), outer_arc_1_mid=(0.375, 0.0), outer_arc_1_end=(0.75, 0.0), outer_arc_2_mid=(0.75, 0.375), outer_arc_2_end=(0.0, 0.375), inner_circle_center=(0.375, 0.375), inner_circle_radius=0.1875, bowl_height=0.75, fillet_radius=0.1875):\n    \"\"\"\n    Creates a bowl with a hollow center.\n\n    Args:\n        outer_arc_1_start (tuple): Start point for the first outer arc.\n        outer_arc_1_mid (tuple): Midpoint for the first outer arc.\n        outer_arc_1_end (tuple): End point for the first outer arc.\n        outer_arc_2_mid (tuple): Midpoint for the second outer arc.\n        outer_arc_2_end (tuple): End point for the second outer arc.\n        inner_circle_center (tuple): Center point for the inner circle.\n        inner_circle_radius (float): Radius of the inner circle.\n        bowl_height (float): Height of the bowl.\n        fillet_radius (float): Radius of the fillets.\n\n    Returns:\n        cq.Workplane: The bowl object.\n    \"\"\"\n\n    outer_profile = (\n        cq.Workplane(\"XY\")\n        .moveTo(outer_arc_1_start[0], outer_arc_1_start[1])\n        .lineTo(outer_arc_1_end[0], outer_arc_1_end[1])\n        .threePointArc(outer_arc_1_mid, outer_arc_2_start)\n        .lineTo(outer_arc_2_end[0], outer_arc_2_end[1])\n        .threePointArc(outer_arc_2_mid, outer_arc_1_start)\n        .close()\n    )\n\n    inner_profile = (\n        cq.Workplane(\"XY\")\n        .moveTo(inner_circle_center[0], inner_circle_center[1])\n        .circle(inner_circle_radius)\n    )\n\n    bowl = (\n        outer_profile\n        .loft(cq.LoftPy.loft(inner_profile.val(), cq.Workplane(\"XY\").moveTo(inner_circle_center[0], inner_circle_center[1]).circle(inner_circle_radius)))\n        .edges().fillet(fillet_radius)\n    )\n\n    return bowl.extrude(bowl_height)\n\nbowl = create_bowl()\ncq.exporters.export(bowl, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:37:30.247Z ===
+Prompt: generate a bowl
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\ndef create_bowl(outer_arc_1_start=(0.0, 0.0), outer_arc_1_mid=(0.375, 0.0), outer_arc_1_end=(0.75, 0.0), outer_arc_2_mid=(0.75, 0.375), outer_arc_2_end=(0.0, 0.375), inner_circle_center=(0.375, 0.375), inner_circle_radius=0.1875, bowl_height=0.75, fillet_radius=0.1875):\n  \"\"\"\n  Creates a bowl with a hollow center.\n\n  Args:\n        outer_arc_1_start (tuple): Start point for the first outer arc.\n        outer_arc_1_mid (tuple): Midpoint for the first outer arc.\n        outer_arc_1_end (tuple): End point for the first outer arc.\n        outer_arc_2_mid (tuple): Midpoint for the second outer arc.\n        outer_arc_2_end (tuple): End point for the second outer arc.\n        inner_circle_center (tuple): Center point for the inner circle.\n        inner_circle_radius (float): Radius of the inner circle.\n        bowl_height (float): Height of the bowl.\n        fillet_radius (float): Radius of the fillets.\n\n  Returns:\n      cq.Workplane: The bowl object.\n  \"\"\"\n  outer_profile = (\n  cq.Workplane(\"XY\")\n  .moveTo(outer_arc_1_start[0], outer_arc_1_start[1])\n  .lineTo(outer_arc_1_end[0], outer_arc_1_end[1])\n  .threePointArc(outer_arc_1_mid, outer_arc_2_start)\n  .lineTo(outer_arc_2_end[0], outer_arc_2_end[1])\n  .threePointArc(outer_arc_2_mid, outer_arc_1_start)\n  .close()\n  )\n  inner_profile = (\n  cq.Workplane(\"XY\")\n  .moveTo(inner_circle_center[0], inner_circle_center[1])\n  .circle(inner_circle_radius)\n  )\n  bowl = (\n  outer_profile\n  .loft(cq.LoftPy.loft(inner_profile.val(), cq.Workplane(\"XY\").moveTo(inner_circle_center[0], inner_circle_center[1]).circle(inner_circle_radius))))\n  .edges().fillet(fillet_radius)\n  )\n  return bowl.extrude(bowl_height)\nbowl = create_bowl()\ncq.exporters.export(bowl, \"output.stl\")"
+}
+================================================================================
+

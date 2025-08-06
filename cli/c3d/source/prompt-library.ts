@@ -140,6 +140,36 @@ This creates a cube with rounded edges (fillet).`;
     let userPrompt = `User request: ${userRequest}`;
     
     if (errorContext) {
+      const formatInstructions = useThinking ? `
+
+Remember to respond using this exact format:
+
+<thinking>
+Analyze the error and think through a corrected approach. Consider:
+- What went wrong in the previous attempt
+- How to fix the specific error
+- Alternative approaches that might work better
+</thinking>
+
+<description>
+Describe the corrected part you're designing.
+</description>
+
+<explanation>
+Explain your corrected approach and what changes you made to fix the error.
+</explanation>
+
+<code>
+\`\`\`python
+import cadquery as cq
+
+# Your corrected CADQuery code here
+# Always end with: cq.exporters.export(result, "output.stl")
+\`\`\`
+</code>` : `
+
+Remember to provide clean CADQuery code that fixes the error.`;
+
       userPrompt = `User request: ${userRequest}
 
 RETRY ATTEMPT ${errorContext.attemptNumber}/${errorContext.maxAttempts}:
@@ -152,7 +182,7 @@ ${errorContext.failedCode}
 
 Error Message: ${errorContext.errorMessage}
 
-Please analyze the failed code and error, then generate a corrected version.`;
+Please analyze the failed code and error, then generate a corrected version.${formatInstructions}`;
     }
 
     return {

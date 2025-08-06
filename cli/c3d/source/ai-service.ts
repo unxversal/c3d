@@ -415,13 +415,7 @@ You must respond with structured JSON containing a detailed description, key fea
 				console.log(`🔧 Extracted code length: ${extractedCode.length} characters`);
 			}
 			
-			// Validate that the code ends with the correct export statement
-			const lines = extractedCode.split('\n');
-			const lastLine = lines[lines.length - 1]?.trim() || '';
-			
-			if (!lastLine.includes('cq.exporters.export(')) {
-				throw new Error(`Code does not end with required export statement. Last line: ${lastLine}`);
-			}
+			// No strict validation needed - let the server handle execution
 
 			return {
 				cadquery_code: extractedCode
