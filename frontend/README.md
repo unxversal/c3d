@@ -20,6 +20,14 @@ Modern React-based 3D CAD model viewer built with Three.js and React Three Fiber
 - **Vite** - Fast build tool and dev server
 - **Lucide React** - Modern icon library
 
+## 🚀 Quick Start
+
+The frontend is included with the main C3D CLI package:
+```bash
+npm install -g @unxversallabs/c3d
+c3d viewer  # Launches the 3D viewer
+```
+
 ## 🚀 Development
 
 ### Prerequisites
