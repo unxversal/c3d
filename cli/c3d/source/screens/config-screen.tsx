@@ -30,6 +30,7 @@ export function ConfigScreen() {
 		{ key: 'errorContextResetAfter', description: 'Reset error context after N consecutive errors', type: 'number', category: 'AI Generation' },
 		{ key: 'thinking', description: 'Use structured thinking prompts', type: 'boolean', category: 'AI Generation' },
 		{ key: 'promptMode', description: 'Prompt style (instructional/completion/thinking_instructional/thinking_completion)', type: 'string', category: 'AI Generation' },
+		{ key: 'includeCadQueryExamples', description: 'Include CADQuery examples in prompts for better code generation', type: 'boolean', category: 'AI Generation' },
 		
 		// Server Settings
 		{ key: 'defaultPort', description: 'Default server port', type: 'number', category: 'Server' },

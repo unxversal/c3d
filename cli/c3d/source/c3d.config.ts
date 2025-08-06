@@ -15,6 +15,7 @@ export interface C3DConfig {
 	thinking: boolean; // Whether to use structured thinking prompts for better reasoning
 	promptMode: 'instructional' | 'completion' | 'thinking_instructional' | 'thinking_completion'; // Prompt style to use
 	errorContextResetAfter: number; // Reset error context (fresh start) after this many consecutive errors
+	includeCadQueryExamples: boolean; // Whether to include CADQuery examples in prompts for better code generation
 	
 	// Server Settings
 	defaultPort: number;
@@ -47,6 +48,7 @@ export const defaultConfig: C3DConfig = {
 	thinking: true, // Default to using structured thinking prompts
 	promptMode: 'thinking_instructional', // Default to thinking instructional prompts
 	errorContextResetAfter: 2, // Reset error context after 2 consecutive errors for fresh start
+	includeCadQueryExamples: false, // Default to excluding CADQuery examples for shorter prompts
 	
 	// Server Settings
 	defaultPort: 8765,

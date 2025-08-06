@@ -40,7 +40,29 @@ Before installing C3D, ensure you have the following installed:
 ### Global Installation (Recommended)
 
 ```sh
-npm install --global c3d
+npm install --global @unxversallabs/c3d
+```
+
+### Local Development Installation
+
+If you want to clone and develop the project locally:
+
+```sh
+# Clone the repository
+git clone <repository-url>
+cd c3d/cli/c3d
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+
+# Install globally from local build
+npm install -g .
+
+# Now you can use c3d command
+c3d generate "a simple cube"
 ```
 
 ### First-time Setup
@@ -371,7 +393,7 @@ The CLI packages everything needed for distribution:
 
 Single-command installation:
 ```sh
-npm install -g c3d
+npm install -g @unxversallabs/c3d
 ```
 
 ## 🤝 Contributing
