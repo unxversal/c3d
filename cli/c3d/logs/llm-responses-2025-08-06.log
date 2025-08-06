@@ -14,3 +14,297 @@ Response JSON:
 }
 ================================================================================
 
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:08:57.991Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cube parameters\ncube_size = 10.0\ncube = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Cylinder parameters\ncylinder_radius = 3.0\ncylinder_height = cube_size\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\n# Position the cylinder at the center of the cube\ncylinder = cylinder.translate((cube_size/2, cube_size/2, 0))\n\n# Subtract the cylinder from the cube to create the hole\nresult = cube.cut(cylinder)\n\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:09:23.762Z ===
+Prompt: generate a cube.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ncube = cq.Workplane(\"XY\").box(20, 20, 20)\ncq.exporters.export(cube, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:23:54.542Z ===
+Prompt: generate a cylinder.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ncylinder = cq.Workplane(\"XY\").cylinder(h=2.0, r=1.0)\ncq.exporters.export(cylinder, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:25:38.357Z ===
+Prompt: generate a cylinder.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ncylinder_radius = 15\ncylinder_height = 10\n\ncylinder = cq.Workplane(\"XY\").circle(cylinder_radius).extrude(cylinder_height)\n\ncq.exporters.export(cylinder, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:26:22.899Z ===
+Prompt: generate a cone.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Create a triangle with vertices (0,0), (1,0), and (0,1)\ntriangle = cq.Triangle((0,0), (1,0), (0,1))\n\n# Create a circle with radius 1 and center at (0,1)\ncircle = cq.Circle(1).center(0,1)\n\n# Revolve the triangle around the z-axis\ncone = triangle.revolve((0,1))\n\n# Scale the cone\ncone = cone.scale(1)\n\n# Export the cone to an STL file\ncq.exporters.export(cone, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:41:38.784Z ===
+Prompt: generate a cone.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cone parameters\ncone_height = 1.0\ncone_radius = 1.0\n\n# Create the cone\ncone = cq.Workplane(\"XY\") \\\n    .moveTo(0, 0) \\\n    .lineTo(cone_radius, 0) \\\n    .lineTo(cone_radius, cone_height) \\\n    .close() \\\n    .rotate((0, 0, 1), (0, 0, 2), 90) \\\n    .extrude(cone_height)\n\n# Export the cone to a STL file\ncq.exporters.export(cone, \"cone.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:42:05.280Z ===
+Prompt: generate a cone.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cone parameters\ncone_radius = 0.1  # Radius of the cone's base\ncone_height = 1.0  # Height of the cone\n\n# Create the cone\ncone = cq.Workplane(\"XY\").cone(cone_height, cone_radius)\n\n# Export the cone to an STL file\ncq.exporters.export(cone, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:43:44.722Z ===
+Prompt: generate a sphere.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\nsphere = cq.Workplane(\"XY\").sphere(1.0)\ncq.exporters.export(sphere, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:54:12.540Z ===
+Prompt: generate a cone
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the square base\nsquare_base = cq.Workplane(\"XY\").box(1.0, 1.0, 1.0)\n\n# Define the cone's radius\ncone_radius = 0.5\n\n# Create the cone by extruding the square base\ncone = square_base.extrude(1.0)\n\n# Export the cone to an STL file\ncq.exporters.export(cone, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:56:13.772Z ===
+Prompt: generate a cone
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cone parameters\ncone_height = 1.0\ncone_radius = 0.5\n\n# Create the cone\ncone = cq.Workplane(\"XY\").circle(cone_radius).extrude(cone_height)\n\n# Export the cone to a STL file\ncq.exporters.export(cone, \"cone.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:56:32.821Z ===
+Prompt: generate a cone
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cone parameters\ncone_base_diameter = 1.5 * 0.75  # Base diameter scaled\ncone_height = 3\n\n# Create the cone base (a cylinder)\ncone_base = cq.Workplane(\"XY\").circle(cone_base_diameter / 2).extrude(cone_height)\n\n# Export to STL\ncq.exporters.export(cone_base, \"cone.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:58:41.889Z ===
+Prompt: generate a tetrahedron
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the vertices of the tetrahedron\nvertices = [\n    (0, 0),\n    (1, 0),\n    (0.5, (1/2)*0.5)  # Approximate sqrt(0.5)/2\n]\n\n# Create the CadQuery Workplane\nwp = cq.Workplane(\"XY\")\n\n# Add the vertices to the Workplane\nwp = wp.add(vertices)\n\n# Extrude the Workplane to create the tetrahedron\ntetrahedron = wp.extrude(1)\n\n# Export the tetrahedron to an STL file\ncq.exporters.export(tetrahedron, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T03:59:10.722Z ===
+Prompt: generate a tetrahedron
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the vertices of the triangular prism\nvertices = [\n    (0, 0),\n    (1, 0),\n    (0, 1)\n]\n\n# Create the triangular prism\nprism = cq.Workplane(\"XY\").polyline(vertices).close().extrude(1)\n\n# Export the prism to an STL file\ncq.exporters.export(prism, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:01:08.090Z ===
+Prompt: Rectangular prism (non-cubic box)
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Part dimensions\nwidth = 15 * 0.75  # Scaled width\ndepth = 10 * 0.75  # Scaled depth\nheight = 5  # Scaled height\nchamfer_angle = 45  # Scaled chamfer angle\nfillet_radius = 1  # Scaled fillet radius\n\n# Create the base rectangular prism\nbase = cq.Workplane(\"XY\").box(width, depth, height)\n\n# Apply chamfer to the edges\nchamfer = base.edges(\"|Z\").chamfer(chamfer_angle)\n\n# Apply fillet to the edges\nfillet = chamfer.edges(\"|Z\").fillet(fillet_radius)\n\n# Export the final part to an STL file\ncq.exporters.export(fillet, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:01:15.776Z ===
+Prompt: Rectangular prism (non-cubic box)
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the dimensions of the rectangular prism\nlength = 10\nwidth = 5\nheight = 2\n\n# Create the rectangular prism\nprism = cq.Workplane(\"XY\").box(length, width, height)\n\n# Export the prism to an STL file\ncq.exporters.export(prism, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:08:18.270Z ===
+Prompt: Ellipsoid (scaled sphere)
+
+
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Your CADQuery code here\n# Always end with: cq.exporters.export(result, \"output.stl\")\n\nellipsoid_radius = 0.05 * 2  # Scaled radius\nellipsoid_height = 0.1\n\nresult = cq.Workplane(\"XY\").circle(ellipsoid_radius).extrude(ellipsoid_height)\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:08:39.884Z ===
+Prompt: Ellipsoid (scaled sphere)
+
+
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Ellipsoid parameters (scaled)\na = 1.0  # Semi-major axis\nb = 0.8  # Semi-minor axis\nc = 0.6  # Elliptical eccentricity\nh = 1.0  # Height\n\n# Create the ellipsoid\nellipsoid = cq.Workplane(\"XY\").ellipsoid(a, b, c, h)\n\n# Export to STL\ncq.exporters.export(ellipsoid, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:08:45.888Z ===
+Prompt: Ellipsoid (scaled sphere)
+
+
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n# Ellipsoid parameters (scaled)\na = 1.0  # Semi-major axis\nb = 0.8  # Semi-minor axis\nc = 0.6  # Elliptical eccentricity\nh = 1.0  # Height\nr = math.sqrt(a**2 - b**2)\n\n# Create the ellipsoid\nellipsoid = cq.Workplane(\"XY\").ellipse(r, b)\nellipsoid = ellipsoid.extrude(h)\n\n# Export to STL\ncq.exporters.export(ellipsoid, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:11:23.127Z ===
+Prompt: Ellipsoid (scaled sphere)
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Ellipsoid parameters\nellipsoid_radius = 0.5\nellipsoid_height = 0.5\nellipsoid_scale = 1\n\n# Hole parameters\nhole_radius = 0.25\nhole_center = (0.25, 0.25)\n\n# Create the ellipsoid\nellipsoid = cq.Workplane(\"XY\").ellipsoid(ellipsoid_radius * ellipsoid_scale, ellipsoid_radius * ellipsoid_scale, ellipsoid_height * ellipsoid_scale)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius * ellipsoid_scale).translate(hole_center * ellipsoid_scale)\n\n# Subtract the hole from the ellipsoid\nresult = ellipsoid.cut(hole)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:11:32.981Z ===
+Prompt: Ellipsoid (scaled sphere)
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n# Ellipsoid parameters\nellipsoid_radius = 0.5\nellipsoid_height = 0.5\nellipsoid_scale = 1\nellipsoid_major_axis = ellipsoid_radius * ellipsoid_scale\nellipsoid_minor_axis = ellipsoid_radius * ellipsoid_scale\n\n# Hole parameters\nhole_radius = 0.25\nhole_center = (0.25, 0.25)\nhole_scale = ellipsoid_scale\n\n# Create the ellipsoid\nellipsoid = cq.Workplane(\"XY\").ellipse(ellipsoid_major_axis, ellipsoid_minor_axis).extrude(ellipsoid_height * ellipsoid_scale)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius * hole_scale).translate(hole_center * hole_scale)\n\n# Subtract the hole from the ellipsoid\nresult = ellipsoid.cut(hole)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:11:46.627Z ===
+Prompt: Ellipsoid (scaled sphere)
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n# Ellipsoid parameters\nellipsoid_radius = 0.5\nellipsoid_height = 0.5\nellipsoid_scale = 1\nellipsoid_major_axis = ellipsoid_radius * ellipsoid_scale\nellipsoid_minor_axis = ellipsoid_scale * ellipsoid_radius\nellipsoid_center = (0, 0)\n\n# Hole parameters\nhole_radius = 0.25\nhole_center = (0.25, 0.25)\nhole_scale = ellipsoid_scale\n\n# Create the ellipsoid\nellipsoid = cq.Workplane(\"XY\").ellipse(ellipsoid_major_axis, ellipsoid_minor_axis).extrude(ellipsoid_height * ellipsoid_scale).translate(ellipsoid_center)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius * hole_scale).translate(hole_center * hole_scale)\n\n# Subtract the hole from the ellipsoid\nresult = ellipsoid.cut(hole)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:14:55.447Z ===
+Prompt: Ellipsoid (scaled sphere)
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\nimport math\n\n# Ellipsoid parameters\nellipsoid_radius = 0.25\nellipsoid_height = 0.5\n\n# Hole parameters\nhole_radius = 0.125\nhole_position = (0.125, 0.125)\n\n# Create the ellipsoid\nellipsoid = cq.Workplane(\"XY\").circle(ellipsoid_radius).extrude(ellipsoid_height)\n\n# Create the hole\nhole = cq.Workplane(\"XY\").circle(hole_radius).extrude(ellipsoid_height)\n\n# Translate the hole to its position\nhole = hole.translate(hole_position)\n\n# Subtract the hole from the ellipsoid\nresult = ellipsoid.cut(hole)\n\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:15:30.547Z ===
+Prompt: generate a football shape
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the dimensions of the football\nlength = 24.78\nwidth = 15.72\nheight = 1.0248\nradius = 2.478\n\n# Create the rectangular body of the football\nbody = cq.Workplane(\"XY\").rect(length, width).extrude(height)\n\n# Create the rounded ends of the football\nend1 = cq.Workplane(\"XY\").circle(radius).extrude(height)\nend2 = cq.Workplane(\"XY\").circle(radius).extrude(height)\n\n# Position the rounded ends at the ends of the football body\nend1 = end1.translate((length/2 - radius, width/2, 0))\nend2 = end2.translate((length/2 + radius, width/2, 0))\n\n# Combine the football body and rounded ends\nfootball = body.union(end1).union(end2)\n\n# Export the football to an STL file\ncq.exporters.export(football, \"football.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:16:08.227Z ===
+Prompt: generate a cup (a cylinder fillet out of a cylinder
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cup parameters\ncup_height = 100  # Total cup height (wall + handle)\ncup_inner_radius = 0.05  # Inner radius of the cup\nhandle_width = 0.1  # Handle width\nhandle_depth = 0.05  # Handle depth\nhandle_x_offset = 0.05  # Handle x offset from cup center\nhandle_y_offset = 0.05  # Handle y offset from cup center\ncup_outer_radius = 0.05\n\n# Create the outer cup\ncup = cq.Workplane(\"XY\").circle(cup_outer_radius).extrude(cup_height)\n\n# Create the inner cup (wall)\ninner_cup = cq.Workplane(\"XY\").circle(cup_inner_radius).extrude(cup_height)\n\n# Cut the inner cup from the outer cup to create the wall\ncup_wall = cup.cut(inner_cup)\n\n# Create the handle\nhandle = cq.Workplane(\"XY\").rect(handle_width, handle_depth).extrude(cup_height)\n\n# Position the handle on the cup\nhandle = handle.translate((handle_x_offset, handle_y_offset, cup_height))\n\n# Combine the cup and handle\nresult = cup_wall.union(handle)\n\n# Export the result to an STL file\ncq.exporters.export(result, \"cup.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:16:27.692Z ===
+Prompt: generate a cup (a cylinder fillet out of a cylinder
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Cup parameters\ncup_height = 100  # Cup height in mm\ncup_diameter = 75  # Cup diameter in mm\nhandle_width = 20  # Handle width in mm\nhandle_depth = 30  # Handle depth in mm\nhandle_x_offset = 37.5  # Handle x offset in mm\nhandle_y_offset = 0  # Handle y offset in mm\nhandle_z_offset = cup_height  # Handle z offset in mm\n\n# Create the cup body\ncup_body = (\n    cq.Workplane(\"XY\")\n    .circle(cup_diameter / 2)\n    .extrude(cup_height)\n)\n\n# Create the handle\nhandle = (\n    cq.Workplane(\"XY\")\n    .rect(handle_width, handle_depth)\n    .extrude(handle_z_offset)\n)\n\n# Position the handle on the cup body\nhandle = handle.translate((handle_x_offset, handle_y_offset, handle_z_offset))\n\n# Combine the cup body and handle\nresult = cup_body.union(handle)\n\n# Export the result to a STL file\ncq.exporters.export(result, \"cup.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:17:06.969Z ===
+Prompt: generate a cup
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\ndef create_cup(cup_height=0.3, cup_width=0.75, cup_depth=0.05):\n    \"\"\"\n    Creates a simple cup shape using CadQuery.\n\n    Args:\n        cup_height (float): The desired height of the cup. Defaults to 0.3.\n        cup_width (float): The desired width of the cup. Defaults to 0.75.\n        cup_depth (float): The desired depth of the cup. Defaults to 0.05.\n\n    Returns:\n        cq.Workplane: A CadQuery workplane object representing the cup.\n    \"\"\"\n\n    # Create the outer cup shape\n    outer_cup = (\n        cq.Workplane(\"XY\")\n        .rect(cup_width, cup_depth)\n        .extrude(cup_height)\n    )\n\n    # Create the inner cup shape (a smaller rectangle)\n    inner_cup = (\n        cq.Workplane(\"XY\")\n        .rect(cup_width - 2 * cup_depth, cup_depth - 2 * cup_depth)\n        .extrude(cup_height)\n    )\n\n    # Cut the inner cup from the outer cup to create the cup's wall\n    cup = outer_cup.cut(inner_cup)\n\n    return cup\n\n# Create the cup with default settings\ncup = create_cup()\n\n# Export the cup to an STL file\ncq.exporters.export(cup, \"cup.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:17:44.361Z ===
+Prompt: generate a pyramid
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the vertices of the rectangular base\nbase_vertices = [\n    (0, 0),\n    (4, 0),\n    (4, 2.5),\n    (0, 2.5)\n]\n\n# Define the apex vertex\napex_vertex = (2, 1.25)\n\n# Create the base rectangle\nbase = cq.Workplane(\"XY\").polyline(base_vertices).close().extrude(2.5)\n\n# Create the apex triangle\ntriangle = cq.Workplane(\"XY\").moveTo(apex_vertex[0], apex_vertex[1]).lineTo(apex_vertex[0] + 4, apex_vertex[1]).lineTo(apex_vertex[0], apex_vertex[1] + 2.5).close().extrude(2.5)\n\n# Combine the base and apex triangle\npyramid = base.union(triangle)\n\n# Export the pyramid to an STL file\ncq.exporters.export(pyramid, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:19:30.410Z ===
+Prompt: generate a pyramid
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Base square\nbase = cq.Workplane(\"XY\").box(1.5, 1.5, 1.5)\n\n# Chamfer the top edges\nchamfer = cq.Workplane(\"XY\").box(1.5, 1.5, 1.5).chamfer(1.5)\n\n# Combine the base and chamfer\npyramid = chamfer\n\n# Export to STL\ncq.exporters.export(pyramid, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:19:37.052Z ===
+Prompt: generate a pyramid
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Base square\nbase = cq.Workplane(\"XY\").box(1.5, 1.5, 1.5)\n\n# Chamfer the top edges\nchamfer = cq.Workplane(\"XY\").box(1.5, 1.5, 1.5).chamfer(1.5)\n\n# Combine the base and chamfer\npyramid = chamfer\n\n# Export to STL\ncq.exporters.export(pyramid, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:19:43.671Z ===
+Prompt: generate a pyramid
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Base square\nbase = cq.Workplane(\"XY\").box(1.5, 1.5, 1.5)\n\n# Chamfer the top edges\nchamfer = cq.Workplane(\"XY\").box(1.5, 1.5, 1.5).chamfer(1.5)\n\n# Combine the base and chamfer\npyramid = chamfer\n\n# Export to STL\ncq.exporters.export(pyramid, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:20:53.783Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the cube dimensions\ncube_size = 10\n\n# Create the outer cube\nouter_cube = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n\n# Define the inner circle dimensions\ninner_circle_radius = 2.5\ninner_circle_x = cube_size / 2\ninner_circle_y = cube_size / 2\n\n# Create the inner circle\ninner_circle = cq.Workplane(\"XY\").circle(inner_circle_radius).translate((inner_circle_x, inner_circle_y, 0))\n\n# Cut the inner circle from the outer cube\nresult = outer_cube.cut(inner_circle)\n\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:21:04.521Z ===
+Prompt: generate a cube
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n# Define the cube dimensions\ncube_size = 10\n# Create the outer cube\nouter_cube = cq.Workplane(\"XY\").box(cube_size, cube_size, cube_size)\n# Define the inner circle dimensions\ninner_circle_radius = 2.5\ninner_circle_x = cube_size / 2\ninner_circle_y = cube_size / 2\n# Create the inner circle\ninner_circle = cq.Workplane(\"XY\").circle(inner_circle_radius).translate((inner_circle_x, inner_circle_y, 0))\n# Cut the inner circle from the outer cube\nresult = outer_cube.cut(inner_circle)\ncq.exporters.export(result, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:21:31.712Z ===
+Prompt: generate a sphere.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Create a sphere with a radius of 1\nsphere = cq.Workplane(\"XY\").circle(1).extrude(1)\n\n# Export the sphere to an STL file\ncq.exporters.export(sphere, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:21:43.022Z ===
+Prompt: generate a sphere.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\nsphere = cq.Workplane(\"XY\").sphere(1.0)\ncq.exporters.export(sphere, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:22:02.230Z ===
+Prompt: generate a triangular prism.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\n# Define the vertices of the triangle\nvertices = [\n    (0, 0),\n    (1, 0),\n    (0.5, 0.866)\n]\n\n# Create the triangle using the vertices\ntriangle = cq.Workplane(\"XY\").polyline(vertices).close()\n\n# Extrude the triangle to create the prism\nprism = triangle.extrude(1)\n\n# Export the prism to an STL file\ncq.exporters.export(prism, \"output.stl\")"
+}
+================================================================================
+
+=== DIRECT_CADQUERY_CODE RESPONSE 2025-08-06T04:23:14.404Z ===
+Prompt: generate a torus.
+Response JSON:
+{
+  "cadquery_code": "import cadquery as cq\n\nouter_radius = 25\ninner_radius = 12.5\ndistance_between_centers = 50\nheight = 100\n\nouter_cylinder = cq.Workplane(\"XY\").circle(outer_radius).extrude(height)\ninner_cylinder = cq.Workplane(\"XY\").circle(inner_radius).extrude(height)\n\ntorus = outer_cylinder.cut(inner_cylinder)\n\ncq.exporters.export(torus, \"output.stl\")"
+}
+================================================================================
+

@@ -1,5 +1,6 @@
 import path from 'path';
 import { mkdir, writeFile } from 'fs/promises';
+import { homedir } from 'os';
 import readline from 'readline';
 import { InteractiveAIService, InteractiveGenerationResult } from './interactive-ai-service.js';
 import type { InteractiveProgress } from './interactive-ai-service.js';
@@ -169,10 +170,22 @@ export class InteractiveGenerationService {
 						});
 
 						try {
-							// Create temporary script file
-							const tempDir = path.join(__dirname, '../temp');
-							await mkdir(tempDir, { recursive: true });
-							const scriptPath = path.join(tempDir, `interactive_generation_${Date.now()}.py`);
+							const config = getConfig();
+							
+							// Create script file (persistent by default, temp only if keepWorkingDirectory is true)
+							let scriptPath: string;
+							if (config.keepWorkingDirectory) {
+								// Keep temp files for debugging
+								const tempDir = path.join(__dirname, '../temp');
+								await mkdir(tempDir, { recursive: true });
+								scriptPath = path.join(tempDir, `interactive_generation_${Date.now()}.py`);
+							} else {
+								// Use persistent location (server will handle output file persistence)
+								const persistentDir = path.join(homedir(), 'Documents', 'C3D Generated', 'scripts');
+								await mkdir(persistentDir, { recursive: true });
+								const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+								scriptPath = path.join(persistentDir, `interactive_generation_${timestamp}.py`);
+							}
 							await writeFile(scriptPath, codeResponse.cadquery_code || '');
 
 							// Test the code with the server

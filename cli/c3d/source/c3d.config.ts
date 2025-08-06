@@ -1,3 +1,7 @@
+import { homedir } from 'os';
+import { join } from 'path';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+
 export interface C3DConfig {
 	// AI Generation Settings
 	maxRetries: number;
@@ -9,6 +13,7 @@ export interface C3DConfig {
 	useStreamingMode: boolean; // Whether to use streaming markdown mode instead of JSON
 	repromptWithError: boolean; // Whether to include the previous error in the next prompt
 	thinking: boolean; // Whether to use structured thinking prompts for better reasoning
+	promptMode: 'instructional' | 'completion' | 'thinking_instructional' | 'thinking_completion'; // Prompt style to use
 	
 	// Server Settings
 	defaultPort: number;
@@ -39,6 +44,7 @@ export const defaultConfig: C3DConfig = {
 	useStreamingMode: true, // Default to streaming markdown mode
 	repromptWithError: true, // Default to reprompting with the error context
 	thinking: true, // Default to using structured thinking prompts
+	promptMode: 'thinking_instructional', // Default to thinking instructional prompts
 	
 	// Server Settings
 	defaultPort: 8765,
@@ -58,7 +64,45 @@ export const defaultConfig: C3DConfig = {
 	maxHistoryMessages: 10,
 };
 
+// Config file location
+const CONFIG_DIR = join(homedir(), '.c3d');
+const CONFIG_FILE = join(CONFIG_DIR, 'config.json');
+
 let currentConfig: C3DConfig = { ...defaultConfig };
+
+// Load config from file on startup
+function loadConfigFromFile(): C3DConfig {
+	try {
+		if (existsSync(CONFIG_FILE)) {
+			const configData = readFileSync(CONFIG_FILE, 'utf8');
+			const fileConfig = JSON.parse(configData);
+			// Merge with defaults to ensure all properties exist
+			return { ...defaultConfig, ...fileConfig };
+		}
+	} catch (error) {
+		console.warn('Warning: Could not load config file, using defaults:', error);
+	}
+	return { ...defaultConfig };
+}
+
+// Save config to file
+function saveConfigToFile(config: C3DConfig): void {
+	try {
+		// Ensure config directory exists
+		if (!existsSync(CONFIG_DIR)) {
+			mkdirSync(CONFIG_DIR, { recursive: true });
+		}
+		
+		// Write config file
+		writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8');
+	} catch (error) {
+		console.error('Error: Could not save config file:', error);
+		throw error;
+	}
+}
+
+// Initialize config by loading from file
+currentConfig = loadConfigFromFile();
 
 export function getConfig(): C3DConfig {
 	return currentConfig;
@@ -66,8 +110,12 @@ export function getConfig(): C3DConfig {
 
 export function updateConfig(updates: Partial<C3DConfig>): void {
 	currentConfig = { ...currentConfig, ...updates };
+	// Automatically save to file when config is updated
+	saveConfigToFile(currentConfig);
 }
 
 export function resetConfig(): void {
 	currentConfig = { ...defaultConfig };
+	// Save the reset config to file
+	saveConfigToFile(currentConfig);
 }

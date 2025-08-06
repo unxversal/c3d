@@ -5,7 +5,7 @@ import {ShimmerText} from '../components/shimmer-text.js';
 import {ServerManager} from '../server-manager.js';
 import {exec} from 'child_process';
 import {promisify} from 'util';
-import {readdir, stat} from 'fs/promises';
+import {readdir, stat, rename} from 'fs/promises';
 import {join, extname, basename, dirname} from 'path';
 import {homedir} from 'os';
 import {fileURLToPath} from 'url';
@@ -50,6 +50,8 @@ export function LibraryScreen({initialSelectedFile}: Props) {
   const [filter, setFilter] = useState('');
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState('Scanning for STL files...');
+  const [renameMode, setRenameMode] = useState(false);
+  const [newFileName, setNewFileName] = useState('');
 
   // Scan for STL files
   useEffect(() => {
@@ -120,20 +122,45 @@ export function LibraryScreen({initialSelectedFile}: Props) {
 
   // Handle keyboard input
   useInput((input, key) => {
-    if (key.upArrow && selectedIndex > 0) {
-      setSelectedIndex(selectedIndex - 1);
-    } else if (key.downArrow && selectedIndex < filteredFiles.length - 1) {
-      setSelectedIndex(selectedIndex + 1);
-    } else if (key.return && filteredFiles[selectedIndex]) {
-      // Open selected file
-      openSTLFile(filteredFiles[selectedIndex]);
-    } else if (key.escape) {
-      setFilter('');
-    } else if (key.backspace || key.delete) {
-      setFilter(prev => prev.slice(0, -1));
-    } else if (input && input.length === 1 && !key.ctrl && !key.meta) {
-      // Add character to filter
-      setFilter(prev => prev + input);
+    if (renameMode) {
+      // Handle rename mode input
+      if (key.return) {
+        // Confirm rename
+        handleRename();
+      } else if (key.escape) {
+        // Cancel rename
+        setRenameMode(false);
+        setNewFileName('');
+      } else if (key.backspace || key.delete) {
+        setNewFileName(prev => prev.slice(0, -1));
+      } else if (input && input.length === 1) {
+        setNewFileName(prev => prev + input);
+      }
+    } else {
+      // Normal navigation mode
+      if (key.upArrow && selectedIndex > 0) {
+        setSelectedIndex(selectedIndex - 1);
+      } else if (key.downArrow && selectedIndex < filteredFiles.length - 1) {
+        setSelectedIndex(selectedIndex + 1);
+      } else if (key.return && filteredFiles[selectedIndex]) {
+        // Open selected file
+        openSTLFile(filteredFiles[selectedIndex]);
+      } else if (key.escape) {
+        setFilter('');
+      } else if (key.backspace || key.delete) {
+        setFilter(prev => prev.slice(0, -1));
+      } else if (input === 'r' || input === 'R') {
+        // Start rename mode
+        if (filteredFiles[selectedIndex]) {
+          setRenameMode(true);
+          setNewFileName(filteredFiles[selectedIndex].name);
+        }
+      } else if (input && input.length === 1 && !key.ctrl && !key.meta) {
+        // Add character to filter (exclude 'r' and 'R' since they're used for rename)
+        if (input !== 'r' && input !== 'R') {
+          setFilter(prev => prev + input);
+        }
+      }
     }
   });
 
@@ -171,6 +198,48 @@ export function LibraryScreen({initialSelectedFile}: Props) {
     }
   };
 
+  const handleRename = async () => {
+    if (!filteredFiles[selectedIndex] || !newFileName.trim()) {
+      setRenameMode(false);
+      setNewFileName('');
+      return;
+    }
+
+    const selectedFile = filteredFiles[selectedIndex];
+    const oldPath = selectedFile.path;
+    const directory = dirname(oldPath);
+    const newPath = join(directory, newFileName.trim() + '.stl');
+
+    try {
+      setStatus(`📝 Renaming ${selectedFile.name} to ${newFileName.trim()}...`);
+      
+      // Rename the actual file
+      await rename(oldPath, newPath);
+      
+      // Update the files list
+      const updatedFiles = files.map(file => 
+        file.path === oldPath 
+          ? { ...file, name: newFileName.trim(), path: newPath }
+          : file
+      );
+      setFiles(updatedFiles);
+      setFilteredFiles(filteredFiles.map(file => 
+        file.path === oldPath 
+          ? { ...file, name: newFileName.trim(), path: newPath }
+          : file
+      ));
+      
+      setStatus(`✅ Renamed to ${newFileName.trim()}.stl`);
+      setRenameMode(false);
+      setNewFileName('');
+      
+    } catch (error) {
+      setStatus(`❌ Error renaming file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setRenameMode(false);
+      setNewFileName('');
+    }
+  };
+
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 B';
     const k = 1024;
@@ -198,18 +267,31 @@ export function LibraryScreen({initialSelectedFile}: Props) {
           </Box>
         </Box>
 
-        {/* Search Filter */}
+        {/* Search Filter / Rename Mode */}
         <Box borderStyle="single" padding={1} marginBottom={1}>
           <Box flexDirection="column">
-            <Text color="yellow" bold>🔍 Filter: {filter || '(type to search)'}</Text>
-            <Text color="gray">Found {filteredFiles.length} file(s)</Text>
+            {renameMode ? (
+              <>
+                <Text color="cyan" bold>✏️  Rename: {newFileName}</Text>
+                <Text color="gray">Enter to confirm, Esc to cancel</Text>
+              </>
+            ) : (
+              <>
+                <Text color="yellow" bold>🔍 Filter: {filter || '(type to search)'}</Text>
+                <Text color="gray">Found {filteredFiles.length} file(s)</Text>
+              </>
+            )}
           </Box>
         </Box>
 
         {/* File List */}
         <Box borderStyle="single" padding={1} marginBottom={1} minHeight={8}>
           <Box flexDirection="column">
-            <Text color="blue" bold>📄 Files (↑↓ to navigate, Enter to open, Esc to clear filter)</Text>
+            {renameMode ? (
+              <Text color="blue" bold>📄 Files (renaming selected file)</Text>
+            ) : (
+              <Text color="blue" bold>📄 Files (↑↓ to navigate, Enter to open, R to rename)</Text>
+            )}
             {filteredFiles.length === 0 ? (
               loading ? (
                 <Text color="gray">Scanning...</Text>
@@ -262,11 +344,22 @@ export function LibraryScreen({initialSelectedFile}: Props) {
         <Box borderStyle="single" padding={1}>
           <Box flexDirection="column">
             <Text color="green" bold>🎮 Controls</Text>
-            <Text color="gray">  • ↑↓ arrows: Navigate files</Text>
-            <Text color="gray">  • Enter: Open selected STL in viewer</Text>
-            <Text color="gray">  • Type: Filter files by name</Text>
-            <Text color="gray">  • Esc: Clear filter</Text>
-            <Text color="gray">  • Q: Quit to main menu</Text>
+            {renameMode ? (
+              <>
+                <Text color="cyan">  • Type: Enter new file name</Text>
+                <Text color="cyan">  • Enter: Confirm rename</Text>
+                <Text color="cyan">  • Esc: Cancel rename</Text>
+              </>
+            ) : (
+              <>
+                <Text color="gray">  • ↑↓ arrows: Navigate files</Text>
+                <Text color="gray">  • Enter: Open selected STL in viewer</Text>
+                <Text color="gray">  • R: Rename selected file</Text>
+                <Text color="gray">  • Type: Filter files by name</Text>
+                <Text color="gray">  • Esc: Clear filter</Text>
+                <Text color="gray">  • Q: Quit to main menu</Text>
+              </>
+            )}
           </Box>
         </Box>
       </Box>

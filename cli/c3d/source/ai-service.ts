@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { getConfig } from './c3d.config.js';
 import { Ollama } from 'ollama';
+import { PromptLibrary, type ErrorContext } from './prompt-library.js';
 
 // Schema for the description generation phase
 const DescriptionSchema = z.object({
@@ -78,80 +79,80 @@ You must respond with structured JSON containing a detailed description, key fea
 		return DescriptionSchema.parse(JSON.parse(content));
 	}
 
-	async generateDirectCADQueryCode(userPrompt: string): Promise<CADQueryResult> {
+	async generateDirectCADQueryCode(userPrompt: string, errorContext?: ErrorContext): Promise<CADQueryResult> {
 		const config = getConfig();
 		
-		console.log('🔧 Starting direct CADQuery code generation...');
+		if (config.debugLogging) {
+			console.log('🔧 Starting direct CADQuery code generation...');
+		}
 		
-				const systemPrompt = `You are an AI CAD assistant. Write CADQuery Python code.
-
-Simple patterns:
-- Box: cq.Workplane("XY").box(w, d, h)
-- Cylinder: cq.Workplane("XY").cylinder(h, r)
-- Export: cq.exporters.export(result, "output.stl")
-
-CRITICAL: Respond with valid JSON:
-{"cadquery_code": "your_python_code_here"}
-
-Example:
-{"cadquery_code": "import cadquery as cq\\nresult = cq.Workplane(\\"XY\\").box(10, 10, 5)\\ncq.exporters.export(result, \\"output.stl\\")"}
-
-Keep it simple.`;
+		// Use the prompt library to generate prompts based on config
+		const prompts = PromptLibrary.generateDirectPrompts(
+			userPrompt,
+			config.promptMode,
+			errorContext
+		);
 
 		try {
-			console.log('🔧 Making OpenAI API call for direct code generation...');
-			console.log(`🔧 Using ${config.useJsonSchema ? 'JSON Schema (strict)' : 'JSON Object (simple)'} mode`);
+			if (config.debugLogging) {
+				console.log('🔧 Making OpenAI API call for direct code generation...');
+				console.log(`🔧 Using ${config.useJsonSchema ? 'JSON Schema (strict)' : 'JSON Object (simple)'} mode`);
+			}
 			
 			const response = await this.openai.chat.completions.create({
 				model: config.ollamaModel,
 				messages: [
-					{ role: 'system', content: systemPrompt },
-					{ role: 'user', content: `Generate CADQuery code for: ${userPrompt}` }
+					{ role: 'system', content: prompts.systemPrompt },
+					{ role: 'user', content: prompts.userPrompt }
 				],
-				response_format: config.useJsonSchema ? {
-					type: 'json_schema',
-					json_schema: {
-						name: 'cadquery_result',
-						strict: true,
-						schema: zodToJsonSchema(CADQueryCodeSchema)
-					}
-				} : {
-					type: 'json_object'
-				},
+				response_format: { type: 'json_object' },
 				temperature: config.temperature,
 				stream: false,
 				max_tokens: config.maxTokens,
 			});
 
-			console.log('✅ Received response from OpenAI API');
-			console.log(`📏 Response: ${JSON.stringify(response)}`);
-			console.log(`📏 Response usage: completion_tokens=${response.usage?.completion_tokens}, total_tokens=${response.usage?.total_tokens}`);
+			if (config.debugLogging) {
+				if (config.debugLogging) {
+				console.log('✅ Received response from OpenAI API');
+			}
+				console.log(`📏 Response: ${JSON.stringify(response)}`);
+				console.log(`📏 Response usage: completion_tokens=${response.usage?.completion_tokens}, total_tokens=${response.usage?.total_tokens}`);
+			}
 
 			const content = response.choices[0]?.message?.content;
 			if (!content) {
 				throw new Error('No response content received from OpenAI API');
 			}
 
-			console.log(`📝 Raw response length: ${content.length} characters`);
-			console.log(`📋 Raw response preview: ${content.substring(0, 200)}...`);
-			console.log('🔧 Parsing JSON response...');
+			if (config.debugLogging) {
+				console.log(`📝 Raw response length: ${content.length} characters`);
+				console.log(`📋 Raw response preview: ${content.substring(0, 200)}...`);
+				if (config.debugLogging) {
+				console.log('🔧 Parsing JSON response...');
+			}
+			}
 			
 			let parsedJson;
 			try {
-				parsedJson = JSON.parse(content);
+				// For completion mode, we may need to add the opening brace
+				let jsonString = content;
+				if (config.promptMode === 'completion' || config.promptMode === 'thinking_completion') {
+					jsonString = '{' + content;
+				}
+				parsedJson = JSON.parse(jsonString);
 			} catch (error) {
-				throw new Error(`Invalid JSON response: ${error}`);
+				throw new Error(`Invalid JSON response: ${error}. Raw content: ${content}`);
 			}
 			
-			// If not using strict schema, validate manually
-			if (!config.useJsonSchema) {
-				if (!parsedJson.cadquery_code || typeof parsedJson.cadquery_code !== 'string') {
-					throw new Error(`Response missing 'cadquery_code' field. Got: ${JSON.stringify(parsedJson)}`);
-				}
+			// Manual validation
+			if (!parsedJson.cadquery_code || typeof parsedJson.cadquery_code !== 'string') {
+				throw new Error(`Response missing 'cadquery_code' field. Got: ${JSON.stringify(parsedJson)}`);
 			}
 			
 			const parsedResult = CADQueryCodeSchema.parse(parsedJson);
-			console.log('✅ Successfully parsed CADQuery code result');
+			if (config.debugLogging) {
+				console.log('✅ Successfully parsed CADQuery code result');
+			}
 			
 			return parsedResult;
 			
@@ -168,75 +169,69 @@ Keep it simple.`;
 	async generateCADQueryCode(userPrompt: string, description: DescriptionResult): Promise<CADQueryResult> {
 		const config = getConfig();
 		
-		console.log('🔧 Starting CADQuery code generation...');
+		if (config.debugLogging) {
+			console.log('🔧 Starting CADQuery code generation with description...');
+		}
 		
-		const systemPrompt = `You are an expert CADQuery programmer. Generate complete, working CADQuery Python code.
-
-CRITICAL REQUIREMENTS:
-- Always import cadquery as cq
-- Use cq.Workplane("XY") to start
-- Assign final object to variable named "result"
-- Make code complete and runnable
-- Use realistic dimensions
-
-MANDATORY FINAL LINE - COPY EXACTLY:
-cq.exporters.export(result, "output.stl")
-
-WRONG EXPORT METHODS (DO NOT USE):
-- cq.exporters.stl.export() ❌
-- cq.exporters.stl() ❌  
-- result.exportSTL() ❌
-- any other export method ❌
-
-ONLY USE: cq.exporters.export(result, "output.stl") ✅
-
-Example complete code:
-import cadquery as cq
-result = cq.Workplane("XY").box(1, 1, 1)
-cq.exporters.export(result, "output.stl")
-
-RESPONSE FORMAT: JSON with only "cadquery_code" field containing complete Python code.`;
-
-		const userMessage = `Generate CADQuery code for: ${userPrompt}
-
-Description: ${description.detailed_description}
-
-Key features: ${description.key_features.join(', ')}`;
+		// Use the prompt library to generate prompts based on config
+		const prompts = PromptLibrary.generateTwoStagePrompts(
+			userPrompt,
+			description,
+			config.promptMode
+		);
 
 		try {
-			console.log('🔧 Making OpenAI API call for code generation...');
+			if (config.debugLogging) {
+				console.log('🔧 Making OpenAI API call for code generation...');
+			}
 			
 			const response = await this.openai.chat.completions.create({
 				model: config.ollamaModel,
 				messages: [
-					{ role: 'system', content: systemPrompt },
-					{ role: 'user', content: userMessage }
+					{ role: 'system', content: prompts.systemPrompt },
+					{ role: 'user', content: prompts.userPrompt }
 				],
-				response_format: config.useJsonSchema ? {
-					type: 'json_schema',
-					json_schema: {
-						name: 'cadquery_result',
-						strict: true,
-						schema: zodToJsonSchema(CADQueryCodeSchema)
-					}
-				} : {
-					type: 'json_object'
-				},
+				response_format: { type: 'json_object' },
 				temperature: config.temperature,
 				stream: false,
 				max_tokens: config.maxTokens, // Use configured token limit
 			});
 
-			console.log('✅ Received response from OpenAI API');
+			if (config.debugLogging) {
+				if (config.debugLogging) {
+				console.log('✅ Received response from OpenAI API');
+			}
+			}
 
 			const content = response.choices[0]?.message?.content;
 			if (!content) {
 				throw new Error('No response content received from OpenAI API');
 			}
 
-			console.log('🔧 Parsing JSON response...');
-			const parsedResult = CADQueryCodeSchema.parse(JSON.parse(content));
-			console.log('✅ Successfully parsed CADQuery code result');
+			if (config.debugLogging) {
+				if (config.debugLogging) {
+				console.log('🔧 Parsing JSON response...');
+			}
+			}
+
+			// Handle JSON parsing based on prompt mode
+			let parsedJson;
+			if (config.promptMode === 'completion' || config.promptMode === 'thinking_completion') {
+				// For completion mode, we may need to add the opening brace
+				const fullJsonString = '{' + content;
+				parsedJson = JSON.parse(fullJsonString);
+			} else {
+				// For instructional mode, parse as-is
+				parsedJson = JSON.parse(content);
+			}
+
+			const parsedResult = CADQueryCodeSchema.parse(parsedJson);
+
+			if (config.debugLogging) {
+				if (config.debugLogging) {
+				console.log('✅ Successfully parsed CADQuery code result');
+			}
+			}
 			
 			return parsedResult;
 			
@@ -354,7 +349,8 @@ Key features: ${description.key_features.join(', ')}`;
 	 */
 	async generateStreamingCADQueryCode(
 		userPrompt: string, 
-		onStream?: (chunk: string) => void
+		onStream?: (chunk: string) => void,
+		errorContext?: ErrorContext
 	): Promise<CADQueryResult> {
 		const config = getConfig();
 		
@@ -362,115 +358,27 @@ Key features: ${description.key_features.join(', ')}`;
 			console.log('🔧 Starting streaming CADQuery code generation...');
 		}
 		
-		const systemPrompt = config.thinking ? `You are an AI CAD assistant and CADQuery expert. When the user describes an object, respond using this exact format:
-
-<thinking>
-Analyze the user's request and think through the approach. Consider:
-- What geometric primitives are needed (boxes, cylinders, spheres, etc.)
-- How to break down complex shapes into simpler components
-- What CADQuery operations to use (extrude, revolve, fillet, chamfer, etc.)
-- Any parametric patterns or helper functions needed
-- Potential challenges and how to address them
-</thinking>
-
-<description>
-Provide a clear description of the part you're designing based on the user's request.
-</description>
-
-<explanation>
-Explain your approach and any key CADQuery concepts or techniques being used.
-</explanation>
-
-<code>
-\`\`\`python
-import cadquery as cq
-
-# Your CADQuery code here
-# Always end with: cq.exporters.export(result, "output.stl")
-\`\`\`
-</code>
-
-Simple CADQuery patterns:
-- Import: import cadquery as cq
-- Box: cq.Workplane("XY").box(w, d, h)
-- Cylinder: cq.Workplane("XY").cylinder(h, r)
-- Export: cq.exporters.export(result, "output.stl")
-
-Always end with: cq.exporters.export(result, "output.stl")` : 
-
-`you are an AI cad assistant. your abilties are being very good at writing cadquery code. your response must generate the user's prompt. You are an AI CAD assistant. Write CADQuery Python code.
-
-Simple CADQuery patterns:
-- Import: import cadquery as cq
-- Box: cq.Workplane("XY").box(w, d, h)
-- Cylinder: cq.Workplane("XY").cylinder(h, r)
-- Export: cq.exporters.export(result, "output.stl")
-
-You are an AI CAD assistant and a CadQuery expert. When the user describes an object, you should:
-
-• Generate concise, idiomatic CadQuery code that builds the part.  
-• Encapsulate repetitive or multi-step operations into helper functions rather than dumping long lists of commands.  
-• Default to parametric patterns: sketch one feature (e.g. a single tooth), then use loops or polar-patterns to replicate it.  
-• Apply any finishing touches (fillets, chamfers) via clearly named functions or selectors.  
-
-Always aim for readable, maintainable scripts—avoid enumerating dozens of operations inline; group them into well-named functions.
-
-Keep it simple. Always end with:
-cq.exporters.export(result, "output.stl")
-
-Example response (always format your response in this way):
-I'll create a simple cube for you. Here's the CADQuery code:
-
-\`\`\`python
-import cadquery as cq
-
-# Create a 10x10x10 cube
-result = cq.Workplane("XY").box(10, 10, 10).fillet(1)
-
-# Export the result
-cq.exporters.export(result, "output.stl")
-\`\`\`
-
-This creates a cube with rounded edges (fillet).`;
-
-// const systemPrompt = `you are an AI cad assistant. your abilties are being very good at writing cadquery code. your response must generate the user’s prompt. You are an AI CAD assistant. Write CADQuery Python code.
-
-// Simple CADQuery patterns:
-// - Import: import cadquery as cq
-// - Box: cq.Workplane("XY").box(w, d, h)
-// - Cylinder: cq.Workplane("XY").cylinder(h, r)
-// - Export: cq.exporters.export(result, "output.stl")
-
-// Keep it simple. Always end with:
-// cq.exporters.export(result, "output.stl")
-
-// Example response:
-// I'll create a simple cube for you. Here's the CADQuery code:
-
-// \`\`\`python
-// import cadquery as cq
-
-// # Create a 10x10x10 cube
-// result = cq.Workplane("XY").box(10, 10, 10).fillet(1)
-
-// # Export the result
-// cq.exporters.export(result, "output.stl")
-// \`\`\`
-
-// This creates a cube with rounded edges (fillet).`;
+		// Use the prompt library to generate prompts based on config
+		const prompts = PromptLibrary.generateStreamingPrompts(
+			userPrompt,
+			config.promptMode,
+			config.thinking,
+			errorContext
+		);
 
 		try {
 			// Initialize Ollama client for streaming
 			const ollama = new Ollama({ host: config.ollamaHost });
 			
 			if (config.debugLogging) {
-			console.log('🔧 Making Ollama streaming API call...');
-		}
+				console.log('🔧 Making Ollama streaming API call...');
+			}
 			
 			let fullResponse = '';
+			// Use the generated prompts
 			const stream = await ollama.generate({
 				model: config.ollamaModel,
-				prompt: `${systemPrompt}\n\nUser request: ${userPrompt}`,
+				prompt: `${prompts.systemPrompt}\n\n${prompts.userPrompt}`,
 				stream: true,
 				options: {
 					temperature: config.temperature,
@@ -511,7 +419,7 @@ This creates a cube with rounded edges (fillet).`;
 			const lines = extractedCode.split('\n');
 			const lastLine = lines[lines.length - 1]?.trim() || '';
 			
-			if (!lastLine.includes('cq.exporters.export(') || !lastLine.includes('"output.stl")')) {
+			if (!lastLine.includes('cq.exporters.export(')) {
 				throw new Error(`Code does not end with required export statement. Last line: ${lastLine}`);
 			}
 

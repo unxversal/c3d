@@ -4,6 +4,7 @@ import { getConfig } from './c3d.config.js';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { homedir } from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -95,6 +96,8 @@ export class GenerationService {
 						maxAttempts: config.maxRetries
 					});
 
+					// TODO: Add error context support to two-stage generation
+					// For now, the two-stage method doesn't support error context
 					const codeResult = await this.aiService.generateCADQueryCode(prompt, description);
 					
 					// Log the code generation result for debugging
@@ -107,10 +110,20 @@ export class GenerationService {
 						maxAttempts: config.maxRetries
 					});
 
-					// Create temporary script file
-					const tempDir = path.join(__dirname, '../temp');
-					await mkdir(tempDir, { recursive: true });
-					const scriptPath = path.join(tempDir, `generation_${Date.now()}.py`);
+					// Create script file (persistent by default, temp only if keepWorkingDirectory is true)
+					let scriptPath: string;
+					if (config.keepWorkingDirectory) {
+						// Keep temp files for debugging
+						const tempDir = path.join(__dirname, '../temp');
+						await mkdir(tempDir, { recursive: true });
+						scriptPath = path.join(tempDir, `generation_${Date.now()}.py`);
+					} else {
+						// Use persistent location (server will handle output file persistence)
+						const persistentDir = path.join(homedir(), 'Documents', 'C3D Generated', 'scripts');
+						await mkdir(persistentDir, { recursive: true });
+						const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+						scriptPath = path.join(persistentDir, `generation_${timestamp}.py`);
+					}
 					await writeFile(scriptPath, codeResult.cadquery_code);
 
 					// Test the code with the server
@@ -182,6 +195,7 @@ export class GenerationService {
 		const config = getConfig();
 		let attempts = 0;
 		let lastError = '';
+		let lastCode = '';
 
 		try {
 			// Step 1: Check if model is available
@@ -215,29 +229,20 @@ export class GenerationService {
 						maxAttempts: config.maxRetries
 					});
 
-					let enhancedPrompt = prompt;
-					let lastCode = '';
-
-					if (attempts > 1 && lastError && config.repromptWithError) {
-						enhancedPrompt = `
-							The user wants to generate a CAD model.
-							Original prompt: "${prompt}"
-
-							A previous attempt to generate the code failed.
-							Failed Code:
-							\`\`\`python
-							${lastCode}
-							\`\`\`
-
-							Error Message: "${lastError}"
-
-							Please analyze the failed code and the error message, then generate a new, corrected version of the Python script that successfully produces the 3D model.
-						`;
+					// Prepare error context for retries
+					let errorContext: any = undefined;
+					if (attempts > 1 && lastError && lastCode && config.repromptWithError) {
+						errorContext = {
+							failedCode: lastCode,
+							errorMessage: lastError,
+							attemptNumber: attempts,
+							maxAttempts: config.maxRetries
+						};
 					}
 
 					const codeResult = config.useStreamingMode 
-						? await this.aiService.generateStreamingCADQueryCode(enhancedPrompt, onStream)
-						: await this.aiService.generateDirectCADQueryCode(enhancedPrompt);
+						? await this.aiService.generateStreamingCADQueryCode(prompt, onStream, errorContext)
+						: await this.aiService.generateDirectCADQueryCode(prompt, errorContext);
 					
 					lastCode = codeResult.cadquery_code;
 
@@ -252,10 +257,20 @@ export class GenerationService {
 						maxAttempts: config.maxRetries
 					});
 
-					// Create temporary script file
-					const tempDir = path.join(__dirname, '../temp');
-					await mkdir(tempDir, { recursive: true });
-					const scriptPath = path.join(tempDir, `generation_${Date.now()}.py`);
+					// Create script file (persistent by default, temp only if keepWorkingDirectory is true)
+					let scriptPath: string;
+					if (config.keepWorkingDirectory) {
+						// Keep temp files for debugging
+						const tempDir = path.join(__dirname, '../temp');
+						await mkdir(tempDir, { recursive: true });
+						scriptPath = path.join(tempDir, `generation_${Date.now()}.py`);
+					} else {
+						// Use persistent location (server will handle output file persistence)
+						const persistentDir = path.join(homedir(), 'Documents', 'C3D Generated', 'scripts');
+						await mkdir(persistentDir, { recursive: true });
+						const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+						scriptPath = path.join(persistentDir, `generation_${timestamp}.py`);
+					}
 					await writeFile(scriptPath, codeResult.cadquery_code);
 
 					if (config.debugLogging) {
@@ -286,14 +301,22 @@ export class GenerationService {
 				} catch (error) {
 					lastError = error instanceof Error ? error.message : String(error);
 					
-					console.log(`❌ Attempt ${attempts} failed: ${lastError}`);
+					// Send error message through the stream instead of console.log
+					const errorMessage = `\n\n❌ **Attempt ${attempts} failed:**\n\`\`\`\n${lastError}\n\`\`\`\n`;
+					onStream?.(errorMessage);
 					
 					if (attempts === config.maxRetries) {
 						onProgress?.({
 							step: 'failed',
 							message: `Failed after ${config.maxRetries} attempts. Last error: ${lastError}`
 						});
+						
+						const finalErrorMessage = `\n\n💥 **Generation failed after ${config.maxRetries} attempts.**\n\nPlease try:\n- Simplifying your request\n- Using different terminology\n- Checking if the CAD operation is supported\n`;
+						onStream?.(finalErrorMessage);
 						break;
+					} else {
+						const retryMessage = `\n\n🔄 **Retrying with corrected approach (attempt ${attempts + 1}/${config.maxRetries})...**\n\n`;
+						onStream?.(retryMessage);
 					}
 
 					// For direct generation, just retry with the same prompt
