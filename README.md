@@ -2,6 +2,16 @@
 
 **Compute 3D Lab** - Generate 3D CAD models from natural language descriptions using AI.
 
+<video src="c3dgenerate.mp4" width="640" height="360" controls>
+  Your browser does not support the video tag.
+</video>
+
+You can also interact with it as an editor:
+
+<video src="c3dgeneratept2.mp4" width="640" height="360" controls>
+  Your browser does not support the video tag.
+</video>
+
 ## ✨ Features
 
 - 🤖 **Interactive AI Generation**: Create CAD models from text with live code editing and re-running
@@ -42,12 +52,22 @@ The 3D viewer will automatically open in your browser with the generated model!
 
 ### Core Commands
 - `c3d generate <description>` - Interactive CAD generation with live code editing and re-running
+
 - `c3d editor <description>` - Alias for generate (same interactive functionality)
+
 - `c3d viewer` - Launch 3D web interface
-- `c3d server start/stop/status` - Manage backend server with interactive status screens  
+  - ![c3d viewer](c3dviewer.gif)
+
+- `c3d server start/stop/status` - Manage backend server with interactive status screens 
+  - ![c3d viewer](c3dserverstatus.gif) 
+
 - `c3d config` - Interactive configuration editor with persistent settings
+  - ![c3d viewer](config.gif) 
+
 - `c3d render <script.py>` - Render Python CADQuery scripts with real-time feedback
+
 - `c3d list` - Browse, rename, and manage STL files with arrow key navigation
+  - ![c3d viewer](c3dlist.gif) 
 
 ### Development & Testing
 - `c3d ui` - Launch UI development playground
