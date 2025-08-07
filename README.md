@@ -2,15 +2,11 @@
 
 **Compute 3D Lab** - Generate 3D CAD models from natural language descriptions using AI.
 
-<video src="c3dgenerate.mp4" width="640" height="360" controls>
-  Your browser does not support the video tag.
-</video>
+![c3d generate](c3dgeneratept1.gif) 
 
 You can also interact with it as an editor:
 
-<video src="c3dgeneratept2.mp4" width="640" height="360" controls>
-  Your browser does not support the video tag.
-</video>
+![c3d generate](c3dgeneratept2.gif) 
 
 ## ✨ Features
 
